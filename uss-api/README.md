@@ -2,7 +2,7 @@
 
 ## Operational States
 
-![alt text](../diagrams/tcl4-statemachine.png "Operational States")
+![alt text](diagrams/tcl4-statemachine.png "Operational States")
 
 ## Diff between this and UTM 
 
