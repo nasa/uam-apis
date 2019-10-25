@@ -1,6 +1,6 @@
 # NUSS-Operator Interface
 
-The NUSS-Operator interface is defined by this README and theses OpenAPI specs. V2.1 OpenAPI spec is based on V2.1 data models and is defined in !["swagger.yaml"](swagger.yaml  "v2.1").  
+The NUSS-Operator interface is defined by this README and theses OpenAPI specs. V2.1 OpenAPI spec is based on V2.1 data models and is defined in [swagger.yaml](swagger.yaml  "v2.1").  
 
 
 ## Conformance Monitoring
@@ -87,3 +87,18 @@ Abbreviation | State
  V  | ACTIVE
 
  **Table 2: Operator-API Operation State Abbreviations**
+
+
+## WebSocket Interface with NUSS Clients (V4)
+
+As a part of the **v4 Operator API**, NUSS implements native WebSocket endpoints for the Operator to connect to.
+The WebSocket API endpoints are documented in the AsyncAPI format in [nuss-operator-websockets.yaml](nuss-operator-websockets.yaml).
+
+AysncAPI documents can be view online - https://playground.asyncapi.io
+
+### AsyncAPI Codegen
+
+```
+npm install -g asyncapi-generator 
+ag asyncapi.yaml java-spring
+```
