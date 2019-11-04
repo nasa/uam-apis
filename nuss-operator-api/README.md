@@ -92,7 +92,7 @@ Abbreviation | State
 ## WebSocket Interface with NUSS Clients (V4)
 
 As a part of the **v4 Operator API**, NUSS implements native WebSocket endpoints for the Operator to connect to.
-The WebSocket API endpoints are documented in the AsyncAPI format in [nuss-operator-websockets.yaml](nuss-operator-websockets.yaml).
+The WebSocket API endpoints are documented in the AsyncAPI format in [operator-websockets.yaml](operator-websockets.yaml).
 
 AysncAPI documents can be view online - https://playground.asyncapi.io
 
