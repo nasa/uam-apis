@@ -28,38 +28,35 @@ components:
       
 channels:
 
-  '/operator/v4/operations':
+  '/operator/v4/ws/operations':
     x-service-name: operations
     description: Publishes all Operations.
     subscribe:
       summary: 
-        Client shall receive all NUSS Operations. 
-        Refer to Operation data model available at - https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation .
+        Client shall receive all NUSS Operations.
       message:
         payload:
           $ref: >-
             https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
 
-  '/operator/v4/positions':
+  '/operator/v4/ws/positions':
     x-service-name: positions
     description: Publishes all Positions.
     subscribe:
       summary: 
-        Client shall receive Positions for all NUSS Operations. 
-        Refer to Position data model available at - https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position .
+        Client shall receive Positions for all NUSS Operations.
       message:
         payload:
           $ref: >-
             https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
 
-  '/operator/v4/messages':
+  '/operator/v4/ws/messages':
     x-service-name: positions
     description: Publishes all Messages.
     subscribe:
       summary: 
         Client shall receive NUSS Operator Messages.
-        Refer to UTMMessage data model available at - https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage .
       message:
         payload:
           $ref: >-
-            https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMMessage
+            https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/swagger.yaml#/definitions/Message
