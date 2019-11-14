@@ -1,0 +1,66 @@
+
+postgREST:
+  token : Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoidWRzX3VzZXIifQ.zYfZwWQqkIJVQNm0v9sWkxA0WymwQfnZrIcfi8mwZE0
+
+
+dmp:
+  credentials_key_secret : secret
+
+spring:
+  security:
+    oauth2:
+      resource:
+        jwt:
+          key-value: |
+            -----BEGIN PUBLIC KEY-----
+            MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAled8NTKgRd0axZjXIxMz
+            A7EWQin7rj3bCrUEjHsTpVlfFH1TJZLJQCnIE0UiRG6LDyHLN4ZdrOw/TEJ24Nca
+            Hg4qnZ+6tpd5TwJ3fPPa5sRn+ZElZFAJyEKsfEUe7XrAhVhFIKsn5cm8BsRkNS+H
+            3UkvQo5PeTijjwswKgU0HjPLTOzs8N0+imqlUGK0BwWiqzMOcK0sXxFJ4MLXQQl+
+            32UzhRohHojn290nCwZS3KQbVmeMNUQx9fxHiegqoFivhHSyylWKy5YgeAJS63g3
+            364laPyd+Iy1Uk8CsqZqPII9Mek/SmxiN+Q+waS6WSfSVvgTC5oSbLhr0KVyJ8Lg
+            1wIDAQAB
+            -----END PUBLIC KEY-----
+
+---
+spring:
+    profiles: test
+    datasource:
+          password: ChangeM3
+          url: jdbc:postgresql://udstest.arc.nasa.gov:5432/uds
+          username: utmtcl2
+
+dmp:
+  credentials_key : AKIAJJXQO4EF6IHVJNVQ
+  credentials_key_secret : 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
+
+---
+spring:
+    profiles: dev
+    datasource:
+          password: ChangeM3
+          username: utmtcl2
+          
+dmp:
+  credentials_key : AKIAI4ETOPHGHSPAZW2A
+  credentials_key_secret : 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
+
+---
+spring:
+  profiles: prod
+  datasource:
+        password: ChangeM3
+        username: utmtcl2
+        url: jdbc:postgresql://198.122.70.209:5432/uds
+
+dmp:
+    credentials_key : AKIAJKOHOKS5NGPS2NJA
+    credentials_key_secret : 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
+
+---
+spring:
+    profiles: prod-sec
+
+dmp:
+    credentials_key_secret : UCNSu1aaX5cnmHeVqrxiLE7/SrSCW48RpvcyjmTo
+    credentials_key : AKIAI6Q2WZLME6CLRREA

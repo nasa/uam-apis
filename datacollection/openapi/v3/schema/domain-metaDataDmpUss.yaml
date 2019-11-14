@@ -1,0 +1,545 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0-oas3"
+  title: UAM Flight Data Specification
+  description: Data model for flight data submission.
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utmregistry.arc.nasa.gov/'
+    email: shivanjli.sharma@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: 'http://uam.arc.nasa.gov'
+paths:
+  /no-paths:
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.  Tools sometimes do not like when
+            there are no paths, but domains do not contain paths.
+components:
+  schemas:
+    MetaDataTestSite:
+      type: object
+      required:
+        - scenario
+        - test_card
+        - test_site
+        - test_run
+      properties:
+        scenario:
+          description: >-
+            Proper formatting for scenarios is "TCL4_Sc#" where "#" is 1-5.
+
+            For other scenarios, the appropriate value should be provided by the
+            POC for that activity.
+          type: string
+          minLength: 1
+          maxLength: 100
+        test_card:
+          description: >-
+            The name or number of the test card.  In many cases, a scenario will
+            have only one test_card, but it is possible that there are multiple
+            test_cards for a given scenario.
+          minLength: 1
+          maxLength: 100
+          type: string
+        test_site:
+          description: Name of the test site
+          minLength: 1
+          maxLength: 100
+          type: string
+          enum:
+            - NV
+            - TX
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases, a
+            test_card may be only run once.  However, it is possible that a
+            test_card is run multiple times.
+          type: integer
+    MetaDataTestSiteTs:
+      type: object
+      required:
+        - test_site
+        - test_card
+        - test_run
+        - timestamp
+      properties:
+        test_site:
+          description: Name of the test site
+          minLength: 1
+          maxLength: 100
+          type: string
+        test_card:
+          description: >-
+            The name or number of the test card.  In many cases, a scenario will
+            have only one test_card, but it is possible that there are multiple
+            test_cards for a given scenario.
+          minLength: 1
+          maxLength: 100
+          type: string
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases, a
+            test_card may be only run once.  However, it is possible that a
+            test_card is run multiple times.
+          type: integer
+        timestamp:
+          $ref: '#/components/schemas/timestamp'
+    metaDataTs:
+      type: object
+      required:
+        - metaData
+        - timestamp
+      properties:
+        metaData:
+          $ref: '#/components/schemas/metaData'
+        timestamp:
+          $ref: '#/components/schemas/timestamp'
+    MetaDataDmpUssId:
+      description: Used to delete a DMP USS data model by UUID
+      type: object
+      required:
+        - uss_name
+        - id
+      properties:
+        uss_name:
+          type: string
+          description: >-
+            This is a unique string that identifies the USS that is supporting
+            this operation.  It is the same identifier used in the basic
+            authentication mechanism required to obtain a token from FIMS
+            (Flight Information Management System).  It is also the subject
+            claim that identifies the principal that is the subject of the JWT.
+          minLength: 1
+          maxLength: 1000
+        id:
+          $ref: '#/components/schemas/UUID'
+    metaDataDmpUss:
+      type: object
+      required:
+        - data_collection
+        - call_sign
+        - test_run
+        - uss_name
+      properties:
+        data_collection:
+          description: >-
+            If true these data are intended for Data Collection. Essentially
+            stating if particular data should be ignored during analysis. This
+            may be modified after submission in the case that there was an issue
+            during execution of the test/experiment that would invalidate the
+            data that were collected.
+          type: boolean
+        call_sign:
+          $ref: '#/components/schemas/CallSign'
+        uss_name:
+          type: string
+          description: >-
+            This is a unique string that identifies the USS that is supporting
+            this operation.  It is the same identifier used in the basic
+            authentication mechanism required to obtain a token from FIMS
+            (Flight Information Management System).  It is also the subject
+            claim that identifies the principal that is the subject of the JWT.
+          minLength: 1
+          maxLength: 1000
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases, a
+            test_card may be only run once.  However, it is possible that a
+            test_card is run multiple times.
+          type: integer
+    metaData:
+      type: object
+      required:
+        - data_collection
+        - scenario
+        - test_card
+        - call_sign
+        - test_type
+        - source
+        - location
+        - setting
+        - test_run
+        - uvin
+        - gufi
+        - uss_name
+      properties:
+        data_collection:
+          description: >-
+            If true these data are intended for Data Collection. Essentially
+            stating if particular data should be ignored during analysis. This
+            may be modified after submission in the case that there was an issue
+            during execution of the test/experiment that would invalidate the
+            data that were collected.
+          type: boolean
+        scenario:
+          description: >-
+            Proper formatting for scenarios is "TCL4_Sc#" where "#" is 1-5.
+
+            For other scenarios, the appropriate value should be provided by the
+            POC for that activity.
+          type: string
+          minLength: 1
+          maxLength: 100
+        test_card:
+          description: >-
+            The name or number of the test card.  In many cases, a scenario will
+            have only one test_card, but it is possible that there are multiple
+            test_cards for a given scenario.
+          minLength: 1
+          maxLength: 100
+          type: string
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases, a
+            test_card may be only run once.  However, it is possible that a
+            test_card is run multiple times.
+          type: integer
+        call_sign:
+          $ref: '#/components/schemas/CallSign'
+        test_type:
+          type: string
+          description: >-
+            Test type. Note a GROUND test may use a physical vehicle and a
+            FLIGHT test may use a simulated vehicle.  This is the reason for
+            separating test_type from source.
+          enum:
+            - GROUND
+            - FLIGHT
+        source:
+          type: string
+          description: >-
+            Hardware-in-the-loop (HWITL) flights refer to ground or airborne
+            flights. Software-in-the loop (SWITL) flights would be used to tag
+            flights do not use a physical vehicle, whether or not there is a
+            full-featured simulation involved.
+          enum:
+            - HWITL
+            - SWITL
+        location:
+          type: string
+          description: >-
+            Name of the testing location, such as NV, Moffett, Crows Landing,
+            etc.  The supplier of the metadata should use a constant value for
+            this field when the same location is used multiple times across data
+            submissions. E.g. "AMES" should always be "AMES" and not "ames" or
+            "Ames" or "NASA Ames" at other various times.
+          minLength: 1
+          maxLength: 100
+        setting:
+          type: string
+          description: >-
+            Test setting. Note that a LAB setting may involve HWITL source and
+            FIELD settings may involve SWITL sources.  LAB settings may have
+            GROUND or FLIGHT tests, same with FIELD settings.
+          enum:
+            - LAB
+            - FIELD
+        uvin:
+          $ref: '#/components/schemas/UUID'
+        gufi:
+          description: >-
+            GUFI of the operation that is the source of these data. Note that
+            this GUFI is repeated in the Position model, so they must match.  In
+            addition this GUFI will map to operational data in the UTM data
+            stores.  Thus the values for call_sign, test_card, test_run must
+            match the metadata supplied with that Operation's metadata. 
+            Mismatches will cause the data submission to be rejected.
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: >-
+            ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-[8-b][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$
+          example: 00000000-0000-4444-8888-FEEDDEADBEEF
+        submit_time:
+          $ref: '#/components/schemas/timestamp'
+        uss_name:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: >-
+            This is a unique string that identifies the USS that is supporting
+            this operation.  It is the same identifier used in the basic
+            authentication mechanism required to obtain a token from FIMS
+            (Flight Information Management System).  It is also the subject
+            claim that identifies the principal that is the subject of the JWT.
+    MetaDataCallSignRun:
+      type: object
+      required:
+        - call_sign
+        - uvin
+        - test_run
+      properties:
+        call_sign:
+          $ref: '#/components/schemas/CallSign'
+        uvin:
+          $ref: '#/components/schemas/UUID'
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases, a
+            test_card may be only run once.  However, it is possible that a
+            test_card is run multiple times.
+          type: integer
+    MetaDataCallSignRunTs:
+      type: object
+      required:
+        - uvin
+        - call_sign
+        - test_run
+        - timestamp
+      properties:
+        call_sign:
+          $ref: '#/components/schemas/CallSign'
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases, a
+            test_card may be only run once.  However, it is possible that a
+            test_card is run multiple times.
+          type: integer
+        uvin:
+          $ref: '#/components/schemas/UUID'
+        timestamp:
+          $ref: '#/components/schemas/timestamp'
+    MetaDataTsArray:
+      description: >-
+        Data model used to delete data by specifying a meta data data model and
+        an array of timestamps.
+      required:
+        - metaDataCallSignRun
+        - timestampArray
+      properties:
+        metaDataCallSignRun:
+          $ref: '#/components/schemas/MetaDataCallSignRun'
+        timestampArray:
+          description: An array of timestamps to delete
+          type: array
+          items:
+            $ref: '#/components/schemas/timestamp'
+          minItems: 1
+          maxItems: 10000
+    timestamp:
+      description: >-
+        Timestamps MUST follow the guidance set forth in RFC3339. This RFC
+        defines a profile for ISO8601 focused on interoperability of Internet
+        based systems.  This profile makes certain design decisions based on
+        reducing rarely used options, elimination of redundant information, and
+        overall simplicity. From these goals and insight from building
+        interoperable systems, RFC3339 provides a grammar for timestamps. 
+        Please see https://tools.ietf.org/html/rfc3339#section-5.6 for that
+        grammar and the sections preceding that grammar for more detailed
+        discussion. For UTM, we have attempted to reduce the grammar to a
+        regular expression, but this does not take into account all rules.  For
+        example, a valid timestamp should not allow 30 days in February, but
+        this is not in the regular expression.  Likewise, leap years are not
+        captured in the regular expression.  Thus it is possible for a timestamp
+        to satisfy this RE, but still not be valid and, thus, be rejected by
+        some components of UTM. Note that this UTM format specifies millisecond
+        precision for all time stamps.  This is why the min and max length are
+        fixed at 24. Note that this UTM format specifies UTC time indicated by a
+        trailing 'Z'. Note that this UTM format specifies date and time
+        separation with a 'T'.
+      type: string
+      format: date-time
+      minLength: 22
+      maxLength: 24
+      example: '2015-08-20T14:11:56.118Z'
+    UUID:
+      type: string
+      format: uuid
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      example: d7126818-d280-475f-aaee-c16e9c6f04e0
+      maxLength: 36
+      minLength: 36
+    LatLonAltTs:
+      description: Latitude and Longitude should have precision of 7 or more digits
+      type: object
+      required:
+        - latLonAlt
+        - ts
+      properties:
+        latLonAlt:
+          $ref: '#/components/schemas/LatLonAlt'
+        ts:
+          $ref: >-
+            https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/timestamp
+    LatLonAlt:
+      description: Latitude and Longitude should have precision of 7 or more digits
+      type: object
+      required:
+        - lat
+        - lon
+        - alt
+      properties:
+        lat:
+          $ref: '#/components/schemas/latitude'
+        lon:
+          $ref: '#/components/schemas/longitude'
+        alt:
+          $ref: '#/components/schemas/altitude'
+    CallSign:
+      type: string
+      minLength: 1
+      maxLength: 100
+      description: >-
+        A UTM TCL4 globally unique identifier that is associated with a
+        vehicle/operation Every operation requires a call_sign that is
+        pre-determined in the full test card description.
+    latitude:
+      description: >-
+        The numeric value of the latitude. Note that min and max values are
+        added as a sanity check.
+      type: number
+      format: double
+      minimum: -90
+      maximum: 90
+    longitude:
+      description: >-
+        The numeric value of the longitude. Note that min and max values are
+        added as a sanity check.
+      type: number
+      format: double
+      minimum: -180
+      maximum: 180
+    altitude:
+      description: >-
+        The numeric value of the altitude. Note that min and max values are
+        added as a sanity check. Units in WGS84 feet.
+      type: number
+      format: double
+      minimum: -8000
+      exclusiveMinimum: false
+      maximum: 100000
+      exclusiveMaximum: false
+    heading_deg:
+      description: Heading in the true North reference frame. (deg)
+      type: number
+      format: float
+      example: 15.85
+    groundCourse_deg:
+      description: >-
+        Ground Course (also known as track) in the true North reference frame.
+        (deg)
+      type: number
+      format: float
+      example: 15.85
+    groundSpeed_ftPerSec:
+      description: Ground Speed. (ft/s)
+      type: number
+      format: float
+      example: 15.85
+    hdop_nonDim:
+      description: >-
+        Number of GPS satellites to which the aircraft has line-of-sight to
+        (whether acquired or not by the GPS receiver).
+      type: number
+      format: double
+      example: 1.3
+    vdop_nonDim:
+      description: 'VDOP: Vertical dilution of precision of GPS constellation.'
+      type: number
+      format: double
+      example: 2.4
+    numGpsSat_nonDim:
+      description: Number of GPS satellites being tracked by GPS receiver.
+      type: integer
+      format: int32
+      minimum: 0
+      example: 5
+    SensorList:
+      description: >-
+        Refer to DMP for individual definitions and units of each of these
+        sensors.
+
+        *ALL* enums are required for UA. Provide
+        "MOTOR_#_CONTROL_THROTTLE_COMMAND_NONDIM" for each motor on UA (where
+        "#" is the motor number ranging from 1 to 16)
+
+        Required enums to submit for Crewed:
+          - LAT
+          - LON
+          - ALT
+          - HEADING_DEG
+          - HDOP_NONDIM
+          - VDOP_NONDIM
+          - NUM_GPS_SATELLITES_IN_VIEW_NONDIM
+          - NUM_GPS_SAT_NONDIM
+          - GROUND_COURSE_DEG
+          - GROUND_SPEED_FT_PER_SEC
+      type: string
+      enum:
+        - LAT
+        - LON
+        - ALT
+        - BAROMETRIC_ALTITUDE_FT
+        - EXTERNAL_TEMPERATURE_C
+        - RELATIVE_HUMIDITY_PRCT_NONDIM
+        - NAVIGATION_ACCURACY_CATEGORY_POSITION
+        - NAVIGATION_INTEGRITY_CATEGORY
+        - HEADING_DEG
+        - TRUE_AIRSPEED_FT_PER_SEC
+        - VERTICAL_SPEED_FT_PER_MIN
+        - YAW_DEG
+        - ROLLRATE_DEG_PER_SEC
+        - PITCH_RATE_DEG_PER_SEC
+        - YAW_RATE_DEG_PER_SEC
+        - VDOP_NONDIM
+        - BATTERY_VOLTAGE_V
+        - BATTERY_CURRENT_A
+        - BATTERY_TEMP_C
+        - NUM_GPS_SATELLITES_IN_VIEW_NONDIM
+        - MOTOR_10_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_11_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_12_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_13_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_14_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_15_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_16_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_1_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_2_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_3_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_4_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_5_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_6_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_7_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_8_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_9_CONTROL_THROTTLE_COMMAND_NONDIM
+        - NUM_GPS_SAT_NONDIM
+        - PITCH_DEG
+        - ROLL_DEG
+        - TARGET_AIRSPEED_FT_PER_SEC
+        - TARGET_GROUND_SPEED_FT_PER_SEC
+        - TARGET_WAYPOINT_ALT_FT
+        - TARGET_WAYPOINT_LAT_DEG
+        - TARGET_WAYPOINT_LON_DEG
+        - VEL_DOWN_FT_PER_SEC
+        - VEL_EAST_FT_PER_SEC
+        - VEL_NORTH_FT_PER_SEC
+        - VERTICAL_NAV_POSITION_ERROR_FT
+        - VERTICAL_NAV_VELOCITY_ERROR_FT_PER_SEC
+        - AIRCRAFT_AIRBORNE_STATE_NONDIM
+        - ABOVE_TERRAIN_ALTITUDE_FT
+        - GEOMETRIC_VERTICAL_ACCURACY_CATEGORY
+        - GROUND_COURSE_DEG
+        - GROUND_SPEED_FT_PER_SEC
+        - HDOP_NONDIM
+        - INDICATED_AIRSPEED_FT_PERSEC
+        - LATERAL_NAV_POSITION_ERROR_FT
+        - LATERAL_NAV_VELOCITY_ERROR_FT_PER_SEC
+        - CONNECTED_TO_RC_DJI
+        - SIG_STRENGTH_DJI
+        - CONNECTED_DJI
+        - HEARTBEAT_TIME_PX4
+        - DATA_RATE_PX4
+        - RATE_MULTIPLIER_PX4
+        - RATE_TX_PX4
+        - RATE_RX_PX4
+        - RSSI_PX4
+        - REMOTE_RSSI_PX4
+        - NOISE_PX4
+        - REMOTE_NOISE_PX4

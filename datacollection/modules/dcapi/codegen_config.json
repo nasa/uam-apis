@@ -1,0 +1,10 @@
+{
+  "library": "spring-boot",
+  "java8": "false",
+  "dateLibrary":"legacy",
+  "basePackage":"gov.nasa.uamdc",
+  "modelPackage": "gov.nasa.uamdc.model",
+  "apiPackage": "gov.nasa.uamdc.exapi",
+  "configPackage": "gov.nasa.uamdc",
+  "useBeanValidation":"true"
+}

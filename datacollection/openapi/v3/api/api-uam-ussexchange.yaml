@@ -1,0 +1,68 @@
+openapi: 3.0.0
+info:
+  description: >-
+    "UAM will require the submission of test data.  Some of these data are not
+    readily collected via UTM means. This file describes the endpoints used for
+    that data collection.  These models are referenced in the Data Management
+    Plan (DMP), so this API and associated models are referred to using the
+    acronym 'DMP'"
+  version: "1.0.0-oas3"
+  title: UAM Data Collection API-1
+  termsOfService: http://uam.arc.nasa.gov/terms
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://uam.arc.nasa.gov/'
+    email: shivanjli.sharma@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+paths:
+  /uss-exchange:
+    post:
+      summary: Upload an array of models
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.message
+      responses:
+        '200':
+          description: Data received. No content returned.
+          content:
+            application/json:
+              schema:
+                #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/utm-apis/openapi/openapi/uam-common-3.yaml#/components/schemas/UTMRestResponse
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          content:
+            application/json:
+              schema:
+                #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/utm-apis/openapi/openapi/uam-common-3.yaml#/components/schemas/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          content:
+            application/json:
+              schema:
+                #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/utm-apis/openapi/openapi/uam-common-3.yaml#/components/schemas/UTMRestResponse
+        '403':
+          description: >-
+            Forbidden. Do not retry with same access token. Reason not provided,
+            but do you have the right scopes? Does uss_name match the sub claim?
+          content:
+            application/json:
+              schema:
+                #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/utm-apis/openapi/openapi/uam-common-3.yaml#/components/schemas/UTMRestResponse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-data-collection.yaml#/definitions/USSExchange
+                #$ref: https://raw.githubusercontent.com/nasa/uam-dev/develop/openapi/v3/schema/domain-uss-exchange.yaml#/components/schemas/USSExchange
+        description: Upload an array of models
+        required: true
+servers:
+  - url: 'https://utmregistry.arc.nasa.gov./api/v4'
