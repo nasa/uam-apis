@@ -17,6 +17,7 @@ You can view the api documentation thus, where 101 and 84 is near the Dumbarton 
 
 
 ## build and view interface specification
+     cd modules/dcapi
     ./gradlew build && java -jar build/libs/*jar | tee dc.log
 
     curl -v -u user1:passwd1  http://localhost:10184/dc/api-docs | python -m json.tool
