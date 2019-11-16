@@ -74,8 +74,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-docs/release-v1.1.2/TCL4%20Data%20Management/utm-tcl4-dmp-con.yaml#/definitions/ConWxOperatingPointDataStation
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v2/schema/schema-uam-wx-data-station-2.0.yaml#/definitions/ConWxOperatingPointDataStation
       responses:
         '200':
           description: Data received. No content returned.
