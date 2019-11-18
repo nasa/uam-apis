@@ -22,7 +22,7 @@ paths:
             there are no paths, but domains do not contain paths.
 components:
   schemas:
-    UTMRestResponse:
+    UAMRestResponse:
       type: object
       required:
         - http_status_code
