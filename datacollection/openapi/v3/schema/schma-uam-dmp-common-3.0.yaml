@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   version: "1.0.0-oas3"
-  title: UTM DMP TCL4 Flight Data Specification
+  title: UAM DMP Flight Data Specification
   description: Data model for flight data submission.
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
@@ -22,6 +22,25 @@ paths:
             there are no paths, but domains do not contain paths.
 components:
   schemas:
+    UTMRestResponse:
+      type: object
+      required:
+        - http_status_code
+        - message
+      properties:
+        http_status_code:
+          type: integer
+          minimum: 100
+          exclusiveMinimum: false
+          maximum: 599
+          exclusiveMaximum: false
+        message:
+          type: string
+          maxLength: 500
+      example:
+        http_status_code: 400
+        message: Bad Request. Invalid JSON?
+  
     MetaDataTestSite:
       type: object
       required:
