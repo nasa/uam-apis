@@ -1289,22 +1289,9 @@ definitions:
         exclusiveMaximum: false
       discovery_reference:
         description: >-
-          An identifier that supplies information about the USS from the
-          discovery perspecitve.  This field is currently vague due to research
-          on the appropriate discovery approach.  It will be tightened when
-          an operational system decides on the approach to discovery.
-
-          For Gridded USS Discovery, this should be an x,y,z string where
-          x and y are the coords of the grid and z is the zoom level.  For
-          example:  "110,117,10"
-
-          For FIMS Discovery, this should be the uss_instance_id which is a
-          UUID.
-
-        type: string
-        minLength: 5
-        maxLength: 36
-        example: "110,117,10"
+          This property was used as an identifier that supplies information 
+          about the USS from the discovery perspecitve.  For Gridded USS discovery, 
+          this is no longer needed, thus is not used and can be ignored.
       gufi:
         description: The GUFI for the operation referenced in this message.  UUIDv4.
         type: string
