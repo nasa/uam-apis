@@ -1292,6 +1292,8 @@ definitions:
           This property was used as an identifier that supplies information 
           about the USS from the discovery perspecitve.  For Gridded USS discovery, 
           this is no longer needed, thus is not used and can be ignored.
+        type: string
+        maxLength: 36
       gufi:
         description: The GUFI for the operation referenced in this message.  UUIDv4.
         type: string
