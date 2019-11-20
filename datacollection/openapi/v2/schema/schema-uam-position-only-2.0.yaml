@@ -1,0 +1,414 @@
+info:
+  description: >-
+    This file contains the core UTM models as OpenAPI 2.0 compliant definitions.
+
+    Some key caveats when using/referencing this API:
+      1. The API on its own is insufficeint to develop a USS or other UTM
+      component.  For example, the USS Specification is needed to understand
+      how and when to use the various endpoints and provides more details on
+      security features that cannot be captured in the API docs.
+      2. There is not a unified time synchronization approach in UTM currently.
+      As such, times provided from one server MUST NOT be validated against each other.
+      For example, if a sending server states that a data element
+      was sent at 10:00:23, but the receiving server thinks it is currently
+      10:00:22, the receiving server must not reject the data submission.  As
+      we develop and roll out the time synchronization scheme for the USS
+      Network, we will add appropriate validation requirements to the API
+      documentation.
+      3. On the contrary, times must be validated for consistency within a
+      given data submission.  For example, if a server states that it sends
+      a data instance at 10:00:23 and one of the other data elements states
+      that a measurement was performed at 10:00:24, then the receiving server
+      must reject that data submission. Some of these checks are explictly
+      stated in the descriptions below. If you recognize any such checks that
+      are not documented, please submit an issue report on github.
+      4. These token SUBJECT validations are required for security.
+      For PUT Operation to modify an existing operation, the token SUBJECT claim upon modification MUST equal the token SUBJECT claim for the initial Operation.
+      For PUT Message associated with an Operation gufi, the token SUBJECT claim used for PUT Message MUST equal the token SUBJECT claim for the initial operation.
+        This check is performed if the initial operation exists, so as to not preclude receiving emergency messages.
+      For PUT Position associated with an Operation gufi, the token SUBJECT claim used for PUT Position MUST equal the token SUBJECT claim for the initial operation.
+        This check is performed only if the initial operation exists, so as to not preclude receiving emergency position reports.
+  version: v4
+  title: UTM models
+swagger: "2.0"
+
+paths:
+  '/no-paths':
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.
+
+definitions:
+
+ 
+
+
+  Altitude:
+    type: object
+    required:
+      - altitude_value
+      - vertical_reference
+      - units_of_measure
+    properties:
+      altitude_value:
+        description: >-
+          The numeric value of the altitude. Note that min and max values are
+          added as a sanity check. As use cases evolve and more options are
+          made available in terms of units of measure or reference systems,
+          these bounds should be re-evaluated.
+        type: number
+        format: double
+        minimum: -8000.0
+        exclusiveMinimum: false
+        maximum: 100000.0
+        exclusiveMaximum: false
+      vertical_reference:
+        description: >-
+         A code indicating the reference for a vertical distance. See AIXM 5.1
+         and FIXM 4.1.0.
+
+         Currently, UTM only allows WGS84 with no immediate plans to allow
+         other options. FIXM and AIXM allow for 'SFC' which is equivalent to
+         AGL.
+        externalDocs:
+          description: See FIXM 4.1.0 for further information.
+          url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#VerticalReferenceType
+        xml:
+          name: VerticalReferenceType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: false
+        type: string
+        enum:
+        - W84
+      units_of_measure:
+        description: >-
+          The reference quantities used to express the value of altitude. See
+          FIXM 4.1.
+
+          Currently, UTM only allows feet with no immediate plans to allow
+          other options.  FIXM allows for feet or meters.
+        externalDocs:
+           description: See FIXM 4.1.0 for further information.
+           url: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomHeightType
+        xml:
+          name: UomHeightType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: false
+        type: string
+        enum:
+        - FT
+      source:
+        description: >-
+          Experimental field for testing and discussion to determine
+          applicability.
+        type: string
+        enum:
+        - ONBOARD_SENSOR
+        - OTHER
+
+
+  Position:
+    type: object
+    required:
+      - enroute_positions_id
+      - altitude_gps
+      - altitude_num_gps_satellites
+      - gufi
+      - hdop_gps
+      - location
+      - time_measured
+      - time_sent
+      - track_bearing
+      - track_bearing_reference
+      - track_bearing_uom
+      - track_ground_speed
+      - track_ground_speed_units
+      - uss_name
+      - vdop_gps
+    properties:
+      altitude_gps:
+        description: >-
+          The altitude as measured via a GPS device on the aircraft.
+        $ref: '#/definitions/Altitude'
+        x-utm-data-accessibility: OPERATIONAL
+      altitude_num_gps_satellites:
+        type: integer
+        format: int32
+        description: Number of satellites used in calculating the altitude.
+        minimum: 0
+        exclusiveMinimum: false
+        x-utm-data-accessibility: SAFETY
+      comments:
+        type: string
+        minLength: 0
+        maxLength: 1000
+        x-utm-data-accessibility: OPERATIONAL
+      enroute_positions_id:
+        description: >-
+          Each position will be assigned a UUIDv4 by the USS managing the
+          referenced operation.  Any system recieving this position object MUST
+          NOT modify this identifier.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        x-utm-data-accessibility: PUBLIC
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      gufi:
+        description: >-
+          Each operation has an GUFI assigned upon submission. Required upon
+          PUTting a new position. It is a JSON string, but conforms to the UUID
+          version 4 specification
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        x-utm-data-accessibility: PUBLIC
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      hdop_gps:
+        type: number
+        format: double
+        description: The horizontal dilution of precision as provided by the onboard GPS.
+        minimum: 0
+        x-utm-data-accessibility: SAFETY
+      location:
+        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        x-utm-data-accessibility: PUBLIC
+      time_measured:
+        description: >-
+          The time the position was measured. Likely the time provided with the
+          GPS position reading.
+          Position time_measured < time_sent MUST be true.
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
+        x-utm-data-accessibility: PUBLIC
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
+      time_sent:
+        description: >-
+          The time the position was sent by the USS as measured by that USS's
+          system time.
+          Position time_measured <= time_sent MUST be true.
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
+        x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
+      track_bearing:
+        type: number
+        format: double
+        description: >-
+          The direction of travel relative to track_bearing_reference in
+          degrees.
+          Position track_bearing value MUST be >= 0.0 and < 360.0.
+          Note that FIXM allows for
+          the value of 360.0, while UTM does not.  The reason is for clarity by
+          not allowing two numbers (0.0 and 360.0) to represent the same
+          measurement.
+        minimum: 0
+        exclusiveMinimum: false
+        maximum: 360
+        exclusiveMaximum: true
+        x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#BearingType
+        xml:
+          name: BearingType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: false
+        x-utm-data-accessibility: OPERATIONAL
+      track_bearing_reference:
+        type: string
+        enum:
+          - TRUE_NORTH
+          - MAGNETIC_NORTH
+        default: TRUE_NORTH
+        description: >-
+          A code indicating the direction of the zero bearing.
+
+          TRUE_NORTH  This value indicates that the direction is relative to True North.
+          MAGNETIC_NORTH  This value indicates that the direction is relative to Magnetic North.
+
+          This field is equivalent to
+        x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#BearingType
+        xml:
+          name: ZeroBearingTypeType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: true
+        x-utm-data-accessibility: OPERATIONAL
+      track_bearing_uom:
+        type: string
+        enum:
+          - DEG
+        description: >-
+          The reference quantities used to express the value of angles.
+          [ISO 19103, chapter 6.5.7.10]
+
+          As in FIXM, only a single option is provided (degrees). Including this
+          field allows for clarity in the data provided and allows for the
+          potential of other units of measure in the future.
+        x-utm-fixm-reference: https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomAngleType
+        xml:
+          name: UomAngleType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: true
+        x-utm-data-accessibility: OPERATIONAL
+      track_ground_speed:
+        type: number
+        format: double
+        description: >-
+          Ground speed int the direction of travel, in units as specifed by track_ground_speed_units.
+          Position track_ground_speed MUST be >= 0.0.
+        minimum: 0
+        exclusiveMinimum: false
+        x-utm-data-accessibility: OPERATIONAL
+      track_ground_speed_units:
+        type: string
+        enum:
+          - KT
+        description: >-
+           The reference quantities used to express the value of ground speed as
+           provided in track_ground_speed.
+
+           KT: Knots.
+
+           FIXM allows KT (knots) and KM_H (kilometers per hour) but we only
+           allow the KT choice.
+        x-utm-fixm-reference: https://www.fixm.aero/releases/US_Ext-4.2.0/doc/schema_documentation_us_extension/UnitsOfMeasure_xsd.html#UomGroundSpeedType
+        xml:
+          name: UomGroundSpeedType
+          namespace: https://www.fixm.aero/nas/4.1
+          prefix: fb
+          attribute: true
+        x-utm-data-accessibility: OPERATIONAL
+      uss_name:
+        description: >-
+          The name of the entity providing UAS Support Services. Populated by
+          the service discovery system based on credential information provided
+          by the USS. The maximum and minimum character length is based on a
+          usable domain name, and considering the maximum in RFC-1035.
+        type: string
+        minLength: 4
+        maxLength: 250
+        x-utm-data-accessibility: OPERATIONAL
+      discovery_reference:
+        description: >-
+          An identifier that supplies information about the USS from the
+          discovery perspecitve.  This field is currently vague due to research
+          on the appropriate discovery approach.  It will be tightened when
+          an operational system decides on the approach to discovery.
+
+          For Gridded USS Discovery, this should be an x,y,z string where
+          x and y are the coords of the grid and z is the zoom level.  For
+          example:  "110,117,10"
+
+          For FIMS Discovery, this should be the uss_instance_id which is a
+          UUID.
+
+        type: string
+        minLength: 5
+        maxLength: 36
+        example: "110,117,10"
+        x-utm-data-accessibility: OPERATIONAL
+      vdop_gps:
+        type: number
+        format: double
+        description: The vertical dilution of precision as provided by the onboard GPS.
+        minimum: 0
+        x-utm-data-accessibility: SAFETY
+    example:
+      altitude_gps:
+        altitude_value: 1239.77
+        vertical_reference: "W84"
+        units_of_measure: "FT"
+        source: "ONBOARD_SENSOR"
+      altitude_num_gps_satellites: 22
+      enroute_positions_id: "d10cd900-086f-43c7-9d6c-BAADCAFEF00D"
+      gufi: "00000000-0000-4444-8888-000000000000"
+      hdop_gps: 1.117
+      time_measured: "2016-10-04T09:15:40.727Z"
+      time_sent: "2016-10-04T09:15:40.727Z"
+      track_bearing: 33.44
+      track_bearing_reference: "MAGNETIC_NORTH"
+      track_bearing_uom: "DEG"
+      track_ground_speed: 33.33
+      track_ground_speed_units: "KT"
+      uss_name: "uss.provider321.net"
+      vdop_gps: 0.932
+      location:
+        type: Point
+        coordinates:
+          - -122.05635935068132
+          - 37.41436490284069
+
+parameters:
+  fieldsParam:
+    name: fields
+    in: query
+    description: >-
+      The specific subset of fields to return. Comma separated list. Default
+      will be all fields when this parameter is not provided in the query.
+      Duplicate field names not allowed and server may reject query if
+      duplicates are provided. If field names are provided that are not part of
+      the request model, the server may either reject the query or ignore the
+      improper fields. Maximum 20 field values supported. If more than 20 fields
+      are required, then this parameter should not be used so that all fields
+      are returned.
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: csv
+    maxItems: 20
+    minItems: 1
+    uniqueItems: true
+  sortParam:
+    name: sort
+    in: query
+    description: >-
+      A valid field name to use for sorting records. If multiple fields are
+      provided, the sorting is based on the ordered priority of that list.
+    required: false
+    default: time_submitted
+    type: string
+  sortIncreasingParam:
+    name: sort_increasing
+    in: query
+    description: >-
+      For optional use with the 'sort' parameter. If 'sort' is not provided,
+      then 'sort_increasing' will be ignored. Boolean value.  If multiple fields
+      are provided in the 'sort' parameter, this boolean value will apply to all
+      of them.
+    required: false
+    default: true
+    type: boolean
+  limitParam:
+    name: limit
+    in: query
+    description: The maximum number or records to return.
+    required: false
+    type: integer
+    default: 10
+    format: int32
+    maximum: 100
+    minimum: 1
+  offsetParam:
+    name: offset
+    in: query
+    description: The index from which to begin the list of returned records.
+    required: false
+    type: integer
+    default: 0
+    format: int32
