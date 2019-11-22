@@ -67,7 +67,7 @@ definitions:
           - APPROVED
           - REJECTED
       organization:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
       contacts:
         description: >-
           List of individual(s) at the applying serving as primary contacts for
@@ -76,7 +76,7 @@ definitions:
         minItems: 1
         maxItems: 5
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
       date_of_validity:
         description: >-
           Date (inclusive) that any operations under this Performance Authorization
@@ -213,9 +213,9 @@ definitions:
           - REMOTE_SENSING
           - OTHER
       minimum_operation_altitude:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
       maximum_operation_altitude:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
       minimum_aircraft_weight_lbs:
         type: number
         format: float
@@ -296,16 +296,16 @@ definitions:
         description: >-
           The minimum altitude for this operation in this operation volume.
           The following MUST hold: min_altitude.altitude_value < max_altitude.altitude_value
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
       max_altitude:
         description: >-
           The maximum altitude for this operation in this operation volume.
           The following MUST hold: min_altitude.altitude_value < max_altitude.altitude_value
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Altitude'
       operation_geography:
         description:
           The polygon encompassing the operational area.
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
 
   StandardProvisions:
     description: >-

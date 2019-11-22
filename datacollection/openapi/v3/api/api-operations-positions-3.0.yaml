@@ -45,33 +45,33 @@ paths:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
           description: Forbidden. Data and or token do not meet security requirements.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       requestBody:
         content:
           application/json:
             schema:
-              $ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Position
               #$ref: ../schema/domain-operations-positions-common-debug-2.0.yaml#/definitions/Position
               #$ref: ../schema/domain-operations-positions-common-3.0.yaml#components/schemas/Position
         required: true
@@ -237,21 +237,21 @@ paths:
                 type: array
                 items:
                   $ref: >-
-                    https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+                    https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
           description: >-
             Forbidden. Do not retry with same access token. Reason not provided,
@@ -260,21 +260,21 @@ paths:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '423':
           description: The requested data are in a transition state. Please retry request.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
   '/operations/{gufi}':
     get:
       tags:
@@ -299,7 +299,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
                 #$ref: ../schema/domain-operations-positions-common-debug-2.0.yaml#/definitions/Operation
                 #$ref: ../schema/domain-operations-positions-common-3.0.yaml#components/schemas/Operation
         '400':
@@ -308,14 +308,14 @@ paths:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
           description: >-
             Forbidden. Do not retry with same access token. Reason not provided,
@@ -324,21 +324,21 @@ paths:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '404':
           description: Resource not found.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '423':
           description: The requested data are in a transition state. Please retry request.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
     put:
       tags:
         - A. Required Endpoints
@@ -365,21 +365,21 @@ paths:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '403':
           description: Forbidden. Data and or token do not meet security requirements.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '409':
           description: >-
             Conflict. This USS has an Operation that intersects. 'messages'
@@ -389,20 +389,20 @@ paths:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           content:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
       requestBody:
         content:
           application/json:
             schema:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+                https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
         description: bbb
         required: true
 servers:
