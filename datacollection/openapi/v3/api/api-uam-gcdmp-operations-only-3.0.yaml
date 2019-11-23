@@ -330,7 +330,7 @@ paths:
           application/json:
             schema:
               #$ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-operations-only-2.0.yaml#/definitions/Operation
-              $ref: https://github.com/nasa/uam-apis/blob/GCATI-176/datacollection/openapi/v2/schema/schema-uam-gcdmp-operations-2.0.yaml#/definitions/Operation
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/GCATI-176/datacollection/openapi/v2/schema/schema-uam-gcdmp-operations-2.0.yaml#/definitions/op_body
         
         description:  Operational plan
           
