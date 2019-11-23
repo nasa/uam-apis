@@ -232,7 +232,7 @@ paths:
             application/json:
               schema:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+                  https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           content:
@@ -329,8 +329,7 @@ paths:
         content:
           application/json:
             schema:
-              #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
-              $ref: shema-uam-operations-only-2.0.yaml#/definitions/Operation
+              $ref:https://raw.githubusercontent.com/nasa/uam-apis/GCATI-174/datacollection/openapi/v2/schema/schema-uam-operations-only-2.0.yaml#/definitions/Operation
         description:  Operational plan
           
         required: true
