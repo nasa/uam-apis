@@ -329,7 +329,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref:https://raw.githubusercontent.com/nasa/uam-apis/GCATI-174/datacollection/openapi/v2/schema/schema-uam-operations-only-2.0.yaml#/definitions/Operation
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/GCATI-174/datacollection/openapi/v2/schema/schema-uam-operations-only-2.0.yaml#/definitions/Operation
         description:  Operational plan
           
         required: true
