@@ -25,19 +25,19 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v3/schema/schma-uam-dmp-common-3.0.yaml#/components/schemas/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/schma-uam-dmp-common-3.0.yaml#/components/schemas/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           content:
             '*/*':
               schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v3/schema/schma-uam-dmp-common-3.0.yaml#/components/schemas/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/schma-uam-dmp-common-3.0.yaml#/components/schemas/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           content:
             '*/*':
               schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v3/schema/schma-uam-dmp-common-3.0.yaml#/components/schemas/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/schma-uam-dmp-common-3.0.yaml#/components/schemas/UTMRestResponse
         '403':
           description: >-
             Forbidden. Do not retry with same access token. Reason not provided,
@@ -45,7 +45,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v3/schema/schma-uam-dmp-common-3.0.yaml#/components/schemas/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/schma-uam-dmp-common-3.0.yaml#/components/schemas/UTMRestResponse
       requestBody:
         content:
           application/json:
@@ -53,7 +53,7 @@ paths:
               type: array
               items:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v2/schema/schema-uam-wx-data-station-2.0.yaml#/definitions/ConWxOperatingPointDataStation
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-wx-data-station-2.0.yaml#/definitions/ConWxOperatingPointDataStation
         description: Array of ConWxOperatingPointDataStation models
         required: true
 servers:
