@@ -29,21 +29,21 @@ paths:
           content:
             application/json:
               schema:
-                #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                #$ref: https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
                 $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-uss-exchange-3.0.yaml#/components/schemas/UAMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           content:
             application/json:
               schema:
-                #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                #$ref: https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
                 $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-uss-exchange-3.0.yaml#/components/schemas/UAMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           content:
             application/json:
               schema:
-                #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                #$ref: https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
                 $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-uss-exchange-3.0.yaml#/components/schemas/UAMRestResponse
         '403':
           description: >-
@@ -52,7 +52,7 @@ paths:
           content:
             application/json:
               schema:
-                #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
+                #$ref: https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/UTMRestResponse
                 $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-uss-exchange-3.0.yaml#/components/schemas/UAMRestResponse
       requestBody:
         content:

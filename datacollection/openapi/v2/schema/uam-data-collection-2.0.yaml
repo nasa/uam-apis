@@ -44,7 +44,7 @@ definitions:
           Contact information of the reporter. Reference utm-commons for model.
           This information is for contacting the reporter when follow-up is
           needed, and should not be sent to NASA
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/PersonOrOrganization'
       report_id:
         description: |-
           A UUID assigned by the reporting USS for this instance of
@@ -93,7 +93,7 @@ definitions:
           active contingency plan id for the operation. Reporter MUST see the prompt text before inputting data.
         x-utm-offnominal-prompt: >-
           Activated contingency plan id, if any. When more than one are used, please state so in the reporter narrative section.
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/ContingencyPlan'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/ContingencyPlan'
       role_responsibility:
         description: >-
           Reporter role and responsibility. Reporter MUST see the prompt text

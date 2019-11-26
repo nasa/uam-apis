@@ -239,7 +239,7 @@ components:
           x-utm-data-accessibility: SAFETY
         location:
           $ref: >-
-            https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point
+            https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point
           x-utm-data-accessibility: PUBLIC
         time_measured:
           description: >-

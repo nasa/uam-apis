@@ -323,10 +323,10 @@ definitions:
           - ROGUE
         x-utm-data-accessibility: OPERATIONAL
       controller_location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       gcs_location:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       contingency_plans:
         description: >-
@@ -430,7 +430,7 @@ definitions:
         x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
-          https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
+          https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-metadata.yaml#/definitions/EventMetadata
         x-utm-data-accessibility: OPERATIONAL
   
   OperationVolume:
@@ -530,7 +530,7 @@ definitions:
         $ref: '#/definitions/Altitude'
         x-utm-data-accessibility: OPERATIONAL
       operation_geography:
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
         x-utm-data-accessibility: OPERATIONAL
       beyond_visual_line_of_sight:
         description: >-
@@ -926,7 +926,7 @@ definitions:
 
           If LOITERING, this is the polygon the UA will stay within at the
           loiter_altitude.
-        $ref: 'https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
         x-utm-data-accessibility: OPERATIONAL
       loiter_altitude:
         description: >-

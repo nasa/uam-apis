@@ -67,7 +67,7 @@ paths:
         content:
           application/json:
             schema:
-              #$ref: https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
+              #$ref: https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Position
               #$ref: https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v2/schema/schema-uam-position-only-2.0.yaml#/definitions/Position
               $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-position-only-2.0.yaml#/definitions/Position
 

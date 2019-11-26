@@ -37,7 +37,7 @@ channels:
       message:
         payload:
           $ref: >-
-            https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Operation
+            https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Operation
 
   '/operator/v4/ws/positions':
     x-service-name: positions
@@ -48,7 +48,7 @@ channels:
       message:
         payload:
           $ref: >-
-            https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Position
+            https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-commons.yaml#/definitions/Position
 
   '/operator/v4/ws/messages':
     x-service-name: positions
@@ -59,4 +59,4 @@ channels:
       message:
         payload:
           $ref: >-
-            https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/nuss-operator-api/swagger.yaml#/definitions/Message
+            https://raw.githubusercontent.com/nasa/uam-apis/master/nuss-operator-api/swagger.yaml#/definitions/Message
