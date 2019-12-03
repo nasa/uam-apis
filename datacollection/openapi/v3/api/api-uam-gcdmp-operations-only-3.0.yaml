@@ -285,8 +285,19 @@ paths:
           schema:
             type: string
       responses:
-        '204':
-          description: Operation data received. No content returned.
+        '200':
+          description: an existing position resource updated
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '201':
+          description: Position data created
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           content:

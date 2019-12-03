@@ -9,8 +9,8 @@ info:
   termsOfService: http://uam.arc.nasa.gov/terms/
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
-    url: 'https://utm.arc.nasa.gov/'
-    email: joseph.rios@nasa.gov
+    url: 'https://uam.arc.nasa.gov/'
+    email: shivanjli.sharma@nasa.gov
   license:
     name: NASA Open Source Agreement
     url: 'https://ti.arc.nasa.gov/opensource/nosa/'
@@ -37,8 +37,19 @@ paths:
           schema:
             type: string
       responses:
-        '204':
-          description: Position data recieved. No content returned.
+        '200':
+          description: an existing position resource updated
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '201':
+          description: Position data created
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           content:
@@ -57,6 +68,13 @@ paths:
             application/json:
               schema:
                 $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '409':
+          description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
         '429':
           description: Too many recent requests from you. Wait to make further queries.
           content:
