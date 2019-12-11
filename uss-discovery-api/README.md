@@ -1,2 +1,0 @@
-# USS Discovery 
-
