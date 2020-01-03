@@ -14,6 +14,19 @@ info:
   license:
     name: NASA Open Source Agreement
     url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+servers:
+  - url: 'https://uss.defined.url/'
+components:
+  securitySchemes:
+    Authorizer:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      x-amazon-apigateway-authtype: "cognito_user_pools"
+      x-amazon-apigateway-authorizer:
+        providerARNs:
+        - "arn:aws:cognito-idp:us-east-1:966029537804:userpool/us-east-1_TJmR9ZRxM"
+        type: "cognito_user_pools"
 paths:
   '/positions/{position_id}':
     put:
@@ -86,9 +99,17 @@ paths:
           application/json:
             schema:
               $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-gcdmp-positions-2.0.yaml#/definitions/pos
-              
+
 
         required: true
-
-servers:
-  - url: 'https://uss.defined.url/'
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseTemplates:
+      application/json: "{\n  \"error\": {\n    \"code\": 400,\n    \"stage\": \"\
+        $context.stage\",\n    \"request\": \"$context.requestId\",\n    \"message\"\
+        : \"$context.error.validationErrorString\"\n  }\n}\n"
+x-amazon-apigateway-request-validators:
+  Validate body, query string parameters, and headers:
+    validateRequestParameters: true
+    validateRequestBody: true
