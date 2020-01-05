@@ -1,11 +1,9 @@
 openapi: 3.0.0
 info:
   description: >-
-    This API describes the minimum interface that a USS must implement to  be
-    part of the USS Network.  This API allows for communication of data  between
-    USS Instances and from FIMS to a USS regarding new USS Instances.
+    Provider of Services to UAM (PSU)
   version: "1.0.0-oas3"
-  title: USS Required API
+  title: PSU-API
   termsOfService: http://uam.arc.nasa.gov/terms/
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
@@ -30,6 +28,7 @@ components:
 paths:
   '/positions/{position_id}':
     put:
+      x-amazon-apigateway-request-validator: all
       tags:
         - A. Required Endpoints
       summary: Share position information.
@@ -109,7 +108,8 @@ x-amazon-apigateway-gateway-responses:
       application/json: "{\n  \"error\": {\n    \"code\": 400,\n    \"stage\": \"\
         $context.stage\",\n    \"request\": \"$context.requestId\",\n    \"message\"\
         : \"$context.error.validationErrorString\"\n  }\n}\n"
+x-amazon-apigateway-request-validator: all
 x-amazon-apigateway-request-validators:
-  Validate body, query string parameters, and headers:
-    validateRequestParameters: true
+  all:
     validateRequestBody: true
+    validateRequestParameters: true
