@@ -43,7 +43,7 @@ paths:
 
 definitions:
   
-  pos:
+  op:
     type: object
     required:
       - pos_body
