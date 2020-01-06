@@ -87,7 +87,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-gcdmp-operations-2.0.yaml#/definitions/op
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-gcdmp-operations-2.0.yaml#/definitions/op
         
         description:  Operational plan
           
