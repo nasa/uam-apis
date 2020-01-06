@@ -46,10 +46,10 @@ definitions:
   op:
     type: object
     required:
-      - pos_body
-      - pos_metadata
+      - op_body
+      - op_metadata
     properties:
-      pos_body:
-        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/Position'
-      pos_metadata:
+      op_body:
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/Operation'
+      op_metadata:
         type: string
