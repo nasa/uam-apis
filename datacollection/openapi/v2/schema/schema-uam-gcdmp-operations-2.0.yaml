@@ -43,13 +43,13 @@ paths:
 
 definitions:
   
-  op:
+  pos:
     type: object
     required:
-      - op_body
-      - op_metadata
+      - pos_body
+      - pos_metadata
     properties:
-      op_body:
-        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/Operation'
-      op_metadata:
+      pos_body:
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/Position'
+      pos_metadata:
         type: string
