@@ -50,6 +50,6 @@ definitions:
       - op_metadata
     properties:
       op_body:
-        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/Operation'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/Operation'
       op_metadata:
         type: string
