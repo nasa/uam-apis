@@ -535,7 +535,16 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point'
         x-utm-data-accessibility: SAFETY
       
-      
+      negotiation_agreements:
+        description: >-
+          An array of NegotiationAgreements to which the USS supporting this
+          operation (in conjunction with the operator) has agreed.
+        type: object
+        maxItems: 250
+        minItems: 1
+        items:
+          $ref: '#/definitions/NegotiationAgreement'
+        x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
           1. PART_107
