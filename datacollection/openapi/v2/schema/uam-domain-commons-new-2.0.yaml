@@ -543,7 +543,7 @@ definitions:
         maxItems: 250
         minItems: 1
         items:
-          $ref: '/definitions/NegotiationAgreement'
+          $ref: '#/definitions/NegotiationAgreement'
         x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
