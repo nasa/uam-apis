@@ -543,7 +543,7 @@ definitions:
         maxItems: 250
         minItems: 1
         items:
-          $ref: '#/definitions/NegotiationAgreement'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/NegotiationAgreement'
         x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
