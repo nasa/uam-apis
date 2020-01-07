@@ -539,7 +539,7 @@ definitions:
         description: >-
           An array of NegotiationAgreements to which the USS supporting this
           operation (in conjunction with the operator) has agreed.
-        type: array  
+        type: object
         items:
           $ref: '#/definitions/SimpleItem'
         x-utm-data-accessibility: OPERATIONAL
