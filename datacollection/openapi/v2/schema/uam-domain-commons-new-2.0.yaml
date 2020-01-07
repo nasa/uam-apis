@@ -1641,6 +1641,18 @@ definitions:
         minLength: 36
         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+      negotiation_id:
+        description: >-
+          An identifier held constant across multiple message_ids.  This value
+          represents a single negotiation between two USSs for two specific
+          operations.  Will be same value as used in NegotiationMessage for this
+          particular negotiation between these operations.
+        type: string
+        format: uuid
+        maxLength: 36
+        minLength: 36
+        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
 
         
       discovery_reference:
