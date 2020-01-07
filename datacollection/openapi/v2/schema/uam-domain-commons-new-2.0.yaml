@@ -540,8 +540,6 @@ definitions:
           An array of NegotiationAgreements to which the USS supporting this
           operation (in conjunction with the operator) has agreed.
         type: array
-        maxItems: 250
-        minItems: 1
         items:
           $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/NegotiationAgreement'
         x-utm-data-accessibility: OPERATIONAL
