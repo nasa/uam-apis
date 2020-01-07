@@ -1742,7 +1742,6 @@ definitions:
           This field is required for security and data quality purposes.
         type: string
         minLength: 4
-        exclusiveMinimum: false
         maxLength: 250
         exclusiveMaximum: false
       uss_name_of_originator:
