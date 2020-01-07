@@ -541,7 +541,7 @@ definitions:
           operation (in conjunction with the operator) has agreed.
         type: array
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/SimpleItem'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/NegotiationAgreement'
         x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
@@ -1615,10 +1615,6 @@ definitions:
         units_of_measure: "FT"
       reason: A UA leaving defined volume
 
-  SimpleItem:
-    properties:
-      message_id:
-        type: string
   NegotiationAgreement:
     required:
       - message_id
