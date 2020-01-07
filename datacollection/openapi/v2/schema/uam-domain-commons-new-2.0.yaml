@@ -541,7 +541,8 @@ definitions:
           operation (in conjunction with the operator) has agreed.
         type: array  
         items:
-          $ref: '#/definitions/NegotiationAgreement'
+          #$ref: '#/definitions/NegotiationAgreement'
+          $ref: '#/definitions/SimpleItem'
         x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
@@ -1615,6 +1616,10 @@ definitions:
         units_of_measure: "FT"
       reason: A UA leaving defined volume
 
+  SimpleItem:
+    properties:
+      message_id:
+        type: string
   NegotiationAgreement:
     required:
       - message_id
