@@ -541,7 +541,7 @@ definitions:
           operation (in conjunction with the operator) has agreed.
         type: array
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/SimpleItem'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/NegotiationAgreement'
         x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
@@ -1641,75 +1641,8 @@ definitions:
         minLength: 36
         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      negotiation_id:
-        description: >-
-          An identifier held constant across multiple message_ids.  This value
-          represents a single negotiation between two USSs for two specific
-          operations.  Will be same value as used in NegotiationMessage for this
-          particular negotiation between these operations.
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      uss_name:
-        description: >-
-          A name identifying the originator of this message. The maximum and
-          minimum character length is
-          based on a usable domain name, and considering the maximum in RFC-1035.
-          NegotiationAgreement uss_name MUST be a duplicate of either uss_name_of_originator or uss_name_of_receiver.
-          This field is required for security and data quality purposes.
-        type: string
-        minLength: 4
-        exclusiveMinimum: false
-        maxLength: 250
-        exclusiveMaximum: false
-      uss_name_of_originator:
-        description: >-
-          Name of the USS originating the negotation.
-          NegotiationAgreement uss_name_of_originator MUST be the uss_name as known by FIMS authorization server.
-          The maximum and minimum character length is based on a usable domain
-          name, and considering the maximum in RFC-1035.
-        type: string
-        minLength: 4
-        maxLength: 250
-      uss_name_of_receiver:
-        description: >-
-          Name of the USS receiving the original negotiation request.
-          NegotiationAgreement uss_name_of_receiver MUST be the uss_name as known by FIMS authorization server.
-          The maximum and minimum character length is based on a usable domain
-          name, and considering the maximum in RFC-1035.
-        type: string
-        minLength: 4
-        maxLength: 250
-      gufi_originator:
-        description: >-
-          The GUFI of the relevant operation of the originating USS. Note that
-          the origin and receiver roles are strictly dependent on which USS is
-          generating this message. May be empty in the case of ATC communication
-          to USS via FIMS.
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      gufi_receiver:
-        description: >
-          The GUFI of the relevant operation of the receiving USS. Note that
-          the origin and receiver roles are strictly dependent on which USS is
-          generating this message. May be empty in the case of ATC communication
-          to USS via FIMS.
-        type: string
-        format: uuid
-        maxLength: 36
-        minLength: 36
-        pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-        example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      free_text:
-        type: string
-        maxLength: 1000
+
+        
       discovery_reference:
         description: >-
           An identifier that supplies information about the USS from the
