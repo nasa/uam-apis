@@ -1,11 +1,9 @@
 openapi: 3.0.0
 info:
   description: >-
-    This API describes the minimum interface that a USS must implement to  be
-    part of the USS Network.  This API allows for communication of data  between
-    USS Instances and from FIMS to a USS regarding new USS Instances.
+    Provider of Services to UAM (PSU) 
   version: "1.0.0-oas3"
-  title: USS Required API
+  title: Operation API
   termsOfService: http://uarm.arc.nasa.gov
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
