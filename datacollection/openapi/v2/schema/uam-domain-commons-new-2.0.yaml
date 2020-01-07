@@ -1647,17 +1647,7 @@ definitions:
         minLength: 36
         pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
         example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-      uss_name:
-        description: >-
-          A name identifying the originator of this message. The maximum and
-          minimum character length is
-          based on a usable domain name, and considering the maximum in RFC-1035.
-          NegotiationAgreement uss_name MUST be a duplicate of either uss_name_of_originator or uss_name_of_receiver.
-          This field is required for security and data quality purposes.
-        type: string
-        minLength: 4
-        maxLength: 250
-        exclusiveMaximum: false
+      
       uss_name_of_originator:
         description: >-
           Name of the USS originating the negotation.
