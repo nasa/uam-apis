@@ -539,9 +539,7 @@ definitions:
         description: >-
           An array of NegotiationAgreements to which the USS supporting this
           operation (in conjunction with the operator) has agreed.
-        type: object
-        maxItems: 250
-        minItems: 1
+        type: array
         items:
           $ref: '#/definitions/NegotiationAgreement'
         x-utm-data-accessibility: OPERATIONAL
