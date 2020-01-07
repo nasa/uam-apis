@@ -621,7 +621,7 @@ definitions:
         maxItems: 250
         minItems: 1
         items:
-          $ref: '#/definitions/OperationVolume'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/OperationVolume'
         x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
@@ -695,9 +695,7 @@ definitions:
           a larger set of integers available and to space them by large offsets.
         type: integer
         minimum: -1000
-        exclusiveMinimum: false
         maximum: 99999
-        exclusiveMaximum: false
         x-utm-data-accessibility: OPERATIONAL
       volume_type:
         description: >-
