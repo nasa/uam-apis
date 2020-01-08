@@ -50,7 +50,7 @@ paths:
               type: array
               items:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-wx-data-station-2.0.yaml#/definitions/ConWxOperatingPointDataStation
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-wx-data-station-2.0.yaml#/definitions/ConWxOperatingPointDataStation
         description: Array of ConWxOperatingPointDataStation models
         required: true
 servers:

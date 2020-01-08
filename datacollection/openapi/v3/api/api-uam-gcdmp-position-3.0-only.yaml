@@ -97,7 +97,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-gcdmp-positions-2.0.yaml#/definitions/pos
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-gcdmp-positions-2.0.yaml#/definitions/pos
 
 
         required: true
