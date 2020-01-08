@@ -22,19 +22,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           content:
             application/json:
               schema:
-                $ref: $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
         '401':
           description: Invalid or missing access_token provided.
           content:
             application/json:
               schema:
-                $ref: $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
         '403':
           description: >-
             Forbidden. Do not retry with same access token. Reason not provided,
@@ -42,7 +42,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
       requestBody:
         content:
           application/json:
