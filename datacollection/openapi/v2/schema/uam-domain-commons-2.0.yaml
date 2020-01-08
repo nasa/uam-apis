@@ -480,7 +480,7 @@ definitions:
         maxItems: 1000
         minItems: 1
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/UasRegistration'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UasRegistration'
         x-utm-data-accessibility: SAFETY
       airspace_authorization:
         type: string
@@ -561,7 +561,7 @@ definitions:
         maxItems: 250
         minItems: 1
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/ContingencyPlan'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/ContingencyPlan'
         x-utm-data-accessibility: OPERATIONAL
       negotiation_agreements:
         description: >-
@@ -571,7 +571,7 @@ definitions:
         maxItems: 250
         minItems: 1
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/NegotiationAgreement'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/NegotiationAgreement'
         x-utm-data-accessibility: OPERATIONAL
       faa_rule:
         description: |-
@@ -649,7 +649,7 @@ definitions:
         maxItems: 250
         minItems: 1
         items:
-          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-new-2.0.yaml#/definitions/OperationVolume'
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/OperationVolume'
         x-utm-data-accessibility: OPERATIONAL
       metadata:
         $ref: >-
