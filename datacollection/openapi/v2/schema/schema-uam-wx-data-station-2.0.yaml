@@ -66,9 +66,9 @@ definitions:
       - "location"
     properties:
       metaDataTestSite:
-         $ref:  https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v2/schema/schema-uam-dmp-common-2.0.yaml#/definitions/MetaDataTestSite
+         $ref:  https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-dmp-common-2.0.yaml#/definitions/MetaDataTestSite
       timestamp:
-         $ref:  https://raw.githubusercontent.com/nasa/uam-apis/develop/datacollection/openapi/v2/schema/schema-uam-dmp-common-2.0.yaml#/definitions/timestamp
+         $ref:  https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-dmp-common-2.0.yaml#/definitions/timestamp
       temperature:
         description: >-
           Degrees Fahrenheit
