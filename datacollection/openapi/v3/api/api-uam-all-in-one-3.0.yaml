@@ -97,7 +97,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-gcdmp-positions-2.0.yaml#/definitions/pos
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-gcdmp-positions-2.0.yaml#/definitions/pos
 
 
         required: true
@@ -172,7 +172,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-gcdmp-operations-2.0.yaml#/definitions/op
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-gcdmp-operations-2.0.yaml#/definitions/op
         
         description:  Operational plan
           
@@ -214,7 +214,7 @@ paths:
               type: array
               items:
                 $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-wx-data-station-2.0.yaml#/definitions/ConWxOperatingPointDataStation
+                  https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-wx-data-station-2.0.yaml#/definitions/ConWxOperatingPointDataStation
         description: Array of ConWxOperatingPointDataStation models
         required: true
   
