@@ -217,6 +217,71 @@ paths:
                   https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/schema-uam-wx-data-station-2.0.yaml#/definitions/ConWxOperatingPointDataStation
         description: Array of ConWxOperatingPointDataStation models
         required: true
+  '/utm_messages/{message_id}':
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: Allow other authorized entities to send a message to this USS.
+      description: >-
+        Allows another USS or FIMS to PUT a message to this USS. For validation
+        purposes:
+          {message_id} in path == UTMMessage.message_id of body data
+      security:
+        - ussapi_security:
+            - utm.nasa.gov_write.message
+      parameters:
+        - in: path
+          name: message_id
+          required: true
+          description: PUT by message_id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: an existing position resource updated
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '201':
+          description: Position data created
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '204':
+          description: UTMMessage received. No content returned.
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/UTMMessage
+        description: The UTMMessage being sent
+        required: true
   
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
