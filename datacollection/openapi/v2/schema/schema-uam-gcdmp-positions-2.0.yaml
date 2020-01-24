@@ -50,6 +50,6 @@ definitions:
       - pos_metadata
     properties:
       pos_body:
-        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/Position'
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/GCATI-220/datacollection/openapi/v2/schema/uam-domain-commons-2.0.yaml#/definitions/Position'
       pos_metadata:
         type: string
