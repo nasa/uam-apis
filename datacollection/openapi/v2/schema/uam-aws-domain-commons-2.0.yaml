@@ -1493,7 +1493,6 @@ definitions:
       - uss_name
       - type
       - cause
-      - geography
       - min_altitude
       - max_altitude
       - effective_time_begin
@@ -1613,8 +1612,6 @@ definitions:
           - SAFETY
           - MUNICIPALITY
           - OTHER
-      geography:
-        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
       effective_time_begin:
         description: >-
           The time that the UVR will begin to be in effect.
