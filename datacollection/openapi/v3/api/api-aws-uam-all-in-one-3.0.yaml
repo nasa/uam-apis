@@ -3,7 +3,7 @@ info:
   description: >-
     Provider of Services to UAM (PSU)
   version: "1.0.0-oas3"
-  title: PSU-API
+  title: GC-UAM-DATA-COLLECTION-API
   termsOfService: http://uam.arc.nasa.gov/terms/
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
@@ -38,9 +38,7 @@ paths:
 
         For validation purposes:
           {position_id} in path == Position.enroute_positions_id of body data
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.operation
+
       parameters:
         - in: path
           name: position_id
@@ -226,9 +224,7 @@ paths:
         Allows another USS or FIMS to PUT a message to this USS. For validation
         purposes:
           {message_id} in path == UTMMessage.message_id of body data
-      security:
-        - ussapi_security:
-            - utm.nasa.gov_write.message
+
       parameters:
         - in: path
           name: message_id
@@ -281,6 +277,63 @@ paths:
             schema:
               $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMMessage
         description: The UTMMessage being sent
+        required: true
+  '/uvrs/{message_id}':
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: >-
+        Allow UAS Volume Reservations (UVRs) to be submitted from authorized
+        entities.
+      description: >-
+        Allow UAS Volume Reservations (UVRs) to be submitted from authorized
+        entities. For validation purposes:
+          {message_id} in path == UASVolumeReservation.message_id of body data
+      parameters:
+        - in: path
+          name: message_id
+          required: true
+          description: PUT by message_id
+          schema:
+            type: string
+      responses:
+        '204':
+          description: UVR data received. No content returned.
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '403':
+          description: Forbidden. Data and or token do not meet security requirements.
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UASVolumeReservation
+        description: The UASVolumeReservation being sent
         required: true
   
 x-amazon-apigateway-gateway-responses:
