@@ -1507,7 +1507,6 @@ definitions:
           RFC-1035.
         type: string
         minLength: 4
-        exclusiveMinimum: false
         maxLength: 250
         exclusiveMaximum: false
       type:
