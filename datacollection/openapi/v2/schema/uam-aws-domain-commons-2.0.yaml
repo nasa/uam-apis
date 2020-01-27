@@ -1493,11 +1493,7 @@ definitions:
       - uss_name
       - type
       - cause
-      - min_altitude
-      - max_altitude
-      - effective_time_begin
-      - effective_time_end
-      - permitted_uas
+
     properties:
       message_id:
         type: string
@@ -1612,50 +1608,6 @@ definitions:
           - SAFETY
           - MUNICIPALITY
           - OTHER
-      effective_time_begin:
-        description: >-
-          The time that the UVR will begin to be in effect.
-          UASVolumeReservation MUST satisfy effective_time_begin < effective_time_end.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        x-utm-data-accessibility: OPERATIONAL
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
-        example: '2015-08-20T14:11:56.118Z'
-      effective_time_end:
-        description: >-
-          The time that the UVR will cease to be in effect.
-          UASVolumeReservation MUST satisfy effective_time_begin < effective_time_end.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        x-utm-data-accessibility: OPERATIONAL
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
-        example: '2015-08-20T14:11:56.118Z'
-      actual_time_end:
-        description: >-
-          Time that the constaint actually ceased being in effect. This
-          value is likely used when a UVR ends early, but is not
-          required.
-        type: string
-        format: date-time
-        minLength: 24
-        maxLength: 24
-        x-utm-data-accessibility: OPERATIONAL
-        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
-        example: '2015-08-20T14:11:56.118Z'
-      min_altitude:
-        description: >-
-          The minimum altitude of the UVR.
-          UVR MUST satisfy min_altitude.altitude_value < max_altitude.altitude_value.
-        $ref: '#/definitions/Altitude'
-      max_altitude:
-        description: >-
-          The maximum altitude of the UVR.
-          UVR MUST satisfy min_altitude.altitude_value < max_altitude.altitude_value.
-        $ref: '#/definitions/Altitude'
       reason:
         description: The reason for the UVR. Meant for human consumption.
         type: string
