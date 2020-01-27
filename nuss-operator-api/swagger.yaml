@@ -8,39 +8,33 @@ info:
   For GETTERs with query parameters, the parameter names must be lower case, however
   string parmeter values are case insensitive.
 
-
   Example of the GET-list using time window:
 
       /messages/?sent_time_after=2038-01-01T07:58:20.000Z&sent_time_before=2038-01-01T07:58:30.000Z
-
-
-  (todo) GET-list for Positions is not yet in.
-
-  (todo) GET-list returns an empty list if nothing is found.
-  GET-by-gufi returns 404 if the item is not found."
+  "
 host: "some.host"
 basePath: "/operator"
 tags:
 
 - name: "Message Data Types"
-  description: "Intent, Inform, Alert and Free message schemas"
+  description: "Intent, Inform, Alert and Free Message schemas"
 - name: "Operations"
-  description: "Add and view operations"
-- name: "Positions, Messages"
-  description: "Manage flying operations"
+  description: "Add and view Operations"
+- name: "Messages"
+  description: "Add and view Operator Messages"
+- name: "Positions"
+  description: "Add and view Positions"
 - name: "Geography Data Types"
   description: "Geographies"
-- name: "Subscription Points"
-  description: "Subscribe to notifications"
 schemes:
 - "https"
-paths:
 
+paths:
   /messages:
     get:
       tags:
-      - "Positions, Messages"
-      summary: "Get Operator Messages."
+      - "Messages"
+      summary: "GET Operator Messages"
       description: "You can specify ASC and DESC (or asc/desc) as follows:
         /operator/messages?sort=DESC
         You can specify a time window as follows:
@@ -98,8 +92,8 @@ paths:
           description: "Forbidden"
     post:
       tags:
-      - "Positions, Messages"
-      summary: "add Message for a Gufi"
+      - "Messages"
+      summary: "POST Message for a GUFI"
       consumes:
       - "application/json"
       produces:
@@ -123,8 +117,8 @@ paths:
   /messages/{gufi}:
     get:
       tags:
-      - "Positions, Messages"
-      summary: "get Messages for a Gufi"
+      - "Messages"
+      summary: "GET Messages by GUFI"
       consumes:
       - "application/json"
       produces:
@@ -168,7 +162,7 @@ paths:
     get:
       tags:
       - "Operations"
-      summary: "GET operation list with query"
+      summary: "GET Operations"
       consumes:
       - "application/json"
       produces:
@@ -280,7 +274,7 @@ paths:
     post:
       tags:
       - "Operations"
-      summary: "add an operation"
+      summary: "POST a new Operation"
       consumes:
       - "application/json"
       produces:
@@ -307,7 +301,7 @@ paths:
     get:
       tags:
       - "Operations"
-      summary: "view operation by GUFI"
+      summary: "GET Operation by GUFI"
       consumes:
       - "application/json"
       produces:
@@ -333,7 +327,7 @@ paths:
     put:
       tags:
       - "Operations"
-      summary: "modify an operation"
+      summary: "Modify an Operation"
       consumes:
       - "application/json"
       produces:
@@ -366,7 +360,7 @@ paths:
   /positions:
     get:
       tags:
-      - "Positions, Messages"
+      - "Positions"
       summary: "GET Positions"
       description: "You can specify ASC and DESC (or asc/desc) as follows: https://host.nasa.gov/nuss/operator/positions?sort=DESC
         You can also specify limit and offset.
@@ -408,8 +402,8 @@ paths:
           description: "Forbidden"
     post:
       tags:
-      - "Positions, Messages"
-      summary: "addPosition"
+      - "Positions"
+      summary: "POST Position"
       consumes:
       - "application/json"
       produces:
@@ -435,8 +429,8 @@ paths:
   /positions/{gufi}:
     get:
       tags:
-      - "Positions, Messages"
-      summary: "getPositionsForGufi"
+      - "Positions"
+      summary: "GET Positions by GUFI"
       consumes:
       - "application/json"
       produces:
@@ -530,7 +524,6 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-
   /schema/InformMsgType:
     get:
       tags:
@@ -576,8 +569,6 @@ paths:
           description: "Forbidden"
         404:
           description: "Not Found"
-
-
   /schema/Point:
     get:
       tags:
@@ -621,22 +612,6 @@ paths:
         404:
           description: "Not Found"
 
-  /user/<username>/utmMsg/v1:
-    get:
-      tags:
-      - "Subscription Points"
-      summary: "Subscribe to event queue"
-      description: "Provides InformMessage data related to the specified operator's\
-        \ operations. For example, after an operator POSTs an operation to the /operations\
-        \  endpoint, that operator will receive InformMessage ACCEPTED or REJECTED.\
-        \  The connection URL is wss://{host}/uss/NotificationProvider/utm\n"
-      parameters: []
-      responses:
-        410:
-          description: "WRONG_PROTOCOL - A RESTful call was made to this endpoint\
-            \ but this is not a REST endpoint."
-
-
 definitions:
   Violation:
     type: "object"
@@ -671,7 +646,6 @@ definitions:
         description: "Set for OperationViolations, VolumeViolations, RogueViolations.\
           \ The ordinal of the volume that is violating this constraint, eg, the proposed\
           \ flight's second volume violated this constraint"
-
   InformMsgType:
     type: "object"
     required:
@@ -1035,7 +1009,6 @@ definitions:
             items:
               type: "number"
               format: "double"
-
   AlertMsgType:
     type: "object"
     required:
@@ -1193,7 +1166,6 @@ definitions:
         format: "double"
         description: "The vertical dilultion of precision as provided by the onboard\
           \ GPS."
-
   OperationVolume:
     type: "object"
     required:
