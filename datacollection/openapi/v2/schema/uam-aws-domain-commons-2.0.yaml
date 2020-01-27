@@ -32,14 +32,6 @@ info:
   title: UTM models
 swagger: "2.0"
 
-paths:
-  '/no-paths':
-    put:
-      responses:
-        '410':
-          description: >-
-            Gone. Not implemented. Will not be implemented. Path included for
-            proper use by automated tooling.
 
 
 definitions:
@@ -1491,6 +1483,14 @@ definitions:
     required:
       - message_id
       - uss_name
+      - type
+      - cause
+      - geography
+      - min_altitude
+      - max_altitude
+      - effective_time_begin
+      - effective_time_end
+      - permitted_uas
     properties:
       message_id:
         type: string
@@ -1508,7 +1508,148 @@ definitions:
         type: string
         minLength: 4
         maxLength: 250
-        exclusiveMaximum: false
+      type:
+        description: >-
+          The type of UVR.  It is expected this list will grow as use cases are
+          identified and cataloged.
+
+          Currently there is only a differentiation between a dynamic restriction
+          and a static advisory.  There is no official guidance on the difference
+          as of today.  Roughly, the assumption is that static advisories would
+          have a longer lead time and/or longer duration than a dynamic restriction.
+        type: string
+        enum:
+          - DYNAMIC_RESTRICTION
+          - STATIC_ADVISORY
+      permitted_uas:
+        description: >-
+          The types of UAS operations that are permitted within the bound of
+          the UVR. When used in conjunction with permitted_gufis, the
+          filters are an 'OR' relationship. Any operation that matches either
+          filter is allowed within the bounds of the UVR.  This list of
+          permitted_uas types is not to be considered a final version.  It is
+          provided to initiate discussion of how the filter should be defined.
+
+          Duplicate strings not allowed in this array.
+
+          If NOT_SET is included, then no other strings allowed in the array.
+        type: array
+        items:
+          type: string
+          enum:
+            - NOT_SET
+            - PUBLIC_SAFETY
+            - SECURITY
+            - NEWS_GATHERING
+            - VLOS
+            - SUPPORT_LEVEL
+            - PART_107
+            - PART_101E
+            - PART_107X
+            - RADIO_LINE_OF_SIGHT
+        minItems: 1
+        maxItems: 8
+      required_support:
+        description: >-
+          If the permitted_uas array contains "SUPPORT_LEVEL" this
+          required_support field is required.  This field describes the support
+          required by an operation to continue to operate within or to enter
+          the UVR.  By remaining within or entering a UVR with the listed
+          required support, the operator is attesting that it is using all
+          elements listed in the required support array.
+
+          To restate:  the array of values in this field is an AND relationship,
+          thus all elements must be utilized by each operation within such a
+          UVR.  If an operator does not have every support elements listed,
+          then its operation must exit or avoid entry to the UVR.
+        type: array
+        items:
+          type: string
+          enum:
+            - V2V
+            - DAA
+            - ADSB_OUT
+            - ADSB_IN
+            - CONSPICUITY
+            - ENHANCED_NAVIGATION
+            - ENHANCED_SAFE_LANDING
+      permitted_gufis:
+        description: >-
+          The specific UAS operations that are permitted within the bounds of
+          the UVR.  When used in conjunction with permitted_uas, the
+          filters are an 'OR' relationship. Any operation that matches either
+          filter is allowed within the bounds of the UVR.  The protocol
+          for adding the appropriate GUFIs to this array needs to be discussed.
+          This may be a chicken/egg problem that will have to be worked through.
+        type: array
+        items:
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
+          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        minItems: 0
+        maxItems: 100
+        example:
+          - '00000000-0000-4444-8888-FEEDDEADFFFF'
+      cause:
+        description: >-
+          The cause for the UVR.
+        type: string
+        enum:
+          - WEATHER
+          - ATC
+          - SECURITY
+          - SAFETY
+          - MUNICIPALITY
+          - OTHER
+      geography:
+        $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Polygon'
+      effective_time_begin:
+        description: >-
+          The time that the UVR will begin to be in effect.
+          UASVolumeReservation MUST satisfy effective_time_begin < effective_time_end.
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
+        x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
+      effective_time_end:
+        description: >-
+          The time that the UVR will cease to be in effect.
+          UASVolumeReservation MUST satisfy effective_time_begin < effective_time_end.
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
+        x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
+      actual_time_end:
+        description: >-
+          Time that the constaint actually ceased being in effect. This
+          value is likely used when a UVR ends early, but is not
+          required.
+        type: string
+        format: date-time
+        minLength: 24
+        maxLength: 24
+        x-utm-data-accessibility: OPERATIONAL
+        pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+        example: '2015-08-20T14:11:56.118Z'
+      min_altitude:
+        description: >-
+          The minimum altitude of the UVR.
+          UVR MUST satisfy min_altitude.altitude_value < max_altitude.altitude_value.
+        $ref: '#/definitions/Altitude'
+      max_altitude:
+        description: >-
+          The maximum altitude of the UVR.
+          UVR MUST satisfy min_altitude.altitude_value < max_altitude.altitude_value.
+        $ref: '#/definitions/Altitude'
       reason:
         description: The reason for the UVR. Meant for human consumption.
         type: string
