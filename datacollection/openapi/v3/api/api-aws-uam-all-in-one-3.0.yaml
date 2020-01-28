@@ -12,8 +12,10 @@ info:
   license:
     name: NASA Open Source Agreement
     url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+
 servers:
   - url: 'https://uss.defined.url/'
+
 components:
   securitySchemes:
     Authorizer:
@@ -25,6 +27,7 @@ components:
         providerARNs:
         - "arn:aws:cognito-idp:us-east-1:966029537804:userpool/us-east-1_TJmR9ZRxM"
         type: "cognito_user_pools"
+
 paths:
   '/positions/{position_id}':
     put:
@@ -46,51 +49,23 @@ paths:
           description: PUT by enroute_positions_id
           schema:
             type: string
+
       responses:
         '200':
-          description: an existing position resource updated
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r200'
         '201':
-          description: Position data created
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
-
+          $ref: '#/components/responses/r201'
         '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r400'
         '401':
-          description: Invalid or missing access_token provided.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r401'
         '403':
-          description: Forbidden. Data and or token do not meet security requirements.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r403'
         '409':
-          description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
-
+          $ref: '#/components/responses/r409'
         '429':
-          description: Too many recent requests from you. Wait to make further queries.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r429'
+
       requestBody:
         content:
           application/json:
@@ -114,58 +89,23 @@ paths:
           description: PUT operation by gufi
           schema:
             type: string
+
       responses:
         '200':
-          description: an existing position resource updated
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r200'
         '201':
-          description: Position data created
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
-
+          $ref: '#/components/responses/r201'
         '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r400'
         '401':
-          description: Invalid or missing access_token provided.
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r401'
         '403':
-          description: Forbidden. Data and or token do not meet security requirements.
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r403'
         '409':
-          description: >-
-            Conflict. This USS has an Operation that intersects. 'messages'
-            field in UTMRestResponse will contain list of GUFIs of length at
-            least 1 indicating the conflicting Operation(s).
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r409'
         '429':
-          description: Too many recent requests from you. Wait to make further queries.
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r429'
+
       requestBody:
         content:
           application/json:
@@ -178,33 +118,17 @@ paths:
   /con-wx-operating-point-data-station:
     post:
       summary: Upload array of ConWxOperatingPointDataStation models.
+
       responses:
         '200':
-          description: Data received. No content returned.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r200'
         '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r400'
         '401':
-          description: Invalid or missing access_token provided.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r401'
         '403':
-          description: >-
-            Forbidden. Do not retry with same access token. Reason not provided,
-            but do you have the right scopes? Does uss_name match the sub claim?
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r403'
+
       requestBody:
         content:
           application/json:
@@ -232,45 +156,23 @@ paths:
           description: PUT by message_id
           schema:
             type: string
+
       responses:
         '200':
-          description: an existing position resource updated
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r200'
         '201':
-          description: Position data created
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r201'
         '204':
-          description: UTMMessage received. No content returned.
+          $ref: '#/components/responses/r204'
         '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r400'
         '401':
-          description: Invalid or missing access_token provided.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r401'
         '403':
-          description: Forbidden. Data and or token do not meet security requirements.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r403'
         '429':
-          description: Too many recent requests from you. Wait to make further queries.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r429'
+
       requestBody:
         content:
           application/json:
@@ -296,37 +198,19 @@ paths:
           description: PUT by message_id
           schema:
             type: string
+
       responses:
         '204':
-          description: UVR data received. No content returned.
+          $ref: '#/components/responses/r204'
         '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r400'
         '401':
-          description: Invalid or missing access_token provided.
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r401'
         '403':
-          description: Forbidden. Data and or token do not meet security requirements.
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r403'
         '429':
-          description: Too many recent requests from you. Wait to make further queries.
-          content:
-            application/json:
-              schema:
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r429'
+
       requestBody:
         content:
           application/json:
@@ -341,38 +225,27 @@ paths:
       summary: Upload array of ADS-B models.
       x-amazon-apigateway-request-validator: 
           all
+
       responses:
         '200':
-          description: Data received. No content returned.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
         '400':
-          description: Bad request. Typically validation error. Fix your request and retry.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r400'
         '401':
-          description: Invalid or missing access_token provided.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r400'
         '403':
-          description: >-
-            Forbidden. Do not retry with same access token.
-          content:
-            application/json:
-              schema:
-                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+          $ref: '#/components/responses/r403'
+        '429':
+          $ref: '#/components/responses/r429'
+
       requestBody:
         content:
           application/json:
             schema:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/uam-apis/gcati213/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSB
+                https://raw.githubusercontent.com/nasa/uam-apis/gcati213/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSBArray
         description: Array of ADSB objects
         required: true
   
@@ -388,3 +261,66 @@ x-amazon-apigateway-request-validators:
   all:
     validateRequestBody: true
     validateRequestParameters: true
+
+components:
+  responses:
+
+    'r200':
+      description: an existing position resource updated
+      content:
+        application/json:
+          schema:
+            $ref: 
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
+    'r201':
+      description: Position data created
+      content:
+        application/json:
+          schema:
+            $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
+    'r204':
+      description: no response supplied
+
+    'r400':
+      description: Bad request. Typically validation error. Fix your request and retry.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
+    'r401':
+      description: Invalid or missing access_token provided.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
+    'r403':
+      description: >-
+        Forbidden. Do not retry with same access token. Reason not provided,
+        but do you have the right scopes? Does uss_name match the sub claim?
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
+    'r409':
+      description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
+      content:
+        application/json:
+          schema:
+            $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+
+    'r429':
+      description: Too many recent requests from you. Wait to make further queries.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+    

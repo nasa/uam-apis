@@ -26,16 +26,16 @@ definitions:
           type: string
           pattern: '^[0-9a-fA-F]{6}$'
           description: ICAO of the aircraft
+        trafficSource: 
+          type: integer
+          enum: [0,1]
+          description: 0 = 1090, 1 = UAT
         latDD:
           type: number
           description: Latitude expressed as decimal degrees
         lonDD: 
           type: number
           description: Longitude expressed as decimal degrees
-        trafficSource: 
-          type: integer
-          enum: [0,1]
-          description: 0 = 1090, 1 = UAT
         altitudeMM: 
           type: number
           description: Geometric altitude or barometric pressure altitudein millimeters
