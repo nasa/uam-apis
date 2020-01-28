@@ -335,6 +335,46 @@ paths:
                 https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UASVolumeReservation
         description: The UASVolumeReservation being sent
         required: true
+
+  '/adsb':
+    post:
+      summary: Upload array of ADS-B models.
+      x-amazon-apigateway-request-validator: 
+          all
+      responses:
+        '200':
+          description: Data received. No content returned.
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '401':
+          description: Invalid or missing access_token provided.
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+        '403':
+          description: >-
+            Forbidden. Do not retry with same access token.
+          content:
+            application/json:
+              schema:
+                $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/uam-apis/gcati213/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSB
+        description: Array of ADSB objects
+        required: true
   
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
