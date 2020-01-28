@@ -14,83 +14,89 @@ definitions:
         aircraft:
           type: array
           items: 
-            type: object
-            required: 
-              - icaoAddress
-            properties:
-              icaoAddress: 
-                type: string
-                pattern: '^[0-9a-fA-F]{6}$'
-                description: ICAO of the aircraft
-              latDD:
-                type: number
-                description: Latitude expressed as decimal degrees
-              lonDD: 
-                type: number
-                description: Longitude expressed as decimal degrees
-              trafficSource: 
-                type: integer
-                enum: [0,1]
-                description: 0 = 1090, 1 = UAT
-              altitudeMM: 
-                type: number
-                description: Geometric altitude or barometric pressure altitudein millimeters
-              headingDE2: 
-                type: number
-                description: Course over ground in centi-degrees
-              horVelocityCMS: 
-                type: integer
-                description: Horizontal velocity in centimeters/sec
-              verVelocityCMS: 
-                type: integer
-                description: Vertical velocity in centimeters/sec with positive being up
-              squawk: 
-                type: number
-                pattern: '^[0-7]{4}$'
-                description: Squawk code
-              altitudeType: 
-                type: number
-                enum: [0,1]
-                description: Altitude Source, 0 is pressure, 1 is geometric
-              callsign:
-                type: string
-                pattern: '^[A-Z0-9]+ *$'
-              emitterType:
-                type: number
-                enum: [0-21,22-39]
-                description: Category type of the emitter
-                  0  = No aircraft type information 
-                  1  = Light (ICAO) < 15,500 lbs 
-                  2  = Small -15,500 to 75,000 lbs 
-                  3  = Large -75,000 to 300,000 lbs 
-                  4  = High Vortex Large (e.g., B757) 
-                  5  = Heavy (ICAO) -> 300,000 lbs 
-                  6  = Highly Maneuverable > 5G acceleration and high speed 
-                  7  = Rotorcraft
-                  8  = (Unassigned)
-                  9  = Glider/sailplane
-                  10 = Lighter than air 
-                  11 = Parachutist/sky diver
-                  12 = Ultralight/hang glider/paraglider
-                  13 = (Unassigned)
-                  14 = Unmanned aerial vehicle
-                  15 = Space/trans-atmospheric vehicle
-                  16 = (Unassigned)
-                  17 = Surface vehicle-emergency vehicle
-                  18 = Surface vehicle-service vehicle
-                  19 = Point Obstacle (includes tethered balloons)
-                  20 = Cluster Obstacle
-                  21 = Line Obstacle
-                  22-39 = (Reserved)
-              utcSync:
-                type: number
-                description: UTC time flag
-              timeStamp:
-                $ref:  
-                  'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-dmp-common-2.0.yaml#/definitions/timestamp'
-              detail:
-                $ref: '#/definitions/Detail'
-          
+            $ref:
+              'https://raw.githubusercontent.com/nasa/uam-apis/gcati213/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSB'
+
+    ADSB:
+      type: object
+      required: 
+        - icaoAddress
+      properties:
+        icaoAddress: 
+          type: string
+          pattern: '^[0-9a-fA-F]{6}$'
+          description: ICAO of the aircraft
+        latDD:
+          type: number
+          description: Latitude expressed as decimal degrees
+        lonDD: 
+          type: number
+          description: Longitude expressed as decimal degrees
+        trafficSource: 
+          type: integer
+          enum: [0,1]
+          description: 0 = 1090, 1 = UAT
+        altitudeMM: 
+          type: number
+          description: Geometric altitude or barometric pressure altitudein millimeters
+        headingDE2: 
+          type: number
+          description: Course over ground in centi-degrees
+        horVelocityCMS: 
+          type: integer
+          description: Horizontal velocity in centimeters/sec
+        verVelocityCMS: 
+          type: integer
+          description: Vertical velocity in centimeters/sec with positive being up
+        squawk: 
+          type: number
+          pattern: '^[0-7]{4}$'
+          description: Squawk code
+        altitudeType: 
+          type: number
+          enum: [0,1]
+          description: Altitude Source, 0 is pressure, 1 is geometric
+        callsign:
+          type: string
+          pattern: '^[A-Z0-9]+ *$'
+        emitterType:
+          type: number
+          enum: [0-21,22-39]
+          description: Category type of the emitter
+            0  = No aircraft type information 
+            1  = Light (ICAO) < 15,500 lbs 
+            2  = Small -15,500 to 75,000 lbs 
+            3  = Large -75,000 to 300,000 lbs 
+            4  = High Vortex Large (e.g., B757) 
+            5  = Heavy (ICAO) -> 300,000 lbs 
+            6  = Highly Maneuverable > 5G acceleration and high speed 
+            7  = Rotorcraft
+            8  = (Unassigned)
+            9  = Glider/sailplane
+            10 = Lighter than air 
+            11 = Parachutist/sky diver
+            12 = Ultralight/hang glider/paraglider
+            13 = (Unassigned)
+            14 = Unmanned aerial vehicle
+            15 = Space/trans-atmospheric vehicle
+            16 = (Unassigned)
+            17 = Surface vehicle-emergency vehicle
+            18 = Surface vehicle-service vehicle
+            19 = Point Obstacle (includes tethered balloons)
+            20 = Cluster Obstacle
+            21 = Line Obstacle
+            22-39 = (Reserved)
+        utcSync:
+          type: number
+          description: UTC time flag
+        timeStamp:
+          $ref:  
+            'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-dmp-common-2.0.yaml#/definitions/timestamp'
+        detail:
+          $ref: 
+            'https://raw.githubusercontent.com/nasa/uam-apis/gcati213/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/Detail'
+
+
     Detail:
       type: object
       nullable: true
