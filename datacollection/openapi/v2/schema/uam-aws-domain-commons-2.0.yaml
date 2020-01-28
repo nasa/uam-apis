@@ -32,7 +32,14 @@ info:
   title: UTM models
 swagger: "2.0"
 
-
+paths:
+  '/no-paths':
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.
 
 definitions:
   timestamp:
