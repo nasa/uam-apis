@@ -286,7 +286,6 @@ definitions:
         type: number
         format: double
         minimum: -8000.0
-        exclusiveMinimum: false
         maximum: 100000.0
         exclusiveMaximum: false
       vertical_reference:
@@ -1039,7 +1038,6 @@ definitions:
         format: int32
         description: Number of satellites used in calculating the altitude.
         minimum: 0
-        exclusiveMinimum: false
         x-utm-data-accessibility: SAFETY
       comments:
         type: string
