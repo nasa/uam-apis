@@ -16,18 +16,6 @@ info:
 servers:
   - url: 'https://uss.defined.url/'
 
-components:
-  securitySchemes:
-    Authorizer:
-      type: "apiKey"
-      name: "Authorization"
-      in: "header"
-      x-amazon-apigateway-authtype: "cognito_user_pools"
-      x-amazon-apigateway-authorizer:
-        providerARNs:
-        - "arn:aws:cognito-idp:us-east-1:966029537804:userpool/us-east-1_TJmR9ZRxM"
-        type: "cognito_user_pools"
-
 paths:
   '/positions/{position_id}':
     put:
@@ -177,7 +165,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMMessage
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-aws-uam-gcdmp-utmmessage-2.0.yaml#/definitions/utmmsg
         description: The UTMMessage being sent
         required: true
   '/uvrs/{message_id}':
@@ -263,6 +251,16 @@ x-amazon-apigateway-request-validators:
     validateRequestParameters: true
 
 components:
+  securitySchemes:
+    Authorizer:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      x-amazon-apigateway-authtype: "cognito_user_pools"
+      x-amazon-apigateway-authorizer:
+        providerARNs:
+        - "arn:aws:cognito-idp:us-east-1:966029537804:userpool/us-east-1_TJmR9ZRxM"
+        type: "cognito_user_pools"
   responses:
 
     'r200':
