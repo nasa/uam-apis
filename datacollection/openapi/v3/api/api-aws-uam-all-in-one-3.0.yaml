@@ -204,7 +204,7 @@ paths:
           application/json:
             schema:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UASVolumeReservation
+                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-aws-uam-gcdmp-uvr-2.0.yaml#/definitions/uvr
         description: The UASVolumeReservation being sent
         required: true
 
