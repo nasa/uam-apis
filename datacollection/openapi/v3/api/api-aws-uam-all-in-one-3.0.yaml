@@ -99,9 +99,9 @@ paths:
           application/json:
             schema:
               $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-aws-uam-gcdmp-operations-2.0.yaml#/definitions/op
-              
+
         description:  Operational plan
-          
+
         required: true
   /con-wx-operating-point-data-station:
     post:
@@ -208,35 +208,6 @@ paths:
         description: The UASVolumeReservation being sent
         required: true
 
-  '/adsb':
-    post:
-      summary: Upload array of ADS-B models.
-      x-amazon-apigateway-request-validator: 
-          all
-
-      responses:
-        '200':
-          $ref: '#/components/responses/r200'
-        '204':
-          $ref: '#/components/responses/r204'
-        '400':
-          $ref: '#/components/responses/r400'
-        '401':
-          $ref: '#/components/responses/r400'
-        '403':
-          $ref: '#/components/responses/r403'
-        '429':
-          $ref: '#/components/responses/r429'
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: >-
-                https://raw.githubusercontent.com/nasa/uam-apis/gcati213/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSBArray
-        description: Array of ADSB objects
-        required: true
-  
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
     statusCode: 400
@@ -268,7 +239,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: 
+            $ref:
               https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
 
     'r201':
@@ -321,4 +292,3 @@ components:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UTMRestResponse
-    
