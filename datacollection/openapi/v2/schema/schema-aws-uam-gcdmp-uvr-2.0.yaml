@@ -47,9 +47,9 @@ definitions:
     type: object
     required:
       - uvr_metadata
-      - uvr
+      - uvr_body
     properties:
-      pos_body:
+      uvr_body:
         $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/UASVolumeReservation'
-      uvr:
+      uvr_metadata:
         type: string
