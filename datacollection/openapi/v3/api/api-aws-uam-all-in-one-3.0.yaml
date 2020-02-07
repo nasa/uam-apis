@@ -188,6 +188,10 @@ paths:
             type: string
 
       responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '201':
+          $ref: '#/components/responses/r201'
         '204':
           $ref: '#/components/responses/r204'
         '400':
