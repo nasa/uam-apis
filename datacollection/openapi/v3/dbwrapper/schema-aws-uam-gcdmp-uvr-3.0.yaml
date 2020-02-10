@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  description: |-
+    This file contains the core UTM models as OpenAPI 2.0 compliant definitions.
+    Some key caveats when using/referencing this API:
+      1. The API on its own is insufficeint to develop a USS or other UTM
+      component.  For example, the USS Specification is needed to understand
+      how and when to use the various endpoints and provides more details on
+      security features that cannot be captured in the API docs.
+      2. There is not a unified time synchronization approach in UTM currently.
+      As such, times provided from one server MUST NOT be validated against each other.
+      For example, if a sending server states that a data element
+      was sent at 10:00:23, but the receiving server thinks it is currently
+      10:00:22, the receiving server must not reject the data submission.  As
+      we develop and roll out the time synchronization scheme for the USS
+      Network, we will add appropriate validation requirements to the API
+      documentation.
+      3. On the contrary, times must be validated for consistency within a
+      given data submission.  For example, if a server states that it sends
+      a data instance at 10:00:23 and one of the other data elements states
+      that a measurement was performed at 10:00:24, then the receiving server
+      must reject that data submission. Some of these checks are explictly
+      stated in the descriptions below. If you recognize any such checks that
+      are not documented, please submit an issue report on github.
+      4. These token SUBJECT validations are required for security.
+      For PUT Operation to modify an existing operation, the token SUBJECT claim upon modification MUST equal the token SUBJECT claim for the initial Operation.
+      For PUT Message associated with an Operation gufi, the token SUBJECT claim used for PUT Message MUST equal the token SUBJECT claim for the initial operation.
+        This check is performed if the initial operation exists, so as to not preclude receiving emergency messages.
+      For PUT Position associated with an Operation gufi, the token SUBJECT claim used for PUT Position MUST equal the token SUBJECT claim for the initial operation.
+        This check is performed only if the initial operation exists, so as to not preclude receiving emergency position reports.
+  version: "1.0.0-oas3"
+  title: UTM models
+paths:
+  /no-paths:
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.
+components:
+  schemas:
+    uvr:
+      type: object
+      required:
+        - uvr_metadata
+        - uvr_body
+      properties:
+        uvr_body:
+          $ref: >-
+            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-aws-domain-commons-3.0.yaml#/components/schemas/UASVolumeReservation
+        uvr_metadata:
+          type: string
