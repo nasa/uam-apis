@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0-oas3"
+  title: UTM DMP TCL4 CON
+  description: Data model for CON submission.
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://utmregistry.arc.nasa.gov/'
+    email: jaewoo.jung@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+  termsOfService: http://github.nasa/uam/
+paths:
+  /no-paths:
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.  Tools sometimes do not like when
+            there are no paths, but domains do not contain paths.
+components:
+  schemas:
+    ConWxOperatingPointDataStation:
+      description: >-
+        Temperature, air pressure (in Hg), windspeed (ft/sec), wind direction,
+        location, and timestamp associated with the measurement from a weather
+        station on the ground.
+      type: object
+      required:
+        - metaDataTestSite
+        - stationId
+        - timestamp
+        - temperature
+        - pressure
+        - windSpeed
+        - windDir
+        - location
+      properties:
+        metaDataTestSite:
+          type: object
+          required:
+            - scenario
+            - test_card
+            - test_site
+            - test_run
+          properties:
+            scenario:
+              description: >-
+                Proper formatting for scenarios is "TCL4_Sc#" where "#" is 1-5.
+                For other scenarios, the appropriate value should be provided by
+                the POC for that activity.
+              type: string
+              minLength: 1
+              maxLength: 100
+            test_card:
+              description: >-
+                The name or number of the test card.  In many cases, a scenario
+                will have only one test_card, but it is possible that there are
+                multiple test_cards for a given scenario.
+              minLength: 1
+              maxLength: 100
+              type: string
+            test_site:
+              description: Name of the test site
+              minLength: 1
+              maxLength: 100
+              type: string
+            test_run:
+              description: >-
+                An identifier for a specific run of a test_card.  In many cases,
+                a test_card may be only run once.  However, it is possible that
+                a test_card is run multiple times.
+              type: integer
+        timestamp:
+          $ref: >-
+            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/timestamp
+        temperature:
+          description: Degrees Fahrenheit
+          type: number
+          format: float
+        pressure:
+          description: Inches Of Hg
+          type: number
+          format: float
+        windSpeed:
+          description: Feet Per Second
+          type: number
+          format: float
+          minimum: 0
+        windDir:
+          description: 'Degrees, True North Reference Frame'
+          type: number
+          minimum: 0
+          maximum: 360
+          exclusiveMinimum: false
+          exclusiveMaximum: true
+        location:
+          $ref: '#/components/schemas/LatLonAlt'
+        stationId:
+          description: >-
+            A unique string identifier for a weather station belonging to given
+            test site
+          type: string
+          minLength: 1
+          maxLength: 1000
+    latitude:
+      description: >-
+        The numeric value of the latitude. Note that min and max values are
+        added as a sanity check.
+      type: number
+      format: double
+      minimum: -90
+      maximum: 90
+    longitude:
+      description: >-
+        The numeric value of the longitude. Note that min and max values are
+        added as a sanity check.
+      type: number
+      format: double
+      minimum: -180
+      maximum: 180
+    LatLonAlt:
+      description: >-
+        Latitude and Longitude should have precision of 7 or more digits.
+        position WGS84 altitude. (ft)
+      type: object
+      required:
+        - lat
+        - lon
+        - alt
+      properties:
+        lat:
+          $ref: '#/components/schemas/latitude'
+        lon:
+          $ref: '#/components/schemas/longitude'
+        alt:
+          $ref: >-
+            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/Altitude
