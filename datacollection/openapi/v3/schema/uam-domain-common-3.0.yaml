@@ -1750,9 +1750,7 @@ components:
             quality purposes.
           type: string
           minLength: 4
-          exclusiveMinimum: false
           maxLength: 250
-          exclusiveMaximum: false
         uss_name_of_originator:
           description: >-
             Name of the USS originating the negotation. NegotiationAgreement
