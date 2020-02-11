@@ -75,7 +75,7 @@ components:
               type: integer
         timestamp:
           $ref: >-
-            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/timestamp
+            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-wx-data-station-3.0.yaml#/components/schemas/timestamp
         temperature:
           description: Degrees Fahrenheit
           type: number
@@ -137,4 +137,4 @@ components:
           $ref: '#/components/schemas/longitude'
         alt:
           $ref: >-
-            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/uam-aws-domain-commons-2.0.yaml#/definitions/Altitude
+            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-wx-data-station-3.0.yaml#/components/schemas/Altitude
