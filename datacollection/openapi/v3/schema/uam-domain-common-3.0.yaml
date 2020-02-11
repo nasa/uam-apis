@@ -1520,9 +1520,7 @@ components:
             considering the maximum in RFC-1035.
           type: string
           minLength: 4
-          exclusiveMinimum: false
           maxLength: 250
-          exclusiveMaximum: false
         type:
           description: >-
             The type of UVR.  It is expected this list will grow as use cases
