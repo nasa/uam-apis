@@ -48,6 +48,6 @@ components:
       properties:
         pos_body:
           $ref: >-
-            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-aws-domain-commons-3.0.yaml#/components/schemas/Position
+            https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/Position
         pos_metadata:
           type: string
