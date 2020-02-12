@@ -39,40 +39,7 @@ components:
         - location
       properties:
         metaDataTestSite:
-          type: object
-          required:
-            - scenario
-            - test_card
-            - test_site
-            - test_run
-          properties:
-            scenario:
-              description: >-
-                Proper formatting for scenarios is "TCL4_Sc#" where "#" is 1-5.
-                For other scenarios, the appropriate value should be provided by
-                the POC for that activity.
-              type: string
-              minLength: 1
-              maxLength: 100
-            test_card:
-              description: >-
-                The name or number of the test card.  In many cases, a scenario
-                will have only one test_card, but it is possible that there are
-                multiple test_cards for a given scenario.
-              minLength: 1
-              maxLength: 100
-              type: string
-            test_site:
-              description: Name of the test site
-              minLength: 1
-              maxLength: 100
-              type: string
-            test_run:
-              description: >-
-                An identifier for a specific run of a test_card.  In many cases,
-                a test_card may be only run once.  However, it is possible that
-                a test_card is run multiple times.
-              type: integer
+          $ref: '#/components/schemas/metaDataTestSite'
         timestamp:
           description: >-
             Timestamps MUST follow the guidance set forth in RFC3339. This RFC
@@ -141,6 +108,41 @@ components:
           type: string
           minLength: 1
           maxLength: 1000
+    metaDataTestSite:
+      type: object
+      required:
+        - scenario
+        - test_card
+        - test_site
+        - test_run
+      properties:
+        scenario:
+          description: >-
+            Proper formatting for scenarios is "TCL4_Sc#" where "#" is 1-5.
+            For other scenarios, the appropriate value should be provided by
+            the POC for that activity.
+          type: string
+          minLength: 1
+          maxLength: 100
+        test_card:
+          description: >-
+            The name or number of the test card.  In many cases, a scenario
+            will have only one test_card, but it is possible that there are
+            multiple test_cards for a given scenario.
+          minLength: 1
+          maxLength: 100
+          type: string
+        test_site:
+          description: Name of the test site
+          minLength: 1
+          maxLength: 100
+          type: string
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases,
+            a test_card may be only run once.  However, it is possible that
+            a test_card is run multiple times.
+          type: integer
     latitude:
       description: >-
         The numeric value of the latitude. Note that min and max values are
