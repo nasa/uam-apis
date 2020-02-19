@@ -103,30 +103,7 @@ paths:
         description:  Operational plan
 
         required: true
-  /con-wx-operating-point-data-station:
-    post:
-      summary: Upload array of ConWxOperatingPointDataStation models.
 
-      responses:
-        '200':
-          $ref: '#/components/responses/r200'
-        '400':
-          $ref: '#/components/responses/r400'
-        '401':
-          $ref: '#/components/responses/r401'
-        '403':
-          $ref: '#/components/responses/r403'
-
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: >-
-                    https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-wx-data-station-3.0.yaml#/components/schemas/ConWxOperatingPointDataStation
-        description: Array of ConWxOperatingPointDataStation models
-        required: true
   '/utm_messages/{message_id}':
     put:
       tags:
