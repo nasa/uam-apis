@@ -6,18 +6,7 @@ info:
 
 definitions:
 
-    ADSBArray:
-      type: object
-      required:
-        - aircraft
-      properties:
-        aircraft:
-          type: array
-          items: 
-            $ref:
-              'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSB'
-
-    ADSB:
+    ADSBModel:
       type: object
       required: 
         - icaoAddress
@@ -53,7 +42,7 @@ definitions:
           pattern: '^[0-7]{4}$'
           description: Squawk code
         altitudeType: 
-          type: number
+          type: integer
           enum: [0,1]
           description: Altitude Source, 0 is pressure, 1 is geometric
         callsign:
@@ -91,11 +80,10 @@ definitions:
           description: UTC time flag
         timeStamp:
           $ref:  
-            'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-dmp-common-2.0.yaml#/definitions/timestamp'
+             '#/definitions/ADSBtimestamp'
         detail:
           $ref: 
-            'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/Detail'
-
+            '#/definitions/Detail'
 
     Detail:
       type: object
@@ -164,7 +152,7 @@ definitions:
             1 Probability of exceeding NIC containment radius is based on per sample 
             0 Probability of exceeding NIC containment radius is based on per hour
         airGroundState:
-          type: number
+          type: integer
           enum: [0,1,3]
           description: Airborne or ground
             0 = Airborne subsonic condition
@@ -352,3 +340,10 @@ definitions:
           description: NOTAM/UOA flight plan filed flag
             todo, not checked, no example
 
+# timestamp stolen from .. 
+    ADSBtimestamp:
+      type: string
+      format: date-time
+      minLength: 22
+      maxLength: 24
+      example: "2015-08-20T14:11:56.118Z"
