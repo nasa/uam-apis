@@ -213,11 +213,16 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items: 
-                $ref: >-
-                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSBModel
-        description: Array of ADSB objects
+              type: object
+              required:
+                - aircraft
+              properties:
+                aircraft:
+                  type: array
+                  items:
+                    $ref: 
+                      https://raw.githubusercontent.com/nasa/uam-apis/gcati-273/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSBModel
+        description: top level ADSB object, containing array of ADSB models
         required: true
   
 x-amazon-apigateway-gateway-responses:

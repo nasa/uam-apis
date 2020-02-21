@@ -5,6 +5,16 @@ info:
       OpenAPI 2.0 compliant definitions for ADS-B Out data.
 
 definitions:
+    ADSBObject:
+      type: object
+      required:
+        - aircraft
+      properties:
+        aircraft:
+          type: array
+          items:
+            $ref: 
+              '#/definitions/ADSBModel'
 
     ADSBModel:
       type: object
@@ -80,14 +90,13 @@ definitions:
           description: UTC time flag
         timeStamp:
           $ref:  
-             '#/definitions/ADSBtimestamp'
+            '#/definitions/ADSBtimestamp'
         detail:
           $ref: 
             '#/definitions/Detail'
 
     Detail:
       type: object
-      nullable: true
       properties:
         navIntegrity:
           type: number
@@ -301,7 +310,7 @@ definitions:
           type: number
           enum: [0-1]
           description: 0 = Fightplan, 1 = CallSign
-        
+
 #    RID:
 #      type: object
 #      properties:
