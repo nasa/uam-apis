@@ -221,7 +221,7 @@ paths:
                   type: array
                   items:
                     $ref: 
-                      https://raw.githubusercontent.com/nasa/uam-apis/gcati-273/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSBModel
+                      https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v2/schema/schema-uam-adsb.yaml#/definitions/ADSBModel
         description: top level ADSB object, containing array of ADSB models
         required: true
   
