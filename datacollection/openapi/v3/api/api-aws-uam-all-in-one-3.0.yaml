@@ -189,6 +189,32 @@ paths:
         description: The UASVolumeReservation being sent
         required: true
 
+  '/adsb':
+    put:
+      summary: Upload array of ADS-B models.
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '429':
+          $ref: '#/components/responses/r429'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/adsb.yaml#/components/schemas/ADSBObject'
+
+        description: top level ADSB object, containing array of ADSB models
+        required: true
+
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
     statusCode: 400
