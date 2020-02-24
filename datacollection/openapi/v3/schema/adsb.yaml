@@ -72,7 +72,6 @@ components:
             type: integer
             enum: [0, 1, 2, 3, 4, 5]
             description: >-
-              TODO-fix-enum-GCATI-273
               Category type of the emitter 0  = No aircraft type information 1  =
               Light (ICAO) < 15,500 lbs 2  = Small -15,500 to 75,000 lbs 3  =
               Large -75,000 to 300,000 lbs 4  = High Vortex Large (e.g., B757) 5
@@ -106,9 +105,10 @@ components:
           properties:
             navIntegrity:
               type: integer
-              enum: [0, 1]
+              enum:
+                - 0-11
+                - 12-15
               description: >-
-                GCATI-273
                 Navigation integrity category (NIC) 0  =RC >=37.04 km (20 NM)
                 Unknown Integrity 1  = RC < 37.04 km (20 NM) RNP-10 containment
                 radius 2  = RC < 14.816 km (8 NM) RNP-4 containment radius 3  = RC <
@@ -122,9 +122,10 @@ components:
                 (Reserved)
             navAccuracy:
               type: integer
-              enum: [0, 1]
+              enum:
+                - 0-4
+                - 5-7
               description: >-
-                GCATI-273
                 Navigation accuracy category(NACv) 0 = Unknown or >= 10 m/s Unknown
                 >= 50 feet (15.24 m) per second 1 = < 10 m/s    < 50 feet (15.24 m)
                 per second 2 = < 3 m/s     < 15 feet (4.57 m) per second 3 = < 1
@@ -132,23 +133,22 @@ components:
                 m) per second 5-7 = (Reserved) (Reserved)
             verVelocitySrc:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: Vertical velocity source 0 = Pressure 1 = Geometric
             emergencyStatus:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-6
               description: >-
                 Emergency status 0 = No-Emergency 1 = General Emergency 2 =
                 Lifeguard/Medical 3 = Min Fuel 4 = No Comm 5 = Unlawful Interference
                 6 = Downed Aircraft
             sysIntegrityLevel:
               type: integer
-              enum: [0, 1, 2, 3]
-
+              enum:
+                - 0-3
               description: >-
-                GCATI-273
                 SourceIntegrity Level(SIL) indicates the probability of the reported
                 horizontal position exceeding the containment radius defined by the
                 NIC (from AC 20-165) 3 ≤1x10-7 Per Hour or Sample 2 ≤1x10-5 Per Hour
@@ -156,8 +156,8 @@ components:
                 Sample  or Unknown
             sysDesignAssurance:
               type: integer
-              enum: [0, 1, 2, 3]
-
+              enum:
+                - 0-3
               description: >-
                 SystemDesign Assurance(SDA) indicated the probability of an ADS-B
                 system malfunction causing false or misleading position (from AC
@@ -166,29 +166,30 @@ components:
                 based on per hour
             airGroundState:
               type: integer
-              enum: [0, 1, 3]
-
+              enum:
+                - 0
+                - 1
+                - 3
               description: >-
                 Airborne or ground 0 = Airborne subsonic condition 1 = Airborne
                 supersonic condition 3 = On ground condition
             svHeadingType:
               type: integer
-              enum: [0, 1, 2, 3]
-
+              enum:
+                - 0-3
               description: >-
                 Track angle from heading 0 = Data Not Available 1 = True Track Angle
                 2 = Magnetic Heading 3 = True Heading
             verticalVelType:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: Vertical rate information 0 = Pressure 1 = Geometric
             navPositionAccuracy:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-15
               description: >-
-                GCATI-273
                 The reported State Vector has sufficient position accuracy for the
                 intended use(NACp) 0  = EPU >= 18.52 km (10 NM) 1  =EPU < 18.52 km
                 (10 NM) 2  = EPU < 7.408 km (4 NM) 3  = EPU < 3.704 km (2 NM) 4  =
@@ -198,8 +199,8 @@ components:
                 and VEPU < 4 m 12-15 = (Reserved)
             navVelocityAccuracy:
               type: integer
-              enum: [0, 1, 2, 3, 4, 5, 6, 7]
-
+              enum:
+                - 0-7
               description: >-
                 The least accurate velocity component being transmitted (NACv) 0 =
                 Unknown or >= 10 m/s Unknown or >= 50 feet (15.24 m) per second 1 =
@@ -208,62 +209,62 @@ components:
                 < 1.5 feet (0.46 m) per second 5-7 = (Reserved)
             navIntegrityBaro:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: >-
                 Barometer checked (NICbaro) 0 = Barometric Pressure Altitude has NOT
                 been cross checked 1 = Barometric Pressure Altitude has been cross
                 checked
             geoVerticalAccuracy:
               type: integer
-              enum: [0, 1, 2]
-
+              enum:
+                - 0-2
               description: >-
                 Geometric Vertical Accuracy(GVA) 0 Unknown or > 150 meters 1 ≤ 150
                 meters 2 ≤ 45 meter
             tcasAcasOperating:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: >-
                 Aircraft is fitted with a TCAS (ACAS) computer and that computer is
                 turned on and operating in a mode that can generate Resolution
                 Advisory (RA) alerts
             tcasAcasAdvisory:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: >-
                 TCAS II or ACAS computer is currently issuing a Resolution Advisory
                 todo, check actual values.
             identSwActive:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: 'ident switch is activated todo, check actual values.'
             atcServicesRecvd:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: >-
                 ATC pilot message mode setting 0 = Not receiving ATC messages 1 =
                 Receiving ATC message
             magHeading:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: True north or magnetic north 0 = True north 1 = Magnetic north
             utcCoupledCondition:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: >-
                 Represents if the Ground Station is UTC-Coupled 0 = Ground Station
                 is not UTC coupled 1 = Ground Station is UTC coupled
             surveilStatus:
               type: integer
-              enum: [0, 1, 2, 3]
-
+              enum:
+                - 0-3
               description: >-
                 Surveillance status 0 = No Condition 1 = permanent alert 2 = temp
                 alert 3 = SPI
@@ -272,13 +273,13 @@ components:
               description: Difference between the pressure altitude and the gnss altitude in mm
             1090esMopsVersion:
               type: integer
-              enum: [0, 1, 2]
-
+              enum:
+                - 1-2
               description: '1 = DO-260A, 2 = DO-260B'
             secondaryAltType:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: Altitude source 0 = Pressure 1 = Geometric
             secondaryAltitudeMM:
               type: integer
@@ -290,33 +291,31 @@ components:
                 message signifies which uplink tower transmitted the TISb frame
             transmitMSO:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-63
               description: >-
-                GCATI-273
                 the transmitMSO is the 6bit field from the transmitted UAT message
                 which should signify which MSO the message was transmitted in.
                 MSO's can range from 0 to 3951 but only transmit the 6 LSB's of the
                 actual MSO if transmitted.
             addressQualifier:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-7
               description: >-
-                GCATI-273
                 Defines the type of target that delivered the data 0 = ADS-B target
                 with ICAO 24-bit 1 = Reserved for National use 2 = TIS-B target with
                 ICAO 24-bit address 3 = TIS-B target with track file identifier 4 =
                 Surface Vehicle 5 = Fixed ADS-B Beacon 6-7 = (Reserved)
             uatMopsVersion:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: '1 = DO-282A, 2 = DO-282B'
             callSignID:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-1
               description: '0 = Fightplan, 1 = CallSign'
             uvin:
               type: string
@@ -329,10 +328,9 @@ components:
               description: Takeoff longitudeexpressed as decimal degrees
             missionType:
               type: integer
-              enum: [0, 1]
-
+              enum:
+                - 0-11
               description: >-
-                GCATI-273
                 Numeric representation of the type of mission being flown 0 =
                 recreational 1 = photography/videography 2 = media 3  =
                 point/structure inspection 4 = agriculture 5 = mapping 6 =
@@ -345,6 +343,6 @@ components:
                 right. long or string?
             fltplanFiled:
               type: number
-              enum: [0, 1]
-                
+              enum:
+                - 0-1
               description: 'NOTAM/UOA flight plan filed flag todo, not checked, no example'
