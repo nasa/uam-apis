@@ -190,7 +190,7 @@ paths:
         required: true
 
   '/adsb':
-    put:
+    post:
       summary: Upload array of ADS-B models.
       responses:
         '200':
