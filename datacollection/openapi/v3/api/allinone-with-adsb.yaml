@@ -210,7 +210,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ADSBModel'
+              $ref: '#/components/schemas/ADSBObject'
 
         description: top level ADSB object, containing array of ADSB models
         required: true
