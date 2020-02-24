@@ -3,15 +3,7 @@ info:
     title: ADS-B Out
     description: >-
       OpenAPI 2.0 compliant definitions for ADS-B Out data.
-swagger: "2.0"
-paths:
-  '/no-paths':
-    put:
-      responses:
-        '410':
-          description: >-
-            Gone. Not implemented. Will not be implemented. Path included for
-            proper use by automated tooling.
+
 definitions:
     ADSBObject:
       type: object
@@ -21,45 +13,45 @@ definitions:
         aircraft:
           type: array
           items:
-            $ref:
+            $ref: 
               '#/definitions/ADSBModel'
 
     ADSBModel:
       type: object
-      required:
+      required: 
         - icaoAddress
       properties:
-        icaoAddress:
+        icaoAddress: 
           type: string
           pattern: '^[0-9a-fA-F]{6}$'
           description: ICAO of the aircraft
-        trafficSource:
+        trafficSource: 
           type: integer
           enum: [0,1]
           description: 0 = 1090, 1 = UAT
         latDD:
           type: number
           description: Latitude expressed as decimal degrees
-        lonDD:
+        lonDD: 
           type: number
           description: Longitude expressed as decimal degrees
-        altitudeMM:
+        altitudeMM: 
           type: number
           description: Geometric altitude or barometric pressure altitudein millimeters
-        headingDE2:
+        headingDE2: 
           type: number
           description: Course over ground in centi-degrees
-        horVelocityCMS:
+        horVelocityCMS: 
           type: integer
           description: Horizontal velocity in centimeters/sec
-        verVelocityCMS:
+        verVelocityCMS: 
           type: integer
           description: Vertical velocity in centimeters/sec with positive being up
-        squawk:
+        squawk: 
           type: number
           pattern: '^[0-7]{4}$'
           description: Squawk code
-        altitudeType:
+        altitudeType: 
           type: integer
           enum: [0,1]
           description: Altitude Source, 0 is pressure, 1 is geometric
@@ -70,17 +62,17 @@ definitions:
           type: number
           enum: [0-21,22-39]
           description: Category type of the emitter
-            0  = No aircraft type information
-            1  = Light (ICAO) < 15,500 lbs
-            2  = Small -15,500 to 75,000 lbs
-            3  = Large -75,000 to 300,000 lbs
-            4  = High Vortex Large (e.g., B757)
-            5  = Heavy (ICAO) -> 300,000 lbs
-            6  = Highly Maneuverable > 5G acceleration and high speed
+            0  = No aircraft type information 
+            1  = Light (ICAO) < 15,500 lbs 
+            2  = Small -15,500 to 75,000 lbs 
+            3  = Large -75,000 to 300,000 lbs 
+            4  = High Vortex Large (e.g., B757) 
+            5  = Heavy (ICAO) -> 300,000 lbs 
+            6  = Highly Maneuverable > 5G acceleration and high speed 
             7  = Rotorcraft
             8  = (Unassigned)
             9  = Glider/sailplane
-            10 = Lighter than air
+            10 = Lighter than air 
             11 = Parachutist/sky diver
             12 = Ultralight/hang glider/paraglider
             13 = (Unassigned)
@@ -97,10 +89,10 @@ definitions:
           type: number
           description: UTC time flag
         timeStamp:
-          $ref:
+          $ref:  
             '#/definitions/ADSBtimestamp'
         detail:
-          $ref:
+          $ref: 
             '#/definitions/Detail'
 
     Detail:
@@ -122,18 +114,18 @@ definitions:
             9  = RC < 75 m and VPL < 112 m e.g., SBAS, HPL, VPL
             10 = RC < 25 m and VPL < 37.5 m e.g., SBAS, HPL, VPL
             11 = RC < 7.5 m and VPL < 11 m e.g., GBAS, HPL, VPL
-            12-15 = (Reserved)
+            12-15 = (Reserved) 
         navAccuracy:
           type: number
           enum: [0-4,5-7]
           description: Navigation accuracy category(NACv)
-            0 = Unknown or >= 10 m/s Unknown >= 50 feet (15.24 m) per second
-            1 = < 10 m/s    < 50 feet (15.24 m) per second
-            2 = < 3 m/s     < 15 feet (4.57 m) per second
-            3 = < 1 m/s     < 5 feet (1.52 m) per second
-            4 = < 0.3 m/s < 1.5 feet (0.46 m) per second
-            5-7 = (Reserved) (Reserved)
-        verVelocitySrc:
+            0 = Unknown or >= 10 m/s Unknown >= 50 feet (15.24 m) per second  
+            1 = < 10 m/s    < 50 feet (15.24 m) per second                   
+            2 = < 3 m/s     < 15 feet (4.57 m) per second           
+            3 = < 1 m/s     < 5 feet (1.52 m) per second                     
+            4 = < 0.3 m/s < 1.5 feet (0.46 m) per second                     
+            5-7 = (Reserved) (Reserved)                                        
+        verVelocitySrc: 
           type: number
           enum: [0-1]
           description: Vertical velocity source
@@ -156,17 +148,17 @@ definitions:
           description: SourceIntegrity Level(SIL)
             indicates the probability of the reported horizontal position exceeding the containment radius defined by the NIC
             (from AC 20-165)
-            3 ≤1x10-7 Per Hour or Sample
-            2 ≤1x10-5 Per Hour or Sample
-            1 ≤ 1x10-3 Per Hour or Sample
-            0 > 1x10-3 Per Hour or Sample  or Unknown
+            3 ≤1x10-7 Per Hour or Sample 
+            2 ≤1x10-5 Per Hour or Sample 
+            1 ≤ 1x10-3 Per Hour or Sample 
+            0 > 1x10-3 Per Hour or Sample  or Unknown 
         sysDesignAssurance:
           type: number
           enum: [0-3]
-          description: SystemDesign Assurance(SDA)
+          description: SystemDesign Assurance(SDA) 
             indicated the probability of an ADS-B system malfunction causing false or misleading position
             (from AC 20-165)
-            1 Probability of exceeding NIC containment radius is based on per sample
+            1 Probability of exceeding NIC containment radius is based on per sample 
             0 Probability of exceeding NIC containment radius is based on per hour
         airGroundState:
           type: integer
@@ -178,7 +170,7 @@ definitions:
         svHeadingType:
           type: number
           enum: [0-3]
-          description: Track angle from heading
+          description: Track angle from heading   
             0 = Data Not Available
             1 = True Track Angle
             2 = Magnetic Heading
@@ -188,7 +180,7 @@ definitions:
           enum: [0-1]
           description: Vertical rate information
             0 = Pressure
-            1 = Geometric
+            1 = Geometric 
         navPositionAccuracy:
           type: number
           enum: [0-15]
@@ -215,8 +207,8 @@ definitions:
             2 = < 3 m/s < 15 feet (4.57 m) per second
             3 = < 1 m/s < 5 feet (1.52 m) per second
             4 = < 0.3 m/s < 1.5 feet (0.46 m) per second
-            5-7 = (Reserved)
-        navIntegrityBaro:
+            5-7 = (Reserved) 
+        navIntegrityBaro: 
           type: number
           enum: [0-1]
           description: Barometer checked (NICbaro)
@@ -226,8 +218,8 @@ definitions:
           type: number
           enum: [0-2]
           description: Geometric Vertical Accuracy(GVA)
-            0 Unknown or > 150 meters
-            1 ≤ 150 meters
+            0 Unknown or > 150 meters 
+            1 ≤ 150 meters 
             2 ≤ 45 meter
         tcasAcasOperating:
           type: number
@@ -237,7 +229,7 @@ definitions:
           type: number
           enum: [0-1]
           description: TCAS II or ACAS computer is currently issuing a Resolution Advisory
-            todo, check actual values.
+            todo, check actual values. 
         identSwActive:
           type: number
           enum: [0-1]
@@ -254,11 +246,11 @@ definitions:
           enum: [0-1]
           description: True north or magnetic north
             0 = True north
-            1 = Magnetic north
+            1 = Magnetic north 
         utcCoupledCondition:
           type: number
           enum: [0-1]
-          description: Represents if the Ground Station is UTC-Coupled
+          description: Represents if the Ground Station is UTC-Coupled  
             0 = Ground Station is not UTC coupled
             1 = Ground Station is UTC coupled
 
@@ -279,7 +271,7 @@ definitions:
         1090esMopsVersion:
           type: number
           enum: [1-2]
-          description: 1 = DO-260A, 2 = DO-260B
+          description: 1 = DO-260A, 2 = DO-260B            
 #    ADSBUAT:
 #      type: object
 #      properties:
@@ -298,7 +290,7 @@ definitions:
         transmitMSO:
           type: number
           enum: [0-63]
-          description: the transmitMSO is the 6bit field from the transmitted UAT message which should signify which MSO the message was transmitted in.  MSO's can range from 0 to 3951 but only transmit the 6 LSB's of the actual MSO if transmitted.
+          description: the transmitMSO is the 6bit field from the transmitted UAT message which should signify which MSO the message was transmitted in.  MSO's can range from 0 to 3951 but only transmit the 6 LSB's of the actual MSO if transmitted. 
         addressQualifier:
           type: number
           enum: [0-7]
@@ -357,7 +349,7 @@ definitions:
           description: NOTAM/UOA flight plan filed flag
             todo, not checked, no example
 
-# timestamp stolen from ..
+# timestamp stolen from .. 
     ADSBtimestamp:
       type: string
       format: date-time
