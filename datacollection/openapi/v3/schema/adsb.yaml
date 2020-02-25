@@ -52,7 +52,8 @@ components:
             description: Vertical velocity in centimeters/sec with positive being up
           squawk:
             type: number
-            pattern: '^[0-7]{4}$'
+            minimum: 0
+            maximum: 7777
             description: Squawk code
           altitudeType:
             type: integer
