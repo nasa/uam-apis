@@ -316,7 +316,7 @@ components:
           callSignID:
             type: integer
             enum: [0,1]
-            description: 0 = Fightplan, 1 = CallSign
+            description: 0 = Flightplan, 1 = CallSign
 
   #    RID:
   #      type: object
@@ -356,7 +356,6 @@ components:
             description: NOTAM/UOA flight plan filed flag
               todo, not checked, no example
 
-# timestamp stolen from .. todo: should use commons
       ADSBtimestamp:
         type: string
         format: date-time
