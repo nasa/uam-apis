@@ -350,12 +350,12 @@ components:
           phoneNumber:
             type: integer
             description: Phone number attached to the mission.
-              todo sic. Cannot possibly be right. long or string?
+              todo sic. string?
           fltplanFiled:
             type: integer
             enum: [0,1]
             description: NOTAM/UOA flight plan filed flag
-              todo, not checked, no example
+              todo, check actual values
 
       ADSBtimestamp:
         type: string
