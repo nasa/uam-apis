@@ -214,6 +214,33 @@ paths:
 
         description: top level ADSB object, containing array of ADSB models
         required: true
+  /uss-exchange:
+    post:
+      summary: Upload an array of models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '429':
+          $ref: '#/components/responses/r429'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: >-
+                  https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-data-collection.yaml#/definitions/USSExchange
+        description: Upload an array of models
+        required: true
 
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
