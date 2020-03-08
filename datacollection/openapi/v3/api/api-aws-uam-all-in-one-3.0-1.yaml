@@ -1,0 +1,328 @@
+openapi: 3.0.0
+info:
+  description: >-
+    Provider of Services to UAM (PSU)
+  version: "1.0.0-oas3"
+  title: GC-UAM-DATA-COLLECTION-API
+  termsOfService: http://uam.arc.nasa.gov/terms/
+  contact:
+    name: 'NASA Ames Research Center, Aviation Systems Division'
+    url: 'https://uam.arc.nasa.gov/'
+    email: shivanjli.sharma@nasa.gov
+  license:
+    name: NASA Open Source Agreement
+    url: 'https://ti.arc.nasa.gov/opensource/nosa/'
+
+servers:
+  - url: 'https://uss.defined.url/'
+
+paths:
+  '/positions/{position_id}':
+    put:
+      x-amazon-apigateway-request-validator: all
+      tags:
+        - A. Required Endpoints
+      summary: Share position information.
+      description: >-
+        Providing position reports to others may allow other USSs to anticipate
+        events.  The USS managing the operation has created the position ID.
+
+        For validation purposes:
+          {position_id} in path == Position.enroute_positions_id of body data
+
+      parameters:
+        - in: path
+          name: position_id
+          required: true
+          description: PUT by enroute_positions_id
+          schema:
+            type: string
+
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '201':
+          $ref: '#/components/responses/r201'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r401'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-positions-3.0.yaml#/components/schemas/pos
+
+
+        required: true
+  '/operations/{gufi}':
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: 'Announce a new, or update an already announced operation.'
+      description: >-
+        Announce an Operation to another USS, either initial Operation or an
+        update to the Operation. The Operation's owner creates the ID.
+      parameters:
+        - in: path
+          name: gufi
+          required: true
+          description: PUT operation by gufi
+          schema:
+            type: string
+
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '201':
+          $ref: '#/components/responses/r201'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r401'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-operations-3.0.yaml#/components/schemas/op
+
+        description:  Operational plan
+
+        required: true
+
+  '/utm_messages/{message_id}':
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: Allow other authorized entities to send a message to this USS.
+      description: >-
+        Allows another USS or FIMS to PUT a message to this USS. For validation
+        purposes:
+          {message_id} in path == UTMMessage.message_id of body data
+
+      parameters:
+        - in: path
+          name: message_id
+          required: true
+          description: PUT by message_id
+          schema:
+            type: string
+
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '201':
+          $ref: '#/components/responses/r201'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r401'
+        '403':
+          $ref: '#/components/responses/r403'
+        '429':
+          $ref: '#/components/responses/r429'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-utmmessage-3.0.yaml#/components/schemas/utmmsg
+        description: The UTMMessage being sent
+        required: true
+  '/uvrs/{message_id}':
+    put:
+      tags:
+        - A. Required Endpoints
+      summary: >-
+        Allow UAS Volume Reservations (UVRs) to be submitted from authorized
+        entities.
+      description: >-
+        Allow UAS Volume Reservations (UVRs) to be submitted from authorized
+        entities. For validation purposes:
+          {message_id} in path == UASVolumeReservation.message_id of body data
+      parameters:
+        - in: path
+          name: message_id
+          required: true
+          description: PUT by message_id
+          schema:
+            type: string
+
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '201':
+          $ref: '#/components/responses/r201'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r401'
+        '403':
+          $ref: '#/components/responses/r403'
+        '429':
+          $ref: '#/components/responses/r429'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-uvr-3.0.yaml#/components/schemas/uvr
+        description: The UASVolumeReservation being sent
+        required: true
+
+  '/adsb':
+    post:
+      summary: Upload array of ADS-B models.
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '429':
+          $ref: '#/components/responses/r429'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/adsb.yaml#/components/schemas/ADSBObject'
+
+        description: top level ADSB object, containing array of ADSB models
+        required: true
+  /uss-exchange:
+    post:
+      summary: Upload an array of models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '429':
+          $ref: '#/components/responses/r429'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: >-
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-ussexchange-3.0.yaml#/components/schemas/ussex_body
+        description: Upload an array of models
+        required: true
+
+x-amazon-apigateway-gateway-responses:
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseTemplates:
+      application/json: "{\n  \"error\": {\n    \"code\": 400,\n    \"stage\": \"\
+        $context.stage\",\n    \"request\": \"$context.requestId\",\n    \"message\"\
+        : \"$context.error.validationErrorString\"\n  }\n}\n"
+x-amazon-apigateway-request-validator: all
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+
+components:
+  securitySchemes:
+    Authorizer:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+      x-amazon-apigateway-authtype: "cognito_user_pools"
+      x-amazon-apigateway-authorizer:
+        providerARNs:
+        - "arn:aws:cognito-idp:us-east-1:966029537804:userpool/us-east-1_TJmR9ZRxM"
+        type: "cognito_user_pools"
+  responses:
+
+    'r200':
+      description: an existing position resource updated
+      content:
+        application/json:
+          schema:
+            $ref:
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r201':
+      description: Position data created
+      content:
+        application/json:
+          schema:
+            $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r204':
+      description: no response supplied
+
+    'r400':
+      description: Bad request. Typically validation error. Fix your request and retry.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r401':
+      description: Invalid or missing access_token provided.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r403':
+      description: >-
+        Forbidden. Do not retry with same access token. Reason not provided,
+        but do you have the right scopes? Does uss_name match the sub claim?
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r409':
+      description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
+      content:
+        application/json:
+          schema:
+            $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r429':
+      description: Too many recent requests from you. Wait to make further queries.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
