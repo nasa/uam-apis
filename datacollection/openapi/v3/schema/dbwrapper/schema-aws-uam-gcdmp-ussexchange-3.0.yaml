@@ -40,7 +40,7 @@ paths:
             proper use by automated tooling.
 components:
   schemas:
-    ussex_body:
+    ussex:
       type: object
       required:
         - uss_exchange
