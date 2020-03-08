@@ -41,8 +41,8 @@ paths:
 components:
   schemas:
     ussex:
-      type: string
-      items:
+      type: object
+      required:
         - ussex_body
       properties:
         ussex_body:
