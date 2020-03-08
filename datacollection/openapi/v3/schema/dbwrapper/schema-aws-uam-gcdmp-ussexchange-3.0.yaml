@@ -40,12 +40,12 @@ paths:
             proper use by automated tooling.
 components:
   schemas:
-    ussex:
+    ussex_body:
       type: object
       required:
-        - ussex_body
+        - uss_exchange
       properties:
-        ussex_body:
+        uss_exchange:
           type: array
           items:
             $ref: >-
