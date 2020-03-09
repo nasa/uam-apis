@@ -2178,7 +2178,7 @@ components:
               data that were collected.
             type: boolean
           call_sign:
-            $ref: ''#/components/schemas/CallSign'
+            $ref: '#/components/schemas/CallSign'
           uss_name:
             type: string
             description: >-
