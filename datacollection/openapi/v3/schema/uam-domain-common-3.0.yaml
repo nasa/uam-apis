@@ -2024,10 +2024,7 @@ components:
           - "http_method"
         properties:
           metaDataDmpUss:
-            description: >-
-              A json format string provide metadata information.
-            type: string
-            example: {"name":"value"}
+            $ref: '#/components/schemas/metaDataDmpUss'
             #$ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/metaDataDmpUss'
           measurement_id:
             description: >-
@@ -2163,6 +2160,49 @@ components:
             type: "string"
             maxLength: 1000
             example: "This test was good."
+
+    metaDataDmpUss:
+        type: object
+        required:
+          - data_collection
+          - call_sign
+          - test_run
+          - uss_name
+        properties:
+          data_collection:
+            description: >-
+              If true these data are intended for Data Collection. Essentially
+              stating if particular data should be ignored during analysis. This
+              may be modified after submission in the case that there was an issue
+              during execution of the test/experiment that would invalidate the
+              data that were collected.
+            type: boolean
+          call_sign:
+            $ref: '#/definitions/CallSign'
+          uss_name:
+            type: string
+            description: >-
+              This is a unique string that identifies the USS that is supporting
+              this operation.  It is the same identifier used in the basic
+              authentication mechanism required to obtain a token from FIMS
+              (Flight Information Management System).  It is also the subject claim
+              that identifies the principal that is the subject of the JWT.
+            minLength: 1
+            maxLength: 1000
+          test_run:
+            description: >-
+              An identifier for a specific run of a test_card.  In many cases, a
+              test_card may be only run once.  However, it is possible that a
+              test_card is run multiple times.
+            type: integer
+    CallSign:
+        type: string
+        minLength: 1
+        maxLength: 100
+        description: >-
+          A UTM TCL4 globally unique identifier that is associated with a vehicle/operation
+          Every operation requires a call_sign that is pre-determined in the
+          full test card description.
     UssInstance:
       type: object
       description: >-
