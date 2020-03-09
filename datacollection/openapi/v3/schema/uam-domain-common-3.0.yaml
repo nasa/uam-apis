@@ -2086,7 +2086,6 @@ components:
 
               See MetaDataDmpUssId for definition of uss_name.
             type: "string"
-            format: "dns-name"
             example: "utm.cool-uss-team.com"
           reporting_uss_role:
             description: >-
