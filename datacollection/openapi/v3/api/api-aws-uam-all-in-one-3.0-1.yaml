@@ -237,7 +237,7 @@ paths:
             schema:
                 $ref: >-
                   https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-ussexchange-3.0.yaml#/components/schemas/ussex
-        description: Upload an object of models
+        description: Upload an object of models, containing array of uss exchange
         required: true
 
 x-amazon-apigateway-gateway-responses:
