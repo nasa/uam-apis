@@ -2029,12 +2029,8 @@ components:
           measurement_id:
             description: >-
               A UUID assigned by the reporting USS for this instance of USSExchange.
-            type: string
-            format: uuid
-            maxLength: 36
-            minLength: 36
-            pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-            example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+            $ref: '#/components/schemas/uuid'
+
           event_id:
             description: >-
               A string provided by the owner of the overall test (likely NASA) that identifies the event within which this data exchange occurs. NASA will define a pattern for this for consistency across tests.
@@ -2043,21 +2039,17 @@ components:
             maxLength: 100
             example: "USS_SPRINT1_SIM_20180723_RUN5"
           exchanged_data_pk:
-            description: >-
-              The primary key of the data that were exchanged.  For example, if an
-              Operation was exchanged, then this field would contain the gufi.
+             description: >-
+                The primary key of the data that were exchanged.  For example, if an
+                Operation was exchanged, then this field would contain the gufi.
 
-              In the case that multiple data elements were exchanged (as in a GET
-              to the Operations endpoint resulting in multiple Operations returned)
-              then just populate this field with one of the primary keys. As a best
-              practice, choose the first one in the array as they were sent between
-              USSs.
-            type: string
-            format: uuid
-            maxLength: 36
-            minLength: 36
-            pattern: "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
-            example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+                In the case that multiple data elements were exchanged (as in a GET
+                to the Operations endpoint resulting in multiple Operations returned)
+                then just populate this field with one of the primary keys. As a best
+                practice, choose the first one in the array as they were sent between
+                USSs.
+             $ref: '#/components/schemas/uuid'
+
           exchanged_data_type:
             type: "string"
             enum:
