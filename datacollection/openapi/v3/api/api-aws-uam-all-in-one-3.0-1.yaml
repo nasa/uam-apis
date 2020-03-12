@@ -203,6 +203,8 @@ paths:
           $ref: '#/components/responses/r400'
         '403':
           $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
         '429':
           $ref: '#/components/responses/r429'
 
@@ -228,6 +230,8 @@ paths:
           $ref: '#/components/responses/r400'
         '403':
           $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
         '429':
           $ref: '#/components/responses/r429'
 
@@ -239,6 +243,32 @@ paths:
                   https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-ussexchange-3.0.yaml#/components/schemas/ussex
         description: Upload an object of models, containing array of uss exchange
         required: true
+  /fet:
+      post:
+        summary: Upload a single instance of the FlightEssentialTelemetryUasStates model
+        responses:
+            '200':
+              $ref: '#/components/responses/r200'
+            '204':
+              $ref: '#/components/responses/r204'
+            '400':
+              $ref: '#/components/responses/r400'
+            '401':
+              $ref: '#/components/responses/r400'
+            '403':
+              $ref: '#/components/responses/r403'
+            '409':
+              $ref: '#/components/responses/r409'
+            '429':
+              $ref: '#/components/responses/r429'
+        requestBody:
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-fet-3.0.yaml#/components/schemas/fet
+          description: The FlightEssentialTelemetryAndUasStates model
+          required: true  
 
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
