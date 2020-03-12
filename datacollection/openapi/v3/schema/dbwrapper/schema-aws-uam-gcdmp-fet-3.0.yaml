@@ -43,9 +43,9 @@ components:
     fet:
       type: object
       required:
-        - fet_bodya
+        - fet_body
       properties:
-        uss_exchange:
+        fet_body:
           type: array
           items:
             $ref: >-
