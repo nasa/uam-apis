@@ -43,7 +43,7 @@ components:
     fet:
       type: object
       required:
-        - fet_body
+        - fet_bodya
       properties:
         uss_exchange:
           type: array
