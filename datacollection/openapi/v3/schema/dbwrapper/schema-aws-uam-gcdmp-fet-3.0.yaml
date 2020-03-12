@@ -49,4 +49,4 @@ components:
           type: array
           items:
             $ref: >-
-                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/USSExchange
+                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/FlightEssentialTelemetryAndUasStates
