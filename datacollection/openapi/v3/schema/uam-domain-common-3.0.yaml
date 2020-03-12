@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: |-
-    This file contains the core UTM models as OpenAPI 2.0 compliant definitions.
+    This file contains the core UAM models as OpenAPI 3.0 compliant definitions.
     Some key caveats when using/referencing this API:
       1. The API on its own is insufficeint to develop a USS or other UTM
       component.  For example, the USS Specification is needed to understand
@@ -29,7 +29,7 @@ info:
       For PUT Position associated with an Operation gufi, the token SUBJECT claim used for PUT Position MUST equal the token SUBJECT claim for the initial operation.
         This check is performed only if the initial operation exists, so as to not preclude receiving emergency position reports.
   version: "1.0.0-oas3"
-  title: UTM models
+  title: UAM models
 paths:
   /no-paths:
     put:
@@ -2160,7 +2160,160 @@ components:
             type: "string"
             maxLength: 1000
             example: "This test was good."
+    FlightEssentialTelemetryAndUasStates:
+        description: >-
+          Flight essential telemetry and UAS state data.
+          Use this model for both UAS and crewed vehicles.
+          List of required elements below:
 
+          *ALL* enums are required for UA (see SensorList).
+          Provide "MOTOR_#_CONTROL_THROTTLE_COMMAND_NONDIM" for each motor on UA (where "#" is the motor number ranging from 1 to 16)
+
+          Required enums to submit for Crewed (see SensorList):
+            - LAT
+            - LON
+            - ALT
+            - HEADING_DEG
+            - HDOP_NONDIM
+            - VDOP_NONDIM
+            - NUM_GPS_SATELLITES_IN_VIEW_NONDIM
+            - NUM_GPS_SAT_NONDIM
+            - GROUND_COURSE_DEG
+            - GROUND_SPEED_FT_PER_SEC
+
+          Refer to DMP for more details.
+
+        required:
+          - metaData
+          - sensorTuple
+        properties:
+          metaData:
+            $ref: '#/components/schemas/metaData'
+            #$ref: '#https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/metaData'
+          sensorTuple:
+            description: >-
+              An individual sensor sample: timestamp, sensor, & value
+            type: array
+            items:
+              $ref: '#/components/schemas/SensorTuple'
+            minItems: 1
+            maxItems: 10000
+    metaData:
+      type: object
+      required:
+        - data_collection
+        - scenario
+        - test_card
+        - call_sign
+        - test_type
+        - source
+        - location
+        - setting
+        - test_run
+        - uvin
+        - gufi
+        - uss_name
+      properties:
+        data_collection:
+          description: >-
+            If true these data are intended for Data Collection. Essentially
+            stating if particular data should be ignored during analysis. This
+            may be modified after submission in the case that there was an issue
+            during execution of the test/experiment that would invalidate the
+            data that were collected.
+          type: boolean
+        scenario:
+          description: >-
+            Proper formatting for scenarios is "TCL4_Sc#" where "#" is 1-5.
+
+            For other scenarios, the appropriate value should be provided by the
+            POC for that activity.
+          type: string
+          minLength: 1
+          maxLength: 100
+        test_card:
+          description: >-
+            The name or number of the test card.  In many cases, a scenario will
+            have only one test_card, but it is possible that there are multiple
+            test_cards for a given scenario.
+          minLength: 1
+          maxLength: 100
+          type: string
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases, a
+            test_card may be only run once.  However, it is possible that a
+            test_card is run multiple times.
+          type: integer
+        call_sign:
+          $ref: '#/components/schemas/CallSign'
+        test_type:
+          type: string
+          description: >-
+            Test type. Note a GROUND test may use a physical vehicle and a
+            FLIGHT test may use a simulated vehicle.  This is the reason for
+            separating test_type from source.
+          enum:
+            - GROUND
+            - FLIGHT
+        source:
+          type: string
+          description: >-
+            Hardware-in-the-loop (HWITL) flights refer to ground or airborne
+            flights. Software-in-the loop (SWITL) flights would be used to tag
+            flights do not use a physical vehicle, whether or not there is a
+            full-featured simulation involved.
+          enum:
+            - HWITL
+            - SWITL
+        location:
+          type: string
+          description: >-
+            Name of the testing location, such as NV, Moffett, Crows Landing,
+            etc.  The supplier of the metadata should use a constant value for
+            this field when the same location is used multiple times across data
+            submissions. E.g. "AMES" should always be "AMES" and not "ames" or
+            "Ames" or "NASA Ames" at other various times.
+          minLength: 1
+          maxLength: 100
+        setting:
+          type: string
+          description: >-
+            Test setting. Note that a LAB setting may involve HWITL source and
+            FIELD settings may involve SWITL sources.  LAB settings may have
+            GROUND or FLIGHT tests, same with FIELD settings.
+          enum:
+            - LAB
+            - FIELD
+        uvin:
+          $ref: '#/components/schemas/uuid'
+        gufi:
+          description: >-
+            GUFI of the operation that is the source of these data. Note that
+            this GUFI is repeated in the Position model, so they must match.  In
+            addition this GUFI will map to operational data in the UTM data
+            stores.  Thus the values for call_sign, test_card, test_run must
+            match the metadata supplied with that Operation's metadata. 
+            Mismatches will cause the data submission to be rejected.
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: >-
+            ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-[8-b][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$
+          example: 00000000-0000-4444-8888-FEEDDEADBEEF
+        submit_time:
+          $ref: '#/components/schemas/timestamp'
+        uss_name:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: >-
+            This is a unique string that identifies the USS that is supporting
+            this operation.  It is the same identifier used in the basic
+            authentication mechanism required to obtain a token from FIMS
+            (Flight Information Management System).  It is also the subject
+            claim that identifies the principal that is the subject of the JWT.
     metaDataDmpUss:
         type: object
         required:
@@ -2195,6 +2348,23 @@ components:
               test_card may be only run once.  However, it is possible that a
               test_card is run multiple times.
             type: integer
+    MetaDataCallSignRun:
+      type: object
+      required:
+        - call_sign
+        - uvin
+        - test_run
+      properties:
+        call_sign:
+          $ref: '#/components/schemas/CallSign'
+        uvin:
+          $ref: '#/components/schemas/uuid'
+        test_run:
+          description: >-
+            An identifier for a specific run of a test_card.  In many cases, a
+            test_card may be only run once.  However, it is possible that a
+            test_card is run multiple times.
+          type: integer
     CallSign:
         type: string
         minLength: 1
@@ -2203,6 +2373,133 @@ components:
           A UTM TCL4 globally unique identifier that is associated with a vehicle/operation
           Every operation requires a call_sign that is pre-determined in the
           full test card description.
+    SensorTuple:
+        description: >-
+          An individual sample of a sensor.  See DMP spreadsheet for definitions of
+          the various enum values.
+
+          Each sensor will have its own requirements on sample frequency.
+
+          NOTE: If 'sensor' = "AIRCRAFT_AIRBORNE_STATE_NONDIM" then 'value' = 0 or 1
+          0 = on ground
+          1 = in air
+          Report at least 1 Hz frequency.
+        required:
+          - timestamp
+          - sensor
+          - value
+        properties:
+          timestamp:
+            description: >-
+              Time for this sample.
+            type: string
+            format: date-time
+            minLength: 24
+            maxLength: 24
+            pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+            example: '2015-08-20T14:11:56.118Z'
+          value:
+            type: number
+            format: double
+            description: >-
+              Value of sensor reading.
+          sensor:
+            description: >-
+              Refer to DMP for individual definitions and units of each of these sensors.
+              $ref: '#/components/schemas/SensorList'
+            #$ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/SensorList'
+    SensorList:
+      description: >-
+        Refer to DMP for individual definitions and units of each of these
+        sensors.
+
+        *ALL* enums are required for UA. Provide
+        "MOTOR_#_CONTROL_THROTTLE_COMMAND_NONDIM" for each motor on UA (where
+        "#" is the motor number ranging from 1 to 16)
+
+        Required enums to submit for Crewed:
+          - LAT
+          - LON
+          - ALT
+          - HEADING_DEG
+          - HDOP_NONDIM
+          - VDOP_NONDIM
+          - NUM_GPS_SATELLITES_IN_VIEW_NONDIM
+          - NUM_GPS_SAT_NONDIM
+          - GROUND_COURSE_DEG
+          - GROUND_SPEED_FT_PER_SEC
+      type: string
+      enum:
+        - LAT
+        - LON
+        - ALT
+        - BAROMETRIC_ALTITUDE_FT
+        - EXTERNAL_TEMPERATURE_C
+        - RELATIVE_HUMIDITY_PRCT_NONDIM
+        - NAVIGATION_ACCURACY_CATEGORY_POSITION
+        - NAVIGATION_INTEGRITY_CATEGORY
+        - HEADING_DEG
+        - TRUE_AIRSPEED_FT_PER_SEC
+        - VERTICAL_SPEED_FT_PER_MIN
+        - YAW_DEG
+        - ROLLRATE_DEG_PER_SEC
+        - PITCH_RATE_DEG_PER_SEC
+        - YAW_RATE_DEG_PER_SEC
+        - VDOP_NONDIM
+        - BATTERY_VOLTAGE_V
+        - BATTERY_CURRENT_A
+        - BATTERY_TEMP_C
+        - NUM_GPS_SATELLITES_IN_VIEW_NONDIM
+        - MOTOR_10_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_11_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_12_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_13_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_14_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_15_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_16_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_1_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_2_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_3_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_4_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_5_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_6_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_7_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_8_CONTROL_THROTTLE_COMMAND_NONDIM
+        - MOTOR_9_CONTROL_THROTTLE_COMMAND_NONDIM
+        - NUM_GPS_SAT_NONDIM
+        - PITCH_DEG
+        - ROLL_DEG
+        - TARGET_AIRSPEED_FT_PER_SEC
+        - TARGET_GROUND_SPEED_FT_PER_SEC
+        - TARGET_WAYPOINT_ALT_FT
+        - TARGET_WAYPOINT_LAT_DEG
+        - TARGET_WAYPOINT_LON_DEG
+        - VEL_DOWN_FT_PER_SEC
+        - VEL_EAST_FT_PER_SEC
+        - VEL_NORTH_FT_PER_SEC
+        - VERTICAL_NAV_POSITION_ERROR_FT
+        - VERTICAL_NAV_VELOCITY_ERROR_FT_PER_SEC
+        - AIRCRAFT_AIRBORNE_STATE_NONDIM
+        - ABOVE_TERRAIN_ALTITUDE_FT
+        - GEOMETRIC_VERTICAL_ACCURACY_CATEGORY
+        - GROUND_COURSE_DEG
+        - GROUND_SPEED_FT_PER_SEC
+        - HDOP_NONDIM
+        - INDICATED_AIRSPEED_FT_PERSEC
+        - LATERAL_NAV_POSITION_ERROR_FT
+        - LATERAL_NAV_VELOCITY_ERROR_FT_PER_SEC
+        - CONNECTED_TO_RC_DJI
+        - SIG_STRENGTH_DJI
+        - CONNECTED_DJI
+        - HEARTBEAT_TIME_PX4
+        - DATA_RATE_PX4
+        - RATE_MULTIPLIER_PX4
+        - RATE_TX_PX4
+        - RATE_RX_PX4
+        - RSSI_PX4
+        - REMOTE_RSSI_PX4
+        - NOISE_PX4
+        - REMOTE_NOISE_PX4
     UssInstance:
       type: object
       description: >-
