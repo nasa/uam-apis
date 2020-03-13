@@ -174,7 +174,7 @@ components:
       pattern: >-
         "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
       example: 00000000-0000-4444-8888-FEEDDEADBEEF
-    UUID_Normal:
+    UUIDNormal:
       type: string
       format: uuid
       pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
@@ -2293,7 +2293,7 @@ components:
             - LAB
             - FIELD
         uvin:
-          $ref: '#/components/schemas/UUID_Normal'
+          $ref: '#/components/schemas/UUIDNormal'
         gufi:
           description: >-
             GUFI of the operation that is the source of these data. Note that
@@ -2365,7 +2365,7 @@ components:
         call_sign:
           $ref: '#/components/schemas/CallSign'
         uvin:
-          $ref: '#/components/schemas/UUID_Normal'
+          $ref: '#/components/schemas/UUIDNormal'
         test_run:
           description: >-
             An identifier for a specific run of a test_card.  In many cases, a
