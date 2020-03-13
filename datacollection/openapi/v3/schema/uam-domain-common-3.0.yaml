@@ -174,6 +174,13 @@ components:
       pattern: >-
         "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$"
       example: 00000000-0000-4444-8888-FEEDDEADBEEF
+    UUID_Normal:
+      type: string
+      format: uuid
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      example: d7126818-d280-475f-aaee-c16e9c6f04e0
+      maxLength: 36
+      minLength: 36
     data_accessibility:
       description: >-
         Each data member of each model will be tagged with a value representing
@@ -2286,7 +2293,7 @@ components:
             - LAB
             - FIELD
         uvin:
-          $ref: '#/components/schemas/uuid'
+          $ref: '#/components/schemas/UUID_Normal'
         gufi:
           description: >-
             GUFI of the operation that is the source of these data. Note that
@@ -2358,7 +2365,7 @@ components:
         call_sign:
           $ref: '#/components/schemas/CallSign'
         uvin:
-          $ref: '#/components/schemas/uuid'
+          $ref: '#/components/schemas/UUID_Normal'
         test_run:
           description: >-
             An identifier for a specific run of a test_card.  In many cases, a
