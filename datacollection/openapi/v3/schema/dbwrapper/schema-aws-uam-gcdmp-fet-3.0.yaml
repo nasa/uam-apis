@@ -46,7 +46,5 @@ components:
         - fet_body
       properties:
         fet_body:
-          type: array
-          items:
-            $ref: >-
+          $ref: >-
                 https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/FlightEssentialTelemetryAndUasStates
