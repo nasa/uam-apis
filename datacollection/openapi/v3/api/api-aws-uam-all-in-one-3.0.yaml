@@ -294,7 +294,7 @@ paths:
                 type: array
                 items:
                   $ref: >-
-                   https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/Waypoint
+                     https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-waypoint-3.0.yaml#/components/schemas/waypoint_body
           description: Upload array of Waypoint models
           required: true  
   
