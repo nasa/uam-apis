@@ -2235,6 +2235,87 @@ components:
               $ref: '#/components/schemas/SensorTuple'
             minItems: 1
             maxItems: 10000
+    Waypoint:
+        description: A single waypoint with associated data.
+        required:
+          - metaData
+          - waypoint_id
+          - waypoint_sequence_id
+          - waypoint_type
+          - position
+          - altitude
+          - timestamp
+          - target_air_speed
+          - target_ground_speed
+          - hover_time
+        properties:
+          metaData:
+            $ref: '#/components/schemas/metaData'
+            #$ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/metaData'
+          waypoint_id:
+            description: unique id for this data submission.
+            type: string
+            format: uuid
+            maxLength: 36
+            minLength: 36
+            pattern: >-
+              ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-b][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+            example: 00000000-0000-4444-8888-FEEDDEADBEEF
+          waypoint_sequence_id:
+            description: |-
+              integer indicating order of this waypoint in the list of waypoints.
+              must be sequential starting with 1.
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 9999
+            example: 23
+          waypoint_type:
+            description: Fly over or fly by?
+            type: string
+            enum:
+              - FLY_BY
+              - FLY_OVER
+          position:
+            description: 2D position of the waypoint. (Lat/Lon)
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point
+          altitude:
+            description: >-
+              Targeted altitude of the waypoint expressed in WGS84 reference frame
+              (ft)
+            $ref: '#/components/schemas/Altitude'
+              #https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude
+          timestamp:
+            description: Targeted time to reach this waypoint.
+            $ref: '#/components/schemas/timestampDateTime'
+          target_ground_speed:
+            description: |-
+              The target ground speed of the vehicle at this waypoint.
+              Units of measure: ft/sec.
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 9999
+            example: 32
+          target_air_speed:
+            description: |-
+              The target air speed of the vehicle at this waypoint.
+              Units of measure: ft/sec.
+            type: integer
+            format: int32
+            minimum: -9999
+            maximum: 9999
+            example: 32
+          hover_time:
+            description: >-
+              Number of seconds the vehicle plans to hover or loiter at this
+              waypoint.
+            type: integer
+            format: int32
+            minimum: 0
+            maximum: 99999
+            example: 120
     metaData:
       type: object
       required:
