@@ -2238,18 +2238,18 @@ components:
     Waypoint:
         description: A single waypoint with associated data.
         required:
-          - waypoint_metaData
+          - metaData
           - waypoint_id
           - waypoint_sequence_id
           - waypoint_type
           - position
-          - waypoint_altitude
-          - waypoint_timestamp
+          - altitude
+          - timestamp
           - target_air_speed
           - target_ground_speed
           - hover_time
         properties:
-          waypoint_metaData:
+          metaData:
             $ref: '#/components/schemas/metaData'
             #$ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/metaData'
           waypoint_id:
@@ -2280,13 +2280,13 @@ components:
             description: 2D position of the waypoint. (Lat/Lon)
             $ref: >-
               https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point
-          waypoint_altitude:
+          altitude:
             description: >-
               Targeted altitude of the waypoint expressed in WGS84 reference frame
               (ft)
             $ref: '#/components/schemas/Altitude'
               #https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude
-          waypoint_timestamp:
+          timestamp:
             description: Targeted time to reach this waypoint.
             $ref: '#/components/schemas/timestampDateTime'
           target_ground_speed:
