@@ -2279,7 +2279,7 @@ components:
           position:
             description: 2D position of the waypoint. (Lat/Lon)
             $ref: >-
-              https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-geojson.yaml#/definitions/Point
+              https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point
           waypoint_altitude:
             description: >-
               Targeted altitude of the waypoint expressed in WGS84 reference frame
