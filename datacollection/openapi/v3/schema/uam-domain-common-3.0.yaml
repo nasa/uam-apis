@@ -211,7 +211,7 @@ components:
       example: d7126818-d280-475f-aaee-c16e9c6f04e0
       maxLength: 36
       minLength: 36
-    data_accessibility:
+    dataAccessibility:
       description: >-
         Each data member of each model will be tagged with a value representing
         its accessibility level.  This enum provides the potential values.
