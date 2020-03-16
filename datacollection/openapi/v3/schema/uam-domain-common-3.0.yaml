@@ -2250,7 +2250,7 @@ components:
           - hover_time
         properties:
           waypoint_metaData:
-            #$ref: '#/components/schemas/metaData'
+            $ref: '#/components/schemas/metaData'
             #$ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/metaData'
           waypoint_id:
             description: unique id for this data submission.
