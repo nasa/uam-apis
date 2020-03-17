@@ -40,7 +40,7 @@ paths:
             proper use by automated tooling.
 components:
   schemas:
-    waypoint_body:
+    waypointBoday:
       type: object
       required:
         - waypoint
