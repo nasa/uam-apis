@@ -291,8 +291,6 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
                   $ref: >-
                      https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-waypoint-3.0.yaml#/components/schemas/waypointwrapper
           description: Upload array of Waypoint models
