@@ -2316,7 +2316,70 @@ components:
             minimum: 0
             maximum: 99999
             example: 120
-            
+    UasTruthPosition:
+      description: As reported by truth position system
+      type: object
+      required:
+        - metaData
+        - xCoordinate_ft
+        - yCoordinate_ft
+        - zCoordinate_ft
+        - timestamp
+      properties:
+        metaData:
+          $ref: '#/components/schemas/metaData'
+        xCoordinate_ft:
+          description: >-
+            X-Coordinate truth position of UA (ECEF: Earth Centered Earth Fixed,
+            inch-level resolution); as reported by the Ground Truth System
+            (Truth Reference System, e.g. optical, radar, LiDAR, nav. beacon,
+            etc). Can be reported by the UAS but has to be independent of UAS's
+            primary navigation system, use of separate RTK system is allowed
+            (UTC time stamped). Report at least 2 decimal places of precision.
+            (ft)
+          $ref: '#/components/schemas/UasTruthEcefCoordinateFt'
+        yCoordinate_ft:
+          description: >-
+            Y-Coordinate truth position of UA (ECEF: Earth Centered Earth Fixed,
+            inch-level resolution); as reported by the Ground Truth System
+            (Truth Reference System, e.g. optical, radar, LiDAR, nav. beacon,
+            etc). Can be reported by the UAS but has to be independent of UAS's
+            primary navigation system, use of separate RTK system is allowed
+            (UTC time stamped). Report at least 2 decimal places of precision.
+            (ft)
+          $ref: '#/components/schemas/UasTruthEcefCoordinateFt'
+        zCoordinate_ft:
+          description: >-
+            Z-Coordinate truth position of UA (ECEF: Earth Centered Earth Fixed,
+            inch-level resolution); as reported by the Ground Truth System
+            (Truth Reference System, e.g. optical, radar, LiDAR, nav. beacon,
+            etc). Can be reported by the UAS but has to be independent of UAS's
+            primary navigation system, use of separate RTK system is allowed
+            (UTC time stamped). Report at least 2 decimal places of precision.
+            (ft)
+          $ref: '#/components/schemas/UasTruthEcefCoordinateFt'
+        timestamp:
+          $ref: '#/components/schemas/timestampDateTime'
+    
+    UasTruthEcefCoordinateFt:
+      type: object
+      required:
+        - estimatedError95Prct_in
+        - value_ft
+      properties:
+        value_ft:
+          type: number
+          format: double
+          description: Coordinate value (ft)
+          example: 871.94
+        estimatedError95Prct_in:
+          type: number
+          format: double
+          description: >-
+            "Estimated truth system position (ECEF) error at time of measurement
+            (95 percentile, inches). UTC time stamped. (in)"
+          minimum: 0
+          example: 3.2        
     metaData:
       type: object
       required:
