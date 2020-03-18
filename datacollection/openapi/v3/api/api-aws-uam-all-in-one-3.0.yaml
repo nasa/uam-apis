@@ -294,7 +294,33 @@ paths:
                   $ref: >-
                      https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-waypoint-3.0.yaml#/components/schemas/waypointwrapper
           description: Upload array of Waypoint models
-          required: true  
+          required: true 
+  /uas-truth-position:
+      post:
+        summary: Upload array of UasTruthPosition models
+        responses:
+            '200':
+              $ref: '#/components/responses/r200'
+            '204':
+              $ref: '#/components/responses/r204'
+            '400':
+              $ref: '#/components/responses/r400'
+            '401':
+              $ref: '#/components/responses/r400'
+            '403':
+              $ref: '#/components/responses/r403'
+            '409':
+              $ref: '#/components/responses/r409'
+            '429':
+              $ref: '#/components/responses/r429'
+        requestBody:
+          content:
+            application/json:
+              schema:
+                  $ref: >-
+                     https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-uastruthposition-3.0.yaml#/components/schemas/uastruthpositionwrapper
+          description: Upload array of UasTruthPosition models
+          required: true
   
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
