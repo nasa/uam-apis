@@ -269,9 +269,9 @@ paths:
                   https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/dbwrapper/schema-aws-uam-gcdmp-fet-3.0.yaml#/components/schemas/fet
           description: The FlightEssentialTelemetryAndUasStates model
           required: true  
-  /flight-plan:
+  /waypoint:
       post:
-        summary: Upload a single instance of the FlightEssentialTelemetryUasStates model
+        summary: Upload a single instance of the waypoint model
         responses:
             '200':
               $ref: '#/components/responses/r200'
