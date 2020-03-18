@@ -45,7 +45,7 @@ components:
       required:
         - uas_truth_position
       properties:
-        waypoint:
+        uas_truth_position:
           type: array
           items:
             $ref: >-
