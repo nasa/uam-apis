@@ -15,7 +15,8 @@ info:
 
 servers:
   - url: 'https://uss.defined.url/'
-  
+
+#x-amazon-apigateway-request-validator: all  
 x-amazon-apigateway-request-validators:
   validate_body_and_parameters:
     validateRequestParameters: true
@@ -293,11 +294,6 @@ x-amazon-apigateway-gateway-responses:
       application/json: "{\n  \"error\": {\n    \"code\": 400,\n    \"stage\": \"\
         $context.stage\",\n    \"request\": \"$context.requestId\",\n    \"message\"\
         : \"$context.error.validationErrorString\"\n  }\n}\n"
-x-amazon-apigateway-request-validator: all
-x-amazon-apigateway-request-validators:
-  all:
-    validateRequestBody: true
-    validateRequestParameters: true
 
 components:
   securitySchemes:
