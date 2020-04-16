@@ -375,11 +375,11 @@ material is also available from the sources indicated in paragraphs (g)(1) and
               0 Probability of exceeding NIC containment radius is based on per hour
           airGroundState:
             type: integer
-            enum: [0,1,3]
+            enum: [0,1,2,3]
             description: Airborne or ground
               0 = Airborne subsonic condition
               1 = Airborne supersonic condition
-              3 = On ground condition
+              3 = On ground condition # never occurs in UAM uAvionix dataset sanjose2.json 
           svHeadingType:
             type: integer
             enum: [0,1,2,3]
