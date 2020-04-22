@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  version: "v1.0-oas3"
+  title: wxstationreport
+  description: OpenAPI 3.0 compliant definitions for AFRC weather station report
+
+components:
+  schemas:
+      wxStationObject:
+        type: object
+        required:
+          - wxreports
+        properties:
+          wxreports:
+            type: array
+            items:
+              $ref: 
+                '#/components/schemas/wxReportModel'
+
+      wxReportModel:
+        description: 'Temperature, air pressure (in Hg), windspeed (ft/sec), wind direction, location, and timestamp associated with the measurement from a weather station on the ground.'
+        type: object
+        required:
+          - stationId
+          - timestamp
+          - temperature
+          - pressure
+          - windSpeed
+          - windDir
+	  - irradiance
+          - location
+        properties:
+          timestamp:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/timestamp'
+          temperature:
+            description: Degrees Fahrenheit
+            type: number
+            format: float
+          pressure:
+            description: Inches Of Hg
+            type: number
+            format: float
+          windSpeed:
+            description: Feet Per Second
+            type: number
+            format: float
+            minimum: 0
+          windDir:
+            description: 'Degrees, True North Reference Frame'
+            type: number
+            minimum: 0
+            maximum: 360
+            exclusiveMinimum: false
+            exclusiveMaximum: true
+	  irradiance:
+	    description: 'instantaneous sample, kilowatts/square meter
+	    type: number
+	    minimum: 0
+	    maximum: 2  # cloud-edge 1.8x enhancement, with margin
+          location:
+            $ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/LatLonAlt'
+          stationId:
+            description: A unique string identifier for a weather station belonging to given test site
+            type: string
+            minLength: 1
+            maxLength: 1000
