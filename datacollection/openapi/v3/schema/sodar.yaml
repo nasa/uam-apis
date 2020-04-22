@@ -8,8 +8,10 @@ components:
   schemas:
     SODARObject:
       type: object
+      required: 
+        - sodararray
       properties:
-        sodarArray:
+        sodararray:
           type: array
           items:
             $ref: #/components/schemas/SODARModel
@@ -19,6 +21,7 @@ components:
       required:
         - siteName
         - reportTime
+        - soundings
       properties:
         siteName:
           type: string
@@ -93,6 +96,8 @@ components:
           type: array
           items:
             type: object
+            required:
+              - altitude
             properties:
               altitude:
                 type: number
