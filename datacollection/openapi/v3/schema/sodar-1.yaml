@@ -14,7 +14,7 @@ components:
         sodararray:
           type: array
           items:
-            $ref: #/components/schemas/SODARModel
+            $ref: '#/components/schemas/SODARModel'
 
     SODARModel:
       type: object
