@@ -27,7 +27,7 @@ components:
           - pressure
           - windSpeed
           - windDir
-	  - irradiance
+          - irradiance
           - location
         properties:
           timestamp:
@@ -52,11 +52,11 @@ components:
             maximum: 360
             exclusiveMinimum: false
             exclusiveMaximum: true
-	  irradiance:
-	    description: 'instantaneous sample, kilowatts/square meter
-	    type: number
-	    minimum: 0
-	    maximum: 2  # cloud-edge 1.8x enhancement, with margin
+          irradiance:
+            description: 'instantaneous sample, kilowatts/square meter'
+            type: number
+            minimum: 0
+            maximum: 2  # cloud-edge 1.8x enhancement, with margin
           location:
             $ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/LatLonAlt'
           stationId:
