@@ -27,7 +27,7 @@ components:
           type: string
           description: the name entered in the sitename field of the Sodar Parameters
         reportTime:
-          $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/timestamp
+          $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/timestamp'
         tempc:
           type: number
           description: Temperature (deg C) 
