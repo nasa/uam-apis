@@ -30,7 +30,7 @@ components:
         type: object
         required:
           - stationId
-          - WXTimeStamp
+          - timeStamp
           - temperature
           - pressure
           - windSpeed
@@ -38,8 +38,8 @@ components:
           - irradiance
           - location
         properties:
-          WXTimeStamp:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/timestamp'
+          timeStamp:
+            $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/timestamp'
           temperature:
             description: Degrees Fahrenheit
             type: number
