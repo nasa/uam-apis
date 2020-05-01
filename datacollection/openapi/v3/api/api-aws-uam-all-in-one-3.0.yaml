@@ -317,6 +317,57 @@ paths:
                       #format: binary
                       format: base64
   
+  /sodar:
+      post:
+        summary: the name entered in the sitename field of the Sodar Parameters
+        responses:
+            '200':
+              $ref: '#/components/responses/r200'
+            '204':
+              $ref: '#/components/responses/r204'
+            '400':
+              $ref: '#/components/responses/r400'
+            '401':
+              $ref: '#/components/responses/r400'
+            '403':
+              $ref: '#/components/responses/r403'
+            '409':
+              $ref: '#/components/responses/r409'
+            '429':
+              $ref: '#/components/responses/r429'
+        requestBody:
+          content:
+            application/json:
+              schema:
+                  $ref: >-
+                     https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/sodar.yaml#/components/schemas/SODARObject
+  /wxstationreport:
+      post:
+        summary: the name entered in the sitename field of the Sodar Parameters
+        responses:
+            '200':
+              $ref: '#/components/responses/r200'
+            '204':
+              $ref: '#/components/responses/r204'
+            '400':
+              $ref: '#/components/responses/r400'
+            '401':
+              $ref: '#/components/responses/r400'
+            '403':
+              $ref: '#/components/responses/r403'
+            '409':
+              $ref: '#/components/responses/r409'
+            '429':
+              $ref: '#/components/responses/r429'
+        requestBody:
+          content:
+            application/json:
+              schema:
+                  $ref: >-
+                     https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/wxstationreport.yaml#/components/schemas/wxStationObject
+          description: the name entered in the sitename field of the Sodar Parameters
+          required: true
+  
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
     statusCode: 400
