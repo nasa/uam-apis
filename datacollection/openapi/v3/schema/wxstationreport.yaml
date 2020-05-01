@@ -4,6 +4,14 @@ info:
   title: wxstationreport
   description: OpenAPI 3.0 compliant definitions for AFRC weather station report
 
+paths:
+  /no-paths:
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.
 components:
   schemas:
       wxStationObject:
