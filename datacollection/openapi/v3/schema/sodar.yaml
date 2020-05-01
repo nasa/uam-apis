@@ -4,6 +4,15 @@ info:
   title: SODAR
   description: OpenAPI 3.0 compliant definitions for SODAR soundings, from SODARView application from ASC
 
+paths:
+  /no-paths:
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.
+            
 components:
   schemas:
     SODARObject:
