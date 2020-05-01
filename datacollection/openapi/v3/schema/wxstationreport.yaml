@@ -4,6 +4,14 @@ info:
   title: wxstationreport
   description: OpenAPI 3.0 compliant definitions for AFRC weather station report
 
+paths:
+  /no-paths:
+    put:
+      responses:
+        '410':
+          description: >-
+            Gone. Not implemented. Will not be implemented. Path included for
+            proper use by automated tooling.
 components:
   schemas:
       wxStationObject:
@@ -22,7 +30,7 @@ components:
         type: object
         required:
           - stationId
-          - timeStamp
+          - WXTimeStamp
           - temperature
           - pressure
           - windSpeed
@@ -30,7 +38,7 @@ components:
           - irradiance
           - location
         properties:
-          timeStamp:
+          WXTimeStamp:
             $ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/timestamp'
           temperature:
             description: Degrees Fahrenheit
