@@ -39,12 +39,7 @@ components:
           - location
         properties:
           timeStamp:
-	    type: string
-	    format: date-time
-	    minLength: 24
-	    maxLength: 24
-	    pattern: >-
-	      ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]{3})Z$
+            $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/timestamp'
           temperature:
             description: Degrees Fahrenheit
             type: number
