@@ -66,7 +66,7 @@ components:
             minimum: 0
             maximum: 2  # cloud-edge 1.8x enhancement, with margin
           location:
-            $ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/LatLonAlt'
+            $ref: 'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/LatLonAlt'
           stationId:
             description: A unique string identifier for a weather station belonging to given test site
             type: string
