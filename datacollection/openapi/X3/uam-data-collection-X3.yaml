@@ -187,6 +187,25 @@ components:
             format: double
           example: [0.0, 0.0]
 
+    UTMRestResponse:
+      type: object
+      required:
+        - http_status_code
+        - message
+      properties:
+        http_status_code:
+          type: integer
+          minimum: 100
+          exclusiveMinimum: false
+          maximum: 599
+          exclusiveMaximum: false
+        message:
+          type: string
+          maxLength: 500
+      example:
+        http_status_code: 400
+        message: Bad Request. Invalid JSON?
+
     CallSign:
         type: string
         minLength: 1
@@ -597,15 +616,14 @@ components:
       content:
         application/json:
           schema:
-            $ref:
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref: '#/components/schemas/UTMRestResponse'
 
     'r201':
       description: Position data created
       content:
         application/json:
           schema:
-            $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref: '#/components/schemas/UTMRestResponse'
 
     'r204':
       description: no response supplied
@@ -615,16 +633,14 @@ components:
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref: '#/components/schemas/UTMRestResponse'
 
     'r401':
       description: Invalid or missing access_token provided.
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref: '#/components/schemas/UTMRestResponse'
 
     'r403':
       description: >-
@@ -633,20 +649,18 @@ components:
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref: '#/components/schemas/UTMRestResponse'
 
     'r409':
       description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
       content:
         application/json:
           schema:
-            $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref: '#/components/schemas/UTMRestResponse'
 
     'r429':
       description: Too many recent requests from you. Wait to make further queries.
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref: '#/components/schemas/UTMRestResponse'
