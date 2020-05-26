@@ -55,137 +55,48 @@ paths:
         content:
           application/json:
             schema:
-                $ref: '#/components/schemas/USSExchange'
+                $ref: '#/components/schemas/PSUExchange'
         description: Upload an object of models, containing array of uss exchange
         required: true
 
 components:
   schemas:
-    timestampDateTime:
+    Timestamp:
       description: >-
         Timestamps MUST follow the guidance set forth in RFC3339.
-        This RFC defines a profile for ISO8601 focused on interoperability of Internet
-        based systems.  This profile makes certain design decisions based on
-        reducing rarely used options, elimination of redundant information, and
-        overall simplicity.
-        From these goals and insight from building interoperable systems,
-        RFC3339 provides a grammar for timestamps.  Please see
-        https://tools.ietf.org/html/rfc3339#section-5.6
-        for that grammar and the sections preceding that grammar for more
-        detailed discussion.
-        For UTM, we have attempted to reduce the grammar to a regular expression,
-        but this does not take into account all rules.  For example, a valid
-        timestamp should not allow 30 days in February, but this is not in the
-        regular expression.  Likewise, leap years are not captured in the
-        regular expression.  Thus it is possible for a timestamp to satisfy this
-        RE, but still not be valid and, thus, be rejected by some components of
-        UTM.
-        Note that this UTM format specifies millisecond precision for all
-        time stamps.  This is why the min and max length are fixed at 24.
-        Note that this UTM format specifies UTC time indicated by a trailing 'Z'.
-        Note that this UTM format specifies date and time separation with a 'T'.
+        Note that this format specifies UTC time indicated by a trailing 'Z'.
+        Note that this format specifies date and time separation with a 'T'.
       type: string
       format: date-time
       minLength: 24
       maxLength: 24
-      #pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
-      example: "2015-08-20T14:11:56.118Z"
+      pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
+      example: '2015-08-20T14:11:56.118Z'
 
-    UUIDNormal:
-      type: string
-      format: uuid
-      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
-      example: d7126818-d280-475f-aaee-c16e9c6f04e0
-      maxLength: 36
-      minLength: 36
-
-    Altitude:
+    LatLonAlt:
       type: object
       required:
-        - altitude_value
-        - vertical_reference
-        - units_of_measure
+        - Latitude
+        - Longitude
+        - Altitude
+      description: >-
+        Object used to define a location. Latitude and Longitude should have precision of 7 or more digits. WGS84 altitude. (ft)
       properties:
-        altitude_value:
+        Latitude:
           description: >-
-            The numeric value of the altitude. Note that min and max values are
-            added as a sanity check. As use cases evolve and more options are
-            made available in terms of units of measure or reference systems,
-            these bounds should be re-evaluated.
+            Degrees of latitude north of the equator, with reference to the WGS84 ellipsoid. Should have precision of 7 or more digits.
           type: number
           format: double
-          minimum: -8000
-          exclusiveMinimum: false
-          maximum: 100000
-          exclusiveMaximum: false
-        vertical_reference:
+        Longitude:
           description: >-
-            A code indicating the reference for a vertical distance. See AIXM
-            5.1 and FIXM 4.1.0.
-
-            Currently, UTM only allows WGS84 with no immediate plans to allow
-            other options. FIXM and AIXM allow for 'SFC' which is equivalent to
-            AGL.
-          externalDocs:
-            description: See FIXM 4.1.0 for further information.
-            url: >-
-              https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/Measures_xsd.html#VerticalReferenceType
-          xml:
-            name: VerticalReferenceType
-            namespace: 'https://www.fixm.aero/nas/4.1'
-            prefix: fb
-            attribute: false
-          type: string
-          enum:
-            - W84
-        units_of_measure:
+            Degrees of longitude east of the Prime Meridian, with reference to the WGS84 ellipsoid. Should have precision of 7 or more digits.
+          type: number
+          format: double
+        Altitude:
           description: >-
-            The reference quantities used to express the value of altitude. See
-            FIXM 4.1.
-
-            Currently, UTM only allows feet with no immediate plans to allow
-            other options.  FIXM allows for feet or meters.
-          externalDocs:
-            description: See FIXM 4.1.0 for further information.
-            url: >-
-              https://www.fixm.aero/releases/FIXM-4.1.0/doc/schema_documentation_core/UnitsOfMeasure_xsd.html#UomHeightType
-          xml:
-            name: UomHeightType
-            namespace: 'https://www.fixm.aero/nas/4.1'
-            prefix: fb
-            attribute: false
-          type: string
-          enum:
-            - FT
-        source:
-          description: >-
-            Experimental field for testing and discussion to determine
-            applicability.
-          type: string
-          enum:
-            - ONBOARD_SENSOR
-            - OTHER
-
-    Point:
-      type: object
-      description: GeoJSon Point, limited to 2D.
-      externalDocs:
-        url: https://tools.ietf.org/html/rfc7946#section-3.1.2
-      properties:
-        type:
-          description: |
-            The type of Geometry. In this case, must be 'Point' per GeoJSON spec.
-          type: string
-          enum:
-          - Point
-        coordinates:
-          type: array
-          maxItems: 2
-          minItems: 2
-          items:
-            type: number
-            format: double
-          example: [0.0, 0.0]
+            The numeric value of the WGS84 altitude.
+          type: number
+          format: double
 
     UTMRestResponse:
       type: object
@@ -206,218 +117,25 @@ components:
         http_status_code: 400
         message: Bad Request. Invalid JSON?
 
-    CallSign:
-        type: string
-        minLength: 1
-        maxLength: 100
-        description: >-
-          A UTM TCL4 globally unique identifier that is associated with a vehicle/operation
-          Every operation requires a call_sign that is pre-determined in the
-          full test card description.
-
-    metaData:
-      type: object
-      required:
-        - data_collection
-        - scenario
-        - test_card
-        - call_sign
-        - test_type
-        - source
-        - location
-        - setting
-        - test_run
-        - uvin
-        - gufi
-        - uss_name
-      properties:
-        data_collection:
-          description: >-
-            If true these data are intended for Data Collection. Essentially
-            stating if particular data should be ignored during analysis. This
-            may be modified after submission in the case that there was an issue
-            during execution of the test/experiment that would invalidate the
-            data that were collected.
-          type: boolean
-        scenario:
-          description: >-
-            Proper formatting for scenarios is "TCL4_Sc#" where "#" is 1-5.
-
-            For other scenarios, the appropriate value should be provided by the
-            POC for that activity.
-          type: string
-          minLength: 1
-          maxLength: 100
-        test_card:
-          description: >-
-            The name or number of the test card.  In many cases, a scenario will
-            have only one test_card, but it is possible that there are multiple
-            test_cards for a given scenario.
-          minLength: 1
-          maxLength: 100
-          type: string
-        test_run:
-          description: >-
-            An identifier for a specific run of a test_card.  In many cases, a
-            test_card may be only run once.  However, it is possible that a
-            test_card is run multiple times.
-          type: integer
-        call_sign:
-          $ref: '#/components/schemas/CallSign'
-        test_type:
-          type: string
-          description: >-
-            Test type. Note a GROUND test may use a physical vehicle and a
-            FLIGHT test may use a simulated vehicle.  This is the reason for
-            separating test_type from source.
-          enum:
-            - GROUND
-            - FLIGHT
-        source:
-          type: string
-          description: >-
-            Hardware-in-the-loop (HWITL) flights refer to ground or airborne
-            flights. Software-in-the loop (SWITL) flights would be used to tag
-            flights do not use a physical vehicle, whether or not there is a
-            full-featured simulation involved.
-          enum:
-            - HWITL
-            - SWITL
-        location:
-          type: string
-          description: >-
-            Name of the testing location, such as NV, Moffett, Crows Landing,
-            etc.  The supplier of the metadata should use a constant value for
-            this field when the same location is used multiple times across data
-            submissions. E.g. "AMES" should always be "AMES" and not "ames" or
-            "Ames" or "NASA Ames" at other various times.
-          minLength: 1
-          maxLength: 100
-        setting:
-          type: string
-          description: >-
-            Test setting. Note that a LAB setting may involve HWITL source and
-            FIELD settings may involve SWITL sources.  LAB settings may have
-            GROUND or FLIGHT tests, same with FIELD settings.
-          enum:
-            - LAB
-            - FIELD
-        uvin:
-          $ref: '#/components/schemas/UUIDNormal'
-        gufi:
-          description: >-
-            GUFI of the operation that is the source of these data. Note that
-            this GUFI is repeated in the Position model, so they must match.  In
-            addition this GUFI will map to operational data in the UTM data
-            stores.  Thus the values for call_sign, test_card, test_run must
-            match the metadata supplied with that Operation's metadata.
-            Mismatches will cause the data submission to be rejected.
-          type: string
-          format: uuid
-          maxLength: 36
-          minLength: 36
-          pattern: >-
-            ^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-[8-9a-bA-B][0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$
-          example: 00000000-0000-4444-8888-FEEDDEADBEEF
-        submit_time:
-          $ref: '#/components/schemas/timestampDateTime'
-        uss_name:
-          type: string
-          minLength: 1
-          maxLength: 1000
-          description: >-
-            This is a unique string that identifies the USS that is supporting
-            this operation.  It is the same identifier used in the basic
-            authentication mechanism required to obtain a token from FIMS
-            (Flight Information Management System).  It is also the subject
-            claim that identifies the principal that is the subject of the JWT.
-
-    metaDataDmpUss:
-        type: object
+    PSUExchange:
         required:
-          - data_collection
-          - call_sign
-          - test_run
-          - uss_name
-        properties:
-          data_collection:
-            description: >-
-              If true these data are intended for Data Collection. Essentially
-              stating if particular data should be ignored during analysis. This
-              may be modified after submission in the case that there was an issue
-              during execution of the test/experiment that would invalidate the
-              data that were collected.
-            type: boolean
-          call_sign:
-            $ref: '#/components/schemas/CallSign'
-          uss_name:
-            type: string
-            description: >-
-              This is a unique string that identifies the USS that is supporting
-              this operation.  It is the same identifier used in the basic
-              authentication mechanism required to obtain a token from FIMS
-              (Flight Information Management System).  It is also the subject claim
-              that identifies the principal that is the subject of the JWT.
-            minLength: 1
-            maxLength: 1000
-          test_run:
-            description: >-
-              An identifier for a specific run of a test_card.  In many cases, a
-              test_card may be only run once.  However, it is possible that a
-              test_card is run multiple times.
-            type: integer
-
-    USSExchange:
-        description: >-
-          This model captures performance and interoperability data for a USS. since
-          these data are not captured explicitly in the USS network, it is important
-          to have USSs self report on these elements.  This information may inform
-          future performance requirements and forensics of certain incidents. This
-          may be an initial model that will be required operationally in terms of
-          a USSs need to log interactions with other USSs.
-        required:
-          - "metaDataDmpUss"
-          - "measurement_id"
-          - "event_id"
           - "exchanged_data_pk"
           - "exchanged_data_type"
-          - "source_uss"
-          - "target_uss"
+          - "source_psu"
+          - "target_psu"
           - "time_request_initiation"
           - "time_request_completed"
           - "actual_http_response"
           - "endpoint"
           - "http_method"
+        description: >-
+          This model captures performance and interoperability data for a PSU. Since only failure case data is included in the PSU network 'Report' model, it is important to have PSUs self report on nominal elements. This information may inform future performance requirements and forensics of certain incidents. This may be an initial model that will be required operationally in terms of a PSUs need to log interactions with other PSUs.
         properties:
-          metaDataDmpUss:
-            $ref: '#/components/schemas/metaDataDmpUss'
-            #$ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/metaDataDmpUss'
-          measurement_id:
-            description: >-
-              A UUID assigned by the reporting USS for this instance of USSExchange.
-            type: string
-            format: uuid
-            maxLength: 36
-            minLength: 36
-            pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
-            example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-          event_id:
-            description: >-
-              A string provided by the owner of the overall test (likely NASA) that identifies the event within which this data exchange occurs. NASA will define a pattern for this for consistency across tests.
-            type: "string"
-            minLength: 3
-            maxLength: 100
-            example: "USS_SPRINT1_SIM_20180723_RUN5"
           exchanged_data_pk:
             description: >-
-              The primary key of the data that were exchanged.  For example, if an
-              Operation was exchanged, then this field would contain the gufi.
+              	The primary key of the data that were exchanged. For example, if an Operation or Constraint was exchanged, then this field would contain the reference ID.
 
-              In the case that multiple data elements were exchanged (as in a GET
-              to the Operations endpoint resulting in multiple Operations returned)
-              then just populate this field with one of the primary keys. As a best
-              practice, choose the first one in the array as they were sent between
-              USSs.
+                In the case that multiple data elements were exchanged, then just populate this field with one of the primary keys. As a best practice, choose the first one in the array as they were sent between PSUs.
             type: string
             format: uuid
             maxLength: 36
@@ -428,62 +146,42 @@ components:
             type: "string"
             enum:
               - OPERATION
-              - POSITION
-              - UTM_MESSAGE
-              - CONSTRAINT_MESSAGE
-              - NEGOTIATION_MESSAGE
-              - USS_INSTANCE
+              - TELEMETRY
+              - CONSTRAINT
               - DISCOVERY
+              - REPORT
               - OTHER_SEE_COMMENT
-            example: "POSITION"
-          source_uss:
+            example: "TELEMETRY"
+          version_number:
             description: >-
-              This is the uss_name of the source_uss.
-
-              See MetaDataDmpUssId for definition of uss_name.
+              The version number of the model that was sent. For Operation and Constraint
+            type: "integer"
+            example: 4
+          source_psu:
+            description: >-
+              This is the psu_name of the source_psu.
             type: "string"
-            example: "uss.provider123.net"
-          target_uss:
+          target_psu:
             description: >-
-              This is the uss_name of the target_uss.
-
-              See MetaDataDmpUssId for definition of uss_name.
+              This is the psu_name of the target_psu.
             type: "string"
-            example: "utm.cool-uss-team.com"
-          reporting_uss_role:
+          reporting_psu_role:
             description: >-
-              An enum indicating if the USS providing these data was the one that initiated the request (SOURCE_USS) or the USS that received the request (TARGET_USS).
+              An enum indicating if the PSU providing these data was the one that initiated the request (source_psu) or the PSU that received the request (target_psu).
             type: "string"
             enum:
-              - SOURCE_USS
-              - TARGET_USS
-            example: "SOURCE_USS"
+              - SOURCE_PSU
+              - TARGET_PSU
           time_request_initiation:
             description: >-
-              If SOURCE_USS, this is the time that the request is sent to the TARGET_USS.
-              If TARGET_USS, this is the time that the request was received from the SOURCE_USS.
-
-              Same formatting rules as in other UTM exchanges (ms, 'Z').
-            type: string
-            format: date-time
-            minLength: 24
-            maxLength: 24
-            pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
-            example: '2015-08-20T14:11:56.118Z'
-
+              If SOURCE_PSU, this is the time that the request is sent to the TARGET_USS.
+              If TARGET_PSU, this is the time that the request was received from the SOURCE_PSU.
+            $ref: '#/components/schemas/Timestamp'
           time_request_completed:
             description: >-
-              If SOURCE_USS, this is the time that the response was received from the TARGET_USS.
-              If TARGET_USS, this is the time that the request was sent back to the SOURCE_USS.
-
-              Same formatting rules as in other UTM exchanges (ms, 'Z').
-            type: string
-            format: date-time
-            minLength: 24
-            maxLength: 24
-            pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$"
-            example: '2015-08-20T14:11:56.118Z'
-
+              If SOURCE_PSU, this is the time that the response was received from the TARGET_PSU.
+              If TARGET_PSU, this is the time that the request was sent back to the SOURCE_PSU.
+            $ref: '#/components/schemas/Timestamp'
           endpoint:
             description: >-
               The endpoint to which the data request was initially sent.
@@ -507,14 +205,14 @@ components:
           expected_http_response:
             description: >-
               The expected HTTP response code.
-              This is required ONLY if the reporting_uss_role is SOURCE_USS.
+              This is required ONLY if the reporting_psu_role is source_psu.
             type: "integer"
             minimum: 100
             maximum: 599
             example: 204
           actual_http_response:
             description: >-
-              The actual HTTP response code sent by the TARGET_USS to the SOURCE_USS.
+              The actual HTTP response code sent by the target_psu to the source_psu.
               Must be reported by USSs in either role.
             type: "integer"
             minimum: 100
@@ -530,33 +228,19 @@ components:
     Waypoint:
         description: A single waypoint with associated data.
         required:
-          - metaData
-          - waypoint_id
-          - waypoint_sequence_id
+          - sequence_id
           - waypoint_type
-          - position
-          - altitude
-          - timestamp
+          - waypoint_location
+          - target_time
           - target_air_speed
           - target_ground_speed
+          - target_vertical_speed
           - hover_time
         properties:
-          metaData:
-            $ref: '#/components/schemas/metaData'
-            #$ref: 'https://raw.githubusercontent.com/nasa/utm-docs/master/TCL4%20Data%20Management/utm-tcl4-dmp-common.yaml#/definitions/metaData'
-          waypoint_id:
-            description: unique id for this data submission.
-            type: string
-            format: uuid
-            maxLength: 36
-            minLength: 36
-            pattern: >-
-              ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
-            example: 00000000-0000-4444-8888-FEEDDEADBEEF
           waypoint_sequence_id:
-            description: |-
-              integer indicating order of this waypoint in the list of waypoints.
-              must be sequential starting with 1.
+            description: >-
+              	Integer indicating order of this waypoint in the list of waypoints.
+                must be sequential starting with 1.
             type: integer
             format: int32
             minimum: 1
@@ -568,21 +252,36 @@ components:
             enum:
               - FLY_BY
               - FLY_OVER
-          position:
-            description: 2D position of the waypoint. (Lat/Lon)
-            $ref: '#/components/schemas/Point'
-              #https://raw.githubusercontent.com/nasa/uam-apis/master/utm-domains/utm-domain-geojson.yaml#/definitions/Point
-          altitude:
+          waypoint_phase:
             description: >-
-              Targeted altitude of the waypoint expressed in WGS84 reference frame
-              (ft)
-            $ref: '#/components/schemas/Altitude'
-              #https://raw.githubusercontent.com/nasa/utm-apis/v4-draft/utm-domains/utm-domain-commons.yaml#/definitions/Altitude
-          timestamp:
+              Phase of flight that the operation will be in at this waypoint. Climb or Descent implies that the vehicle is traveling with some lateral air speed while descending. Vertical implies no lateral speed.
+            type: string
+            enum:
+              - HOVER
+              - VERTICAL_CLIMB
+              - CLIMB
+              - CRUISE
+              - VERTICAL_DESCENT
+              - DESCENT
+          waypoint_location:
+            description: >-
+              For Lat/Lon, report at least seven decimal degrees. (deg)
+              For Alt, express in WGS84 standard. (ft)
+            $ref: '#/components/schemas/LatLonAlt'
+          target_time:
             description: Targeted time to reach this waypoint.
-            $ref: '#/components/schemas/timestampDateTime'
+            $ref: '#/components/schemas/Timestamp'
+          target_air_speed:
+            description: >-
+              The target air speed of the vehicle at this waypoint.
+              Units of measure: ft/sec.
+            type: integer
+            format: int32
+            minimum: -9999
+            maximum: 9999
+            example: 32
           target_ground_speed:
-            description: |-
+            description: >-
               The target ground speed of the vehicle at this waypoint.
               Units of measure: ft/sec.
             type: integer
@@ -590,9 +289,9 @@ components:
             minimum: 0
             maximum: 9999
             example: 32
-          target_air_speed:
-            description: |-
-              The target air speed of the vehicle at this waypoint.
+          target_vertical_speed:
+            description: >-
+              For climb and descent waypoints, the target speed of climb or descent
               Units of measure: ft/sec.
             type: integer
             format: int32
@@ -601,8 +300,7 @@ components:
             example: 32
           hover_time:
             description: >-
-              Number of seconds the vehicle plans to hover or loiter at this
-              waypoint.
+              Number of seconds the vehicle plans to hover or loiter at this waypoint.
             type: integer
             format: int32
             minimum: 0
