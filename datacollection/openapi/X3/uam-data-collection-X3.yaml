@@ -235,9 +235,9 @@ components:
           - target_air_speed
           - target_ground_speed
           - target_vertical_speed
-          - hover_time
+          - hover_duration
         properties:
-          waypoint_sequence_id:
+          sequence_id:
             description: >-
               	Integer indicating order of this waypoint in the list of waypoints.
                 must be sequential starting with 1.
@@ -298,7 +298,7 @@ components:
             minimum: -9999
             maximum: 9999
             example: 32
-          hover_time:
+          hover_duration:
             description: >-
               Number of seconds the vehicle plans to hover or loiter at this waypoint.
             type: integer
