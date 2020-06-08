@@ -374,7 +374,7 @@ components:
             description: >-
               Name of the industry partner
             type: string
-          test _id:
+          test_id:
             description: >-
                 Distinguishing the event name, in this case the value is X3.
             type: string
