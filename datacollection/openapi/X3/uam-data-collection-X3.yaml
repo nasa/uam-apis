@@ -349,6 +349,7 @@ components:
           - scenario_id
           - call_sign
           - PSU_url
+          - crew
         properties:
           FRI:
             description: >-
@@ -410,7 +411,30 @@ components:
           crew:
             description: >-
               The crew.
+            type: array
+            items:
+              $ref: '#/components/schemas/CrewMember'
+
+    CrewMember:
+        description: >-
+          Information pretaining to the member of a crew.
+        required:
+          - role
+        properties:
+          name:
+            description: >-
+                Name of the individual crew member
             type: string
+            example: "Skipper Tanner"
+          role:
+            description: >-
+                Role of the individual crew member
+            type: string
+          email:
+            description: >-
+                Email of the individual crew member
+            type: string
+
 
 
   responses:
