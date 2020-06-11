@@ -52,8 +52,6 @@ paths:
           $ref: '#/components/responses/r409'
         '429':
           $ref: '#/components/responses/r429'
-
-
       requestBody:
         content:
           application/json:
@@ -62,6 +60,34 @@ paths:
               items:
                 $ref: '#/components/schemas/PSUExchange'
         description: Upload an object of models, containing array of psu exchange
+        required: true
+
+  /metadata:
+    post:
+      summary: Upload an object of models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FlightRunMetadata'
+        description: Upload an object of models, containing array of flight run metadata
         required: true
 
 components:
@@ -348,7 +374,7 @@ components:
         required:
           - FRI
           - flight_type
-          - flight-test-run-date-time
+          - flight_test_run_date_time
           - industry_partner_name
           - test_id
           - scenario_id
