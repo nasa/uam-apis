@@ -251,6 +251,7 @@ components:
           - FRI
           - sequence_id
           - waypoint_type
+          - waypoint_phase
           - waypoint_location
           - target_time
           - target_air_speed
@@ -287,12 +288,16 @@ components:
               Phase of flight that the operation will be in at this waypoint. Climb or Descent implies that the vehicle is traveling with some lateral air speed while descending. Vertical implies no lateral speed.
             type: string
             enum:
-              - HOVER
-              - VERTICAL_CLIMB
+              - GROUND_TAXI
+              - GROUND_HOVER
+              - TAKEOFF
+              - CLIMB_VERTICAL
               - CLIMB
               - CRUISE
-              - VERTICAL_DESCENT
+              - DESCENT_VERTICAL
               - DESCENT
+              - APPROACH
+              - LANDING
           waypoint_location:
             description: >-
               For Lat/Lon, report at least seven decimal degrees. (deg)
