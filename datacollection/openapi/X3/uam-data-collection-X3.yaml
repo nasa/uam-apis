@@ -396,9 +396,9 @@ components:
                 Distinguishing between flight test events.
             type: string
             enum:
-              - Airspace Simulation
-              - Flight Simulation
-              - Live Flight
+              - AIRSPACE_SIMULATION
+              - FLIGHT_SIMULATION
+              - LIVE_FLIGHT
           flight_test_run_date_time:
             description: Timestamp information about the start of the flight test event run.
             $ref: '#/components/schemas/Timestamp'
@@ -413,10 +413,10 @@ components:
             enum:
               - X3
               - X4
-              - Virtual Dry Run
-              - Buildup Run 1
-              - Buildup Run 2
-              - Dry Run
+              - VIRTUAL_DRY_RUN
+              - BUILDUP_RUN_1
+              - BUILDUP_RUN_2
+              - DRY_RUN
               - DT
               - NC-1
           test_description:
