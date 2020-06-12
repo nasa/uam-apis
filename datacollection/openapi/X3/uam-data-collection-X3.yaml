@@ -113,17 +113,17 @@ components:
       description: >-
         Object used to define a location. Latitude and Longitude should have precision of 7 or more digits. WGS84 altitude. (ft)
       properties:
-        Latitude:
+        latitude:
           description: >-
             Degrees of latitude north of the equator, with reference to the WGS84 ellipsoid. Should have precision of 7 or more digits.
           type: number
           format: double
-        Longitude:
+        longitude:
           description: >-
             Degrees of longitude east of the Prime Meridian, with reference to the WGS84 ellipsoid. Should have precision of 7 or more digits.
           type: number
           format: double
-        Altitude:
+        altitude:
           description: >-
             The numeric value of the WGS84 altitude.
           type: number
