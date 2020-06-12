@@ -107,9 +107,9 @@ components:
     LatLonAlt:
       type: object
       required:
-        - Latitude
-        - Longitude
-        - Altitude
+        - latitude
+        - longitude
+        - altitude
       description: >-
         Object used to define a location. Latitude and Longitude should have precision of 7 or more digits. WGS84 altitude. (ft)
       properties:
