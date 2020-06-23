@@ -1,0 +1,82 @@
+---
+openapi: 3.0.2
+info:
+  title: UTM Telemetry API (USS->UDC)
+  version: 0.1.0
+  description: |-
+    Interface definitions for sending telemetry to UDC.
+
+security:
+  - Authority:
+      - utm.strategic_coordination
+
+tags:
+  - name: Telemetry
+    description: Endpoint exposed to collect real-time telemetry data. Send telemetry to UDC for operations in Activated, NonConforming, or Contingent states. Telemetry messages should be sent once per second until the operation transitions to the Ended state.
+
+#
+#
+#
+
+paths:
+  #
+  # UDC Endpoint: TELEMETRY
+  #
+
+  /telemetry/{entityuuid}:
+    summary: Send detailed information on the position of an Operation.
+    parameters:
+      - name: entityuuid
+        description: EntityUUID of the VehicleTelemetry object. Each telemetry message has a unique identifier.
+        schema:
+          $ref: 'utm.yaml#/components/schemas/EntityUUID'
+        in: path
+        required: true
+
+    put:
+      tags:
+        - Telemetry
+      security:
+        - Authority:
+            - utm.strategic_coordination
+      summary: Notify UDC on the position of an Operation in the Activated, NonConforming, or Contingent states.
+      operationId: notifyTelemetryDetails
+      description: Notify UDC directly of telemetry associated with an Operation. Send telemetry once per second.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'utm.yaml#/components/schemas/VehicleTelemetry'
+        required: true
+      responses:
+        "204":
+          description: Telemetry information received successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: 'utm.yaml#/components/schemas/ErrorResponse'
+          description: |-
+            * One or more parameters were missing or invalid.
+            * The Entity could not be parsed, or contains illegal data.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: 'utm.yaml#/components/schemas/ErrorResponse'
+          description: |-
+            Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: 'utm.yaml#/components/schemas/ErrorResponse'
+          description: |-
+            * The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+            * The client identified in the access token is not the owner of this Entity according to the receiving client's records.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: 'utm.yaml#/components/schemas/ErrorResponse'
+          description: The client issued too many requests in a short period of time.
