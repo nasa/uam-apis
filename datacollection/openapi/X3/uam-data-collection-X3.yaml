@@ -68,7 +68,7 @@ paths:
 
   /metadata:
     post:
-      summary: Upload an array of FlightRubMetadata models
+      summary: Upload an array of FlightRunMetadata models
       responses:
         '200':
           $ref: '#/components/responses/r200'
