@@ -1,0 +1,85 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'io.franzbecker.gradle-lombok' version '3.0.0'
+    id 'org.hidetake.swagger.generator' version '2.18.2'
+    id 'jacoco'
+}
+
+group 'uss-validationtests'
+version '1.0-SNAPSHOT'
+
+apply plugin: "distribution"
+def USSNAME = 'uber'
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //swagger codegen
+    compile('io.swagger:swagger-parser:2.0.0-rc1')
+    compile('io.swagger.core.v3:swagger-annotations:2.0.7')
+    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.18'
+
+    //apache http client
+    compile 'org.apache.httpcomponents:httpclient:4.5.10'
+
+    //basic
+    compile 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    //auth
+    compile('com.nimbusds:nimbus-jose-jwt:5.11')
+
+    //spring boot web starters and runners
+    implementation("org.springframework.boot:spring-boot-starter-web:1.5.9.RELEASE")
+    implementation("org.springframework.boot:spring-boot-starter-test:1.5.9.RELEASE")
+    implementation("org.springframework.security.oauth:spring-security-oauth2:2.3.3.RELEASE")
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+// ----------------------
+// Build & Release
+// ----------------------
+swaggerSources {
+    utm {
+        inputFile = file("src/main/schema/utm.yaml")
+        code {
+            language = 'java'
+            configFile = file('src/main/schema/swagger-codegen-config.json')
+            components = [models: true, modelDocs: false, apiDocs: false, supportingFiles: false]
+        }
+    }
+}
+compileJava.dependsOn generateSwaggerCode
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+        }
+        java {
+            srcDir "${swaggerSources.utm.code.outputDir}/src/main/java"
+        }
+    }
+    test {
+        resources {
+            srcDir 'src/test/resources'
+        }
+    }
+}
+
+task zip(type: Zip) {
+    from "${buildDir}/${USSNAME}"
+    destinationDir = file("${buildDir}")
+}
+zip.mustRunAfter test
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = false
+    }
+    reports.html.destination = file("$buildDir/$USSNAME/")
+}
+test.finalizedBy zip

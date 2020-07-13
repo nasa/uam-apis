@@ -1,0 +1,10 @@
+{
+  "modelPackage": "com.uss.validationtests.swagger",
+  "hideGenerationTimestamp": true,
+  "java8": true,
+  "dateLibrary": "java8",
+  "importMappings": {
+    "UUID": "java.util.UUID"
+  },
+  "library": "okhttp-gson"
+}

@@ -1,0 +1,11 @@
+##Notes for debugging and verification
+ #### convert a der to pem
+  `openssl x509 -inform DER -outform PEM -text -in cert.der -out cert.pem`
+
+ #### get a der from pem for private key
+ `openssl pkcs8 -topk8 -nocrypt -inform PEM -outform DER -in uss.private.key.pem -out uss.private.key.der`
+
+ #### steps to verify if the certificate matches with the private key, public key
+ `openssl x509 -noout -modulus -in uss.x509.pub.cert.pem | openssl md5`
+ `openssl rsa -noout -modulus -in uss.private.key.pem | openssl md5`
+ `openssl rsa -pubin -noout -modulus -in fims.auth.pub.key.pem | openssl md5`
