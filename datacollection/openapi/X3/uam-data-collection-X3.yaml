@@ -289,7 +289,6 @@ components:
           - waypoint_phase
           - waypoint_location
           - target_time
-          - target_air_speed
           - target_ground_speed
           - target_vertical_speed
           - hover_duration
