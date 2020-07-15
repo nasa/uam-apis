@@ -125,7 +125,7 @@ paths:
                 $ref: '#/components/schemas/FlightEssentialTelemetry'
         description: Upload an object of models, containing array of flight essential telemetry
         required: true
-  /constraintoccurence:
+  /constraintoccurrence:
     post:
       summary: Upload an array of ConstraintOccurrence models
       responses:
