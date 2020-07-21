@@ -445,12 +445,12 @@ components:
             type: string
           scenario_id:
             description: >-
-                Distinguishing NC Scenarios. SCENARIO_1: Trajectory Planning and Compliance, SCENARIO_2: Aircraft and AOM data exchange and coordination, SCENERIO_3: UAM Port Operations
+                Distinguishing NC Scenarios. SCENARIO_1: Trajectory Planning and Compliance, SCENARIO_2: Aircraft and AOM data exchange and coordination, SCENARIO_3: UAM Port Operations
             type: string
             enum:
               - SCENARIO_1
               - SCENARIO_2
-              - SCENERIO_3
+              - SCENARIO_3
           call_sign:
             description: >-
               Unique call sign used to communicate with operators. The call sign will be captured in the communication audio while executing the flight test.
