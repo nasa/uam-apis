@@ -96,6 +96,66 @@ paths:
         description: Upload an object of models, containing array of flight run metadata
         required: true
 
+  /flightessentialtelemetry:
+    post:
+      summary: Upload an array of FlightEssentialTelemetry models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FlightEssentialTelemetry'
+        description: Upload an object of models, containing array of flight essential telemetry
+        required: true
+  /constraintoccurrence:
+    post:
+      summary: Upload an array of ConstraintOccurrence models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConstraintOccurrence'
+        description: Upload an object of models, containing array of constraint occurrence
+        required: true
+
+
 components:
   schemas:
     Timestamp:
@@ -497,6 +557,120 @@ components:
                 Email of the individual crew member
             type: string
 
+    FlightEssentialTelemetry:
+      description: >-
+        Flight essential telemetry and state data.
+      required:
+        - id
+        - sensor
+        - timestamp
+        - value
+      properties:
+        id:
+          description: >-
+            Universally-unique identifier for an Operation. This is the same value used in the 'id' fields in the Operation data
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        sensor:
+          description: >-
+            Refer to DMP for individual definitions and units of each of these sensors.
+          type: string
+          enum:
+            - LAT
+            - LON
+            - ALT
+            - NAVIGATION_ACCURACY_CATEGORY_POSITION
+            - GEOMETRIC_VERTICAL_ACCURACY_CATEGORY
+            - GROUND_SPEED_FT_PER_SEC
+            - HEADING_DEG
+            - TRUE_AIRSPEED_FT_PER_SEC
+            - VERTICAL_SPEED_FT_PER_MIN
+            - PITCH_DEG
+            - ROLL_DEG
+            - AIRCRAFT_AIRBORNE_STATE_NONDIM
+        timestamp:
+          description: >-
+            Time for this sample. Report at least 1 Hz frequency.
+          $ref: '#/components/schemas/Timestamp'
+        value:
+          description: >-
+            Value of sensor reading.
+          type: number
+          format: double
+
+    ConstraintOccurrence:
+      description: >-
+        This model captures the enactment of a Constraint from the
+        perspective of PSU to operator interaction.  The goal is to capture how
+        PSUs inform operators and how those operators react.  These data will
+        be correlated with data captured via the PSU Network.
+      required:
+        - id
+        - occurrence_id
+        - time_psu_received
+        - time_psu_sent
+        - time_response_from_operator_received
+        - message_protocol
+        - message_to_operator
+      properties:
+        id:
+          description: >-
+            Universally-unique identifier for an Operation. This is the same value used in the 'id' fields in the Operation data
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        occurrence_id:
+          description: >-
+            EntityUUID of the Constraint this exchange is in reference too
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        time_psu_received:
+          description: >-
+            The time that the PSU received the Constraint message describing
+            this dynamic restriction.
+          $ref: '#/components/schemas/Timestamp'
+        time_psu_sent:
+          description: >-
+            The time that the PSU sent a message to an affected operation.
+          $ref: '#/components/schemas/Timestamp'
+        time_response_from_operator_received:
+          description: >-
+            The time that the PSU receives acknowledgement that the message was
+            received.  If an HTTP exchange this would be the time that the
+            20X was received.  If some other exchange mechanism, then just the
+            time that acknowledgement was received.
+          $ref: '#/components/schemas/Timestamp'
+        message_protocol:
+          description: >-
+            How is the message sent to the operator?  If 'OTHER' you must describe
+            in 'notes' field.  May expand this enumeration based on discussions
+            with partners.
+          type: string
+          enum:
+            - HTTP
+            - WEBSOCKETS
+            - EMAIL
+            - SMS
+            - OTHER
+        message_to_operator:
+          description: >-
+            The actual data payload sent to the operator from the PSU. May be
+            difficult to apply a maxLength to this field, should discuss.
+
+            This may be JSON formatted, so proper escaping of certain chars may
+            be necessary.  It may make sense to base64 encode this.  Should discuss.
+          type: string
 
 
   responses:
