@@ -1,0 +1,159 @@
+ASTM-style timestamps:
+
+Only a subset of ASTM-3339 conformant timestamps are accepted. They must satisfy the regular expression below.
+Note that signed numeric timezones and leap seconds are supported.
+Note also that nanosecond resolution is not provided, and that times that differ only in fractions of a second smaller than 1/10000000 will resolve to the same time in the database)
+Note finally that timestamps with timezones omit the Z indicator.
+
+^((19|20)[0-9][0-9]-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][b0-9]|2[0-3]):[0-5][0-9])))$
+
+Here are some working examples:
+
+2020-10-15T10:10:10Z
+1920-10-15T10:10:10Z
+2020-10-15T10:10:10.1Z
+2020-10-15T10:10:10.1111Z
+2020-10-15T10:10:10.7654321Z
+2020-10-15T10:10:10+07:00
+2020-10-15T10:10:10-07:00
+
+Database semantics for models.
+
+These are the error messages that might be encountered from submission to the data pipeline, as of 7/23/2020.
+They are almost univerally in the form of 
+"<ASTM OR X3 MODEL NAME>_<KEY NAME>_<ERROR CONDITION>
+or prose-like with model and offending values or referring ids.
+
+For OPERATIONS:
+
+    OPERATION VOLUMES OBJECT MISSING FOR OPERATION ID % ,
+    OPERATION VOLUME START TIME NOT RFC3339 COMPLIANT FOR OPERATION ID % 
+    OPERATION VOLUME END TIME NOT RFC3339 COMPLIANT FOR OPERATION ID %
+    OPERATION VOLUME START TIME OUTSIDE OF OPERATION FOR OPERATION ID % ,
+    OPERATION VOLUME END TIME OUTSIDE OF OPERATION TIMES FOR OPERATION ID % ,
+    OPERATION VOLUME END TIME OUTSIDE OF OPERATION TIMES FOR OPERATION ID % ,
+    BOTH POLYGON AND RADIUS IN VOLUME FOR OPERATION ID %
+    OPERATION VOLUME VERTICES OBJECT MISSING FOR OPERATION ID %
+    TOO FEW POINTS IN POLYGON VOLUME IN OPERATION ID %
+    LAST AND FIRST POINT EQUAL IN POLYGON VOLUME IN OPERATION ID %
+    NO POLYGON OR RADIUS IN VOLUME IN OPERATION ID %
+
+    operation_id_missing
+    operation_ovn_length_too_long_or_short
+    operation_owner_missing
+    operation_state_enum_illegal_value
+    operation_subscription_id_missing
+    operation_time_end_missing_or_not_rfc3339
+    operation_time_end_precedes_start
+    operation_time_start_missing_or_not_rfc3339
+    operation_uss_base_url_missing
+    operation_uss_base_url_too_long_rfc7230
+    operations_version_less_than_minimum
+    operations_version_missing
+
+For OPERATION DETAILS:
+
+    detail_volume_altitude_lower_missing
+    detail_volume_altitude_upper_missing
+    detail_volume_lower_altitude_above_upper_altitude
+    detail_volume_lower_altitude_too_high - > 100000
+    detail_volume_lower_altitude_too_low - <= -8000.0
+    detail_volume_time_end_missing
+    detail_volume_time_end_precedes_start
+    detail_volume_time_start_missing
+    detail_volume_upper_altitude_too_high - > 100000
+    detail_volume_upper_altitude_too_low <= -8000.0
+    detail_volume_latitude_not_null - latitude is missing. Could be named better.
+    detail_volume_latitude_out_of_range - not between -90 and 90
+    detail_volume_longitude_not_null - longitude is missing. Could be named better.
+    detail_volume_longitude_out_of_range - not between  -180 and 180
+    detail_volume_radius_not_specified
+
+For VEHICLE_TELEMETRY
+
+    TELEMETRY POSITION EXTRAPOLATED WITHOUT EXPLICIT ACCURACY FOR ENTITY ID %'
+    TELEMETRY CONTAINED NEITHER POSITION NOR VELOCITY FOR ENTITY ID %
+
+    vehicle_telemetry_entity_id_missing
+    vehicle_telemetry_time_measured_missing_or_not_rfc3339
+
+    vehicle_telemetry_speed_is_negative
+    vehicle_telemetry_speed_is_ridiculously_high - faster than mach 3, > 1021
+    vehicle_telemetry_speed_missing 
+    vehicle_telemetry_track_out_of_range - not in range 0 and 360 (not inclusive)
+
+    vehicle_telemetry_altitude_missing
+    vehicle_telemetry_altitude_too_high - > 100000
+    vehicle_telemetry_altitude_too_low - < -8000
+    vehicle_telemetry_latitude_not_null - latitude missing. Could be named better.
+    vehicle_telemetry_latitude_out_of_range - not between -90 and 90
+    vehicle_telemetry_longitude_not_null - longitude is missing. Could be named better.
+    vehicle_telemetry_longitude_out_of_range - longitude not between -180 and 180
+    vehicle_telemetry_accuracy_h_bad_value
+    vehicle_telemetry_accuracy_v_bad_value
+
+For PSU_EXCHANGE
+
+    PSU EXCHANGE EXCHANGED DATA TYPE IS OTHERS_SEE_COMMENTS BUT COMMENTS IS NULL FOR EXCHANGED DATA PK %
+    PSU EXCHANGE TIME INITIATED IS AFTER TIME_COMPLETED FOR EXCHANGE DATA PK %
+    PSU EXCHANGE TIME INITIATED IS AFTER TIME_COMPLETED FOR EXCHANGE DATA PK %
+    PSU EXCHANGE EXPECTED HTTP RESPONSE IS REQUIRED FOR SOURCE PSU FOR EXCHANGED DATA PK %
+    PSU EXCHANGE FRI LIST <generic UUID format errors>
+    PSU EXCHANGE CONTAINS NO RECORDS
+
+    psu_exchange_actual_http_response_missing
+    psu_exchange_exchanged_data_type_contains_illegal_value
+    psu_exchange_http_method_illegal_value
+    psu_exchange_reporting_psu_role_illegal_value
+    psu_exchange_reporting_psu_role_is_null - psu_role is missing. Could be named better. Sorry. 
+    psuexchange_time_request_completed_missing_or_not_rfc3339
+    psuexchange_time_request_initiation_missing_or_not_rfc3339
+
+For WAYPOINTS
+
+    WAYPOINT SUBMISSION CONTAINS NO WAYPOINTS
+    WAYPOINT SEQUENCE_IDS MUST BE SEQUENTIAL FOR OPERATION %
+    WAYPOINT SEQUENCE_ID MUST START AT 1 FOR OPERATION %, NOT %
+    WAYPOINT TARGET TIMES OUT OF ORDER FOR OPERATION %
+    WAYPOINT SEQUENCE_IDS MUST BE SEQUENTIAL AFTER UPDATE FOR OPERATION %
+    WAYPOINT TARGET TIME REPEATED FOR OPERATION %
+
+    waypoint_waypoint_sequence_id_must_not_be_repeated
+    waypoint_altitude_must_be_specified
+    waypoint_altitude_too_high - > 100000
+    waypoint_altitude_too_low - < -8000
+    waypoint_flight_phase_must_be_specified
+    waypoint_flight_phase_value_not_recognized
+    waypoint_hover_duration_must_be_specified
+    waypoint_hover_duration_must_not_be_negative
+    waypoint_id_must_be_specified
+    waypoint_sequence_less_than_1
+    waypoint_sequence_must_be_specified
+    waypoint_target_air_speed_must_not_be_negative
+    waypoint_target_ground_speed_must_be_specified
+    waypoint_target_ground_speed_must_not_be_negative
+    waypoint_target_time_must_be_specified_and_rfc3339_compliant
+    waypoint_target_vertical_speed_must_be_specified
+    waypoint_type_must_be_specified
+    waypoint_type_value_not_recognized
+
+For FTR_METADATA
+
+    FLIGHTRUNMETADATA OPERATION_IDS ERROR:<generic UUID format errors>: FOR FRI %
+    FLIGHTRUNMETADATA SPECIFIED NO CREW FOR FRI $%
+    FLIGHTRUNMETADATA SPECIFIED NO METADATA
+
+    metadata_crew_email_poorly_formed - regular expression '[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}'
+    metadata_crewmember_missing_role
+    flightrunmetadata_fri_tag_is_missing
+    metadata_flight_type_missing
+    metadata_flight_type_not_recognized
+    metadata_fri_is_missing
+    metadata_missing_partner_name
+    metadata_missing_start_time_or_not_rfc_3339
+    metadata_psu_url_missing
+    metadata_psu_url_too_long_rfc7230
+    metadata_scenario_id_missing
+    metadata_scenario_id_unrecognized
+    metadata_test_id_missing
+    metadata_test_id_not_recognized
