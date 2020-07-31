@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: |-
     X3 Data Models - includes Scenario 1, 2 and 3
-  version: "3.0.0"
+  version: "1.0.3"
   title: X3 Data Models
 
 paths:
