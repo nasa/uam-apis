@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
   description: |-
-    X3 Data Models
-  version: "1.0.0"
+    X3 Data Models - includes Scenario 1, 2 and 3
+  version: "3.0.0"
   title: X3 Data Models
 
 paths:
@@ -96,7 +96,7 @@ paths:
         description: Upload an object of models, containing array of flight run metadata
         required: true
 
-  /flightessentialtelemetry:
+  /flight-essential-telemetry:
     post:
       summary: Upload an array of FlightEssentialTelemetry models
       responses:
@@ -125,7 +125,8 @@ paths:
                 $ref: '#/components/schemas/FlightEssentialTelemetry'
         description: Upload an object of models, containing array of flight essential telemetry
         required: true
-  /constraintoccurrence:
+
+  /constraint-occurrence:
     post:
       summary: Upload an array of ConstraintOccurrence models
       responses:
@@ -155,6 +156,95 @@ paths:
         description: Upload an object of models, containing array of constraint occurrence
         required: true
 
+  /off-nominal-response:
+    post:
+      summary: Upload an array of OffNominalResponse models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/OffNominalResponse'
+        description: Upload an object of models, containing array of OffNominalResponse
+        required: true
+
+  /auxiliary-operation:
+    post:
+      summary: Upload an array of AuxiliaryOperation models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AuxiliaryOperation'
+        description: Upload an object of models, containing array of AuxiliaryOperation
+        required: true
+
+  /con-pre-run-op:
+    post:
+      summary: Upload an array of ConPreRunOp models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConPreRunOp'
+        description: Upload an object of models, containing array of ConPreRunOp
+        required: true
 
 components:
   schemas:
@@ -672,6 +762,115 @@ components:
             be necessary.  It may make sense to base64 encode this.  Should discuss.
           type: string
 
+    OffNominalResponse:
+      description: >-
+        This model captures the response to an off nominal event from the perspective
+        of the operator.
+      type: object
+      required:
+        - id
+        - timestamp
+        - response_value
+        - landing_location
+      properties:
+        id:
+          description: >-
+            Universally-unique identifier for an Operation. This is the same value used in the 'id' fields in the Operation data
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        response_time:
+          description: >-
+            Time at which the operator alerts the PSU of the response to the off
+            nominal event
+          $ref: '#/components/schemas/Timestamp'
+        response_value:
+          description: >-
+            The response to the off nominal event
+          type: string
+          enum:
+            - GO_AROUND_INITIATED
+            - ALTERNATE_LANDING_INITIATED
+            - CONTINGENT_INITIATED
+        landing_location:
+          description: >-
+            Revised landing location as a result of the off nominal event
+            For Lat/Lon, report at least seven decimal degrees. (deg)
+            For Alt, express in WGS84 standard. (ft)
+          $ref: '#/components/schemas/LatLonAlt'
+
+    AuxiliaryOperation:
+      description: >-
+        This model captures operation data post flight that is not specifically included in the PSU Network Operation model.
+      required:
+        - id
+        - takeoff_time
+        - landing_time
+      properties:
+        id:
+          description: >-
+            Universally-unique identifier for an Operation. This is the same value used in the 'id' fields in the Operation data
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        takeoff_time:
+          description: >-
+            The time the operation first becomes airborne
+          $ref: '#/components/schemas/Timestamp'
+        landing_time:
+          description: >-
+            The time the operation lands
+          $ref: '#/components/schemas/Timestamp'
+        traffic_interactions:
+          description: >-
+            Number of distinct IFR or VFR vehicles that came within 1 nmi lateral and 1500 ft vertical of the operation at any point of an operations flight
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 9999
+          example: 32
+
+    ConPreRunOp:
+      type: object
+      required:
+        - id
+        - plannedTakeoffLocation
+        - plannedLandingLocation
+        - alternateLandingLocations
+      properties:
+        id:
+          description: >-
+            Universally-unique identifier for an Operation. This is the same value used in the 'id' fields in the Operation data
+          type: string
+          format: uuid
+          maxLength: 36
+          minLength: 36
+          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        plannedTakeoffLocation:
+          description: >-
+            For Lat/Lon, report at least seven decimal degrees. (deg)
+            For Alt, express in WGS84 standard. (ft)
+          $ref: '#/components/schemas/LatLonAlt'
+        plannedLandingLocation:
+          description: >-
+            For Lat/Lon, report at least seven decimal degrees. (deg)
+            For Alt, express in WGS84 standard. (ft)
+          $ref: '#/components/schemas/LatLonAlt'
+        alternateLandingLocations:
+          description: >-
+            Planned landing locations in case of a contingency
+          type: array
+          items:
+            $ref: '#/components/schemas/LatLonAlt'
+          minItems: 1
+          maxItems: 10000
 
   responses:
 
