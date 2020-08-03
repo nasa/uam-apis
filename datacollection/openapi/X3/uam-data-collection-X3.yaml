@@ -96,7 +96,7 @@ paths:
         description: Upload an object of models, containing array of flight run metadata
         required: true
 
-  /flightessentialtelemetry:
+  /flight-essential-telemetry:
     post:
       summary: Upload an array of FlightEssentialTelemetry models
       responses:
@@ -125,7 +125,8 @@ paths:
                 $ref: '#/components/schemas/FlightEssentialTelemetry'
         description: Upload an object of models, containing array of flight essential telemetry
         required: true
-  /constraintoccurrence:
+
+  /constraint-occurrence:
     post:
       summary: Upload an array of ConstraintOccurrence models
       responses:
