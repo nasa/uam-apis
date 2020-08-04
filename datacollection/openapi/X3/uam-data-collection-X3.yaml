@@ -563,9 +563,8 @@ components:
         Flight essential telemetry and state data.
       required:
         - id
-        - sensor
         - timestamp
-        - value
+        - sensorTuple
       properties:
         id:
           description: >-
@@ -576,6 +575,27 @@ components:
           minLength: 36
           pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
           example: "00000000-0000-4444-8888-FEEDDEADBEEF"
+        timestamp:
+          description: >-
+            Time for this sample. Report at least 1 Hz frequency.
+          $ref: '#/components/schemas/Timestamp'
+        sensorTuple:
+          description: >-
+            An individual sensor sample containing sensor, & value
+            All listed sensors are required.
+          type: array
+          items:
+            $ref: '#/components/schemas/SensorTuple'
+          minItems: 1
+          maxItems: 10000
+
+    SensorTuple:
+      description: >-
+        An individual sample of a sensor.
+      required:
+        - value
+        - sensor
+      properties:
         sensor:
           description: >-
             Refer to DMP for individual definitions and units of each of these sensors.
@@ -593,10 +613,6 @@ components:
             - PITCH_DEG
             - ROLL_DEG
             - AIRCRAFT_AIRBORNE_STATE_NONDIM
-        timestamp:
-          description: >-
-            Time for this sample. Report at least 1 Hz frequency.
-          $ref: '#/components/schemas/Timestamp'
         value:
           description: >-
             Value of sensor reading.
@@ -611,12 +627,11 @@ components:
         be correlated with data captured via the PSU Network.
       required:
         - id
-        - occurrence_id
+        - constraint_id
         - time_psu_received
         - time_psu_sent
         - time_response_from_operator_received
         - message_protocol
-        - message_to_operator
       properties:
         id:
           description: >-
@@ -627,7 +642,7 @@ components:
           minLength: 36
           pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
           example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-        occurrence_id:
+        constraint_id:
           description: >-
             EntityUUID of the Constraint this exchange is in reference too
           type: string
@@ -671,6 +686,11 @@ components:
 
             This may be JSON formatted, so proper escaping of certain chars may
             be necessary.  It may make sense to base64 encode this.  Should discuss.
+          type: string
+        notes:
+          description: >-
+            Additional details about the exchange and/or message protocol. This may
+            include the actual data payload sent to the operator from the PSU.
           type: string
 
 
