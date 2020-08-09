@@ -789,7 +789,6 @@ components:
       type: object
       required:
         - id
-        - timestamp
         - response_value
         - landing_location
       properties:
