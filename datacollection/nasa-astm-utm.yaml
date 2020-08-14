@@ -224,6 +224,7 @@ components:
         The path between two vertices shall be the shortest possible path between those vertices.
         Edges may not cross.
         Vertices may not be duplicated.  In particular, the final polygon vertex shall not be identical to the first vertex.
+        NASA will not validate winding order.                                    
       required:
         - vertices
       type: object
@@ -603,10 +604,14 @@ components:
             - $ref: '#/components/schemas/EntityOVN'
         time_start:
           description: Beginning time of Operation.
+          NASA validates this start time is less than or equal to the operation volume array's start time.
+          Additionally the start to end duration must be greater than or equal to the array's duration.
           anyOf:
             - $ref: '#/components/schemas/Time'
         time_end:
           description: End time of Operation.
+          NASA validates this end time is greater than or equal to the operation volume array's end time.
+          Additionally the start to end duration must be greater than or equal to the array's duration.
           anyOf:
             - $ref: '#/components/schemas/Time'
         uss_base_url:
