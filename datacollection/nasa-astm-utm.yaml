@@ -224,7 +224,7 @@ components:
         The path between two vertices shall be the shortest possible path between those vertices.
         Edges may not cross.
         Vertices may not be duplicated.  In particular, the final polygon vertex shall not be identical to the first vertex.
-        NASA will not validate winding order.                                    
+        NASA will not validate winding order.
       required:
         - vertices
       type: object
@@ -610,7 +610,7 @@ components:
           anyOf:
             - $ref: '#/components/schemas/Time'
         time_end:
-          description: |- 
+          description: |-
              End time of Operation.
              NASA validates this end time is greater than or equal to the operation volume array's end time.
              Additionally the start to end duration must be greater than or equal to the array's duration.
@@ -2124,7 +2124,10 @@ paths:
     summary: Detailed information on the position of an off-nominal Operation.
     parameters:
       - name: entityuuid
-        description: EntityUUID for this Operation.
+        description: |-
+            EntityUUID for this Operation.
+            For NASA, GET telemetry in the off-nominal state, the 'entityuuid' http
+            request URL parameter should be set to the Operation ID.
         schema:
           $ref: '#/components/schemas/EntityUUID'
         in: path
