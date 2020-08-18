@@ -134,7 +134,10 @@ components:
       properties:
         value:
           type: string
-          description: RFC3339-formatted time/date string.  The time zone must be 'Z'.
+          description: |-
+            RFC3339-formatted time/date string.  The time zone must be 'Z'.
+            NASA validates that time format is a subset of ASTM-3339 as detailed
+            in https://github.com/nasa/uam-apis/blob/master/datacollection/openapi/X3/NDPValidation.txt
           format: date-time
           example: '1985-04-12T23:20:50.52Z'
         format:
@@ -224,7 +227,7 @@ components:
         The path between two vertices shall be the shortest possible path between those vertices.
         Edges may not cross.
         Vertices may not be duplicated.  In particular, the final polygon vertex shall not be identical to the first vertex.
-        NASA will not validate winding order.
+        NASA that validates winding order is counter-clockwise.
       required:
         - vertices
       type: object
