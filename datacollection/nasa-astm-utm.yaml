@@ -227,7 +227,7 @@ components:
         The path between two vertices shall be the shortest possible path between those vertices.
         Edges may not cross.
         Vertices may not be duplicated.  In particular, the final polygon vertex shall not be identical to the first vertex.
-        NASA that validates winding order is counter-clockwise.
+        NASA does not validate winding order.
       required:
         - vertices
       type: object
