@@ -1,4 +1,4 @@
-8/4/2020
+8/18/2020
 
 ASTM-style timestamps:
 
@@ -46,7 +46,6 @@ For ASTM OPERATIONS:
     OPERATION POLYGON PERIMETER CONTAINS DUPLICATE POINTS FOR OPERATION ID - "Vertices may not be duplicated."
     OPERATION POLYGON VOLUME NOT VALID (%) FOR OPERATION ID - "Edges may not cross."
     OPERATION POLYGON VOLUME NOT COMPLIANT (CONTAINS INTERIOR RING) FOR OPERATION ID
-    OPERATION POLYGON VOLUME NOT WOUND COUNTERCLOCKWISE FOR OPERATION ID - "The winding order shall be interpreted as the order which produces the smaller area."
 
     operation_id_missing
     operation_ovn_length_too_long_or_short
@@ -194,7 +193,6 @@ for ASTM CONSTRAINTS
     CONSTRAINT POLYGON PERIMETER CONTAINS DUPLICATE POINTS FOR CONSTRAINT ID - "Vertices may not be duplicated."
     CONSTRAINT POLYGON VOLUME NOT VALID (%) FOR CONSTRAINT ID - "Edges may not cross."
     CONSTRAINT POLYGON VOLUME NOT COMPLIANT (CONTAINS INTERIOR RING) FOR CONSTRAINT ID
-    CONSTRAINT POLYGON VOLUME NOT WOUND COUNTERCLOCKWISE FOR CONSTRAINT ID - "The winding order shall be interpreted as the order which produces the smaller area."
 
 For X3 CONPRERUNOPS
 
