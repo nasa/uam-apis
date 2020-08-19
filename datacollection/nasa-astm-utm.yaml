@@ -1131,6 +1131,7 @@ components:
       required:
         - id
         - time_measured
+        - position
       type: object
       properties:
         id:
@@ -1184,6 +1185,9 @@ components:
         Note: 'accuracy' values are required when extrapolated field is true
         and always in the entry for the current state.
       type: object
+      required:
+        - longitude
+        - latitude
       properties:
         longitude:
           $ref: '#/components/schemas/Longitude'
