@@ -267,7 +267,7 @@ components:
         - longitude
         - altitude
       description: >-
-        Object used to define a location. Latitude and Longitude should have precision of 7 or more digits. WGS84 altitude. (ft)
+        Object used to define a location. Latitude and Longitude should have precision of 7 or more digits. WGS84 altitude. (m)
       properties:
         latitude:
           description: >-
@@ -494,7 +494,7 @@ components:
           waypoint_location:
             description: >-
               For Lat/Lon, report at least seven decimal degrees. (deg)
-              For Alt, express in WGS84 standard. (ft)
+              For Alt, express in WGS84 standard. (m)
             $ref: '#/components/schemas/LatLonAlt'
           target_time:
             description: Targeted time to reach this waypoint.
@@ -502,7 +502,7 @@ components:
           target_air_speed:
             description: >-
               The target air speed of the vehicle at this waypoint.
-              Units of measure: ft/sec.
+              Units of measure: m/sec.
             type: integer
             format: int32
             minimum: -9999
@@ -511,7 +511,7 @@ components:
           target_ground_speed:
             description: >-
               The target ground speed of the vehicle at this waypoint.
-              Units of measure: ft/sec.
+              Units of measure: m/sec.
             type: integer
             format: int32
             minimum: 0
@@ -520,7 +520,7 @@ components:
           target_vertical_speed:
             description: >-
               For climb and descent waypoints, the target speed of climb or descent
-              Units of measure: ft/sec.
+              Units of measure: m/sec.
             type: integer
             format: int32
             minimum: -9999
@@ -789,7 +789,7 @@ components:
       type: object
       required:
         - id
-        - response_time 
+        - response_time
         - response_value
         - landing_location
       properties:
@@ -819,7 +819,7 @@ components:
           description: >-
             Revised landing location as a result of the off nominal event
             For Lat/Lon, report at least seven decimal degrees. (deg)
-            For Alt, express in WGS84 standard. (ft)
+            For Alt, express in WGS84 standard. (m)
           $ref: '#/components/schemas/LatLonAlt'
 
     AuxiliaryOperation:
@@ -876,12 +876,12 @@ components:
         plannedTakeoffLocation:
           description: >-
             For Lat/Lon, report at least seven decimal degrees. (deg)
-            For Alt, express in WGS84 standard. (ft)
+            For Alt, express in WGS84 standard. (m)
           $ref: '#/components/schemas/LatLonAlt'
         plannedLandingLocation:
           description: >-
             For Lat/Lon, report at least seven decimal degrees. (deg)
-            For Alt, express in WGS84 standard. (ft)
+            For Alt, express in WGS84 standard. (m)
           $ref: '#/components/schemas/LatLonAlt'
         alternateLandingLocations:
           description: >-
