@@ -1222,6 +1222,7 @@ components:
       required:
         - speed
         - units_speed
+        - track 
       type: object
       properties:
         speed:
