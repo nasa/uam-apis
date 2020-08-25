@@ -136,8 +136,23 @@ components:
           type: string
           description: |-
             RFC3339-formatted time/date string.  The time zone must be 'Z'.
-            NASA validates that time format is a subset of ASTM-3339 as detailed
-            in https://github.com/nasa/uam-apis/blob/master/datacollection/openapi/X3/NDPValidation.txt
+
+            NASA validates that time format satisfies this regular expression:
+            ```
+            ^((19|20)[0-9][0-9]-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])[Tt]([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]|60)(\.[0-9]+)?(([Zz])|([\+|\-]([01][b0-9]|2[0-3]):[0-5][0-9])))$
+            ```
+
+            Note also that nanosecond resolution is not provided. Here are some examples:
+            ```
+            2020-10-15T10:10:10Z
+            1920-10-15T10:10:10Z
+            2020-10-15T10:10:10.1Z
+            2020-10-15T10:10:10.1111Z
+            2020-10-15T10:10:10.7654321Z
+            2020-10-15T10:10:10+07:00
+            2020-10-15T10:10:10-07:00
+            ```
+
           format: date-time
           example: '1985-04-12T23:20:50.52Z'
         format:
