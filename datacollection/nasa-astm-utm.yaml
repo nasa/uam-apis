@@ -1132,6 +1132,7 @@ components:
         - id
         - time_measured
         - position
+        - velocity
       type: object
       properties:
         id:
@@ -1188,6 +1189,7 @@ components:
       required:
         - longitude
         - latitude
+        - altitude
       properties:
         longitude:
           $ref: '#/components/schemas/Longitude'
