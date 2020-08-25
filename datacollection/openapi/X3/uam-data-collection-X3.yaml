@@ -281,7 +281,7 @@ components:
           format: double
         altitude:
           description: >-
-            The numeric value of the WGS84 altitude.
+            The numeric value of the WGS84 altitude. (m)
           type: number
           format: double
 
