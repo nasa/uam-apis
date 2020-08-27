@@ -373,8 +373,8 @@ components:
             example: "TELEMETRY"
           version_number:
             description: >-
-              The version number of the model (eg Operation or Constraint) that was sent
-              in the described data exchange.
+              The version number of the referenced model (eg Operation or Constraint that was sent
+              in the described data exchange).  If there is no referenced model, set to 0.
             type: "integer"
             example: 4
           source_psu:
@@ -575,7 +575,7 @@ components:
           PSU subsystem that include PSU operator capabilities shall submit data
           as per the data model mentioned in Table-3 to Data Pipeline.
 
-          This model is submitted after Operation enters 'Closed' state.
+          This model is submitted after Operation enters 'Ended' state.
 
         required:
           - FRI
@@ -636,9 +636,6 @@ components:
           scenario_id:
             description: >-
                 Distinguishing NC Scenarios.
-                SCENARIO_1: Trajectory Planning and Compliance,
-                SCENARIO_2: Aircraft and AOM data exchange and coordination,
-                SCENARIO_3: UAM Port Operations
             type: string
             enum:
               - SCENARIO_1
