@@ -2138,9 +2138,10 @@ paths:
     parameters:
       - name: entityuuid
         description: |-
-            EntityUUID of the this Operation.
+            EntityUUID of the Operation in the off-nominal state.
             For NASA, GET telemetry in the off-nominal state, the 'entityuuid' http
-            request URL parameter should be set to the Operation ID.
+            request URL parameter should be set to the ID of the
+            Operation in the off-nominal state.
         schema:
           $ref: '#/components/schemas/EntityUUID'
         in: path
