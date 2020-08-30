@@ -134,12 +134,7 @@ components:
       properties:
         value:
           type: string
-          description: |-
-            RFC3339-formatted time/date string.  The time zone must be 'Z'.
-            For NASA Data Pipeline date-time is validated against this ECMA 262 regex:
-            ````
-             ^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{3})Z$
-            ````
+          description: RFC3339-formatted time/date string.  The time zone must be 'Z'.
           format: date-time
           example: '1985-04-12T23:20:50.52Z'
         format:

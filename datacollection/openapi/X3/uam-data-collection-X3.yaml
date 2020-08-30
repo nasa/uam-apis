@@ -489,8 +489,12 @@ components:
           sequence_id:
             description: >-
               	Integer indicating order of this waypoint in the list of waypoints.
-                must be sequential starting with 1.  If Operation is updated,
-                the sequence_id does not reset to 1.
+                Provides the sequence of waypoints for the operation. The sequence
+                IDs for an operations waypoints must start at 1. Sequence IDs may
+                not be repeated and there there may be no gaps in the sequence IDs
+                for an operations waypoints. If an Operations waypoints are updated
+                with subsequent submissions of waypoints to this endpoint, sequence
+                IDs that already exist will be updated, and new sequence IDs will be added.
             type: integer
             format: int32
             minimum: 1
