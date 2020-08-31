@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
   description: |-
-    X3 Data Models - includes Scenario 1, 2 and 3
+    Data Pipeline Endpoints for X3 - includes endpoints Scenario 1, 2 and 3
   version: "1.0.3"
-  title: X3 Data Models
+  title: Data Pipeline Endpoints for X3
 
 paths:
   /waypoint:
