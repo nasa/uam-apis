@@ -867,7 +867,7 @@ components:
           $ref: '#/components/schemas/Timestamp'
         traffic_interactions:
           description: >-
-            Number of distinct IFR or VFR vehicles that came within 1 nmi lateral and 1500 ft vertical of the operation at any point of an operations flight.
+            Number of distinct IFR or VFR vehicles that came within 1 nmi lateral and 1500 ft vertical of the operation at any point of an operations flight
           type: integer
           format: int32
           minimum: 0
