@@ -305,7 +305,15 @@ paths:
               $ref: '#/components/responses/r409'
             '429':
               $ref: '#/components/responses/r429'
-        
+            '500':
+              $ref: '#/components/responses/r500'
+            '502':
+              $ref: '#/components/responses/r502'
+            '503':
+              $ref: '#/components/responses/r503'
+            '504':
+              $ref: '#/components/responses/r504'
+
         requestBody:
             content:
               multipart/form-data:
@@ -448,3 +456,34 @@ components:
             $ref: >-
               https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
 
+    'r500':
+      description: Internal Server Error.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r502':
+      description: Bad Gateway/Validation Error.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r503':
+      description: Limit Exceeded/Service Unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+
+    'r504':
+      description: Gateway Timeout.
+      content:
+        application/json:
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
