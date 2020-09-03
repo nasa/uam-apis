@@ -2,5 +2,5 @@
 
 ## Diff to UTM
 
-  In THIS directory,  
+  In this directory,  
   ` git diff --no-index -- utm-domains/ ../utm-apis//utm-domains/ `
