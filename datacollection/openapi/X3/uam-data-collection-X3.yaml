@@ -96,36 +96,6 @@ paths:
         description: Upload an object of models, containing array of flight run metadata
         required: true
 
-  /flight-essential-telemetry:
-    post:
-      summary: Upload an array of FlightEssentialTelemetry models
-      responses:
-        '200':
-          $ref: '#/components/responses/r200'
-        '204':
-          $ref: '#/components/responses/r204'
-        '400':
-          $ref: '#/components/responses/r400'
-        '401':
-          $ref: '#/components/responses/r400'
-        '403':
-          $ref: '#/components/responses/r403'
-        '409':
-          $ref: '#/components/responses/r409'
-        '429':
-          $ref: '#/components/responses/r429'
-        '500':
-          $ref: '#/components/responses/r500'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/FlightEssentialTelemetry'
-        description: Upload an object of models, containing array of flight essential telemetry
-        required: true
-
   /constraint-occurrence:
     post:
       summary: Upload an array of ConstraintOccurrence models
@@ -664,67 +634,6 @@ components:
             description: >-
                 Email of the individual crew member
             type: string
-
-    FlightEssentialTelemetry:
-      description: >-
-        Flight essential telemetry and state data.
-      required:
-        - id
-        - timestamp
-        - sensorTuple
-      properties:
-        id:
-          description: >-
-            Universally-unique identifier for an Operation. This is the same value used in the 'id' fields in the Operation data
-          type: string
-          format: uuid
-          maxLength: 36
-          minLength: 36
-          pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
-          example: "00000000-0000-4444-8888-FEEDDEADBEEF"
-        timestamp:
-          description: >-
-            Time for this sample. Report at least 1 Hz frequency.
-          $ref: '#/components/schemas/Timestamp'
-        sensorTuple:
-          description: >-
-            An individual sensor sample containing sensor, & value
-            All listed sensors are required.
-          type: array
-          items:
-            $ref: '#/components/schemas/SensorTuple'
-          minItems: 1
-          maxItems: 10000
-
-    SensorTuple:
-      description: >-
-        An individual sample of a sensor.
-      required:
-        - value
-        - sensor
-      properties:
-        sensor:
-          description: >-
-            Refer to DMP for individual definitions and units of each of these sensors.
-          type: string
-          enum:
-            - LAT
-            - LON
-            - ALT
-            - NAVIGATION_ACCURACY_CATEGORY_POSITION
-            - GEOMETRIC_VERTICAL_ACCURACY_CATEGORY
-            - GROUND_SPEED_FT_PER_SEC
-            - HEADING_DEG
-            - TRUE_AIRSPEED_FT_PER_SEC
-            - VERTICAL_SPEED_FT_PER_MIN
-            - PITCH_DEG
-            - ROLL_DEG
-            - AIRCRAFT_AIRBORNE_STATE_NONDIM
-        value:
-          description: >-
-            Value of sensor reading.
-          type: number
-          format: double
 
     ConstraintOccurrence:
       description: >-
