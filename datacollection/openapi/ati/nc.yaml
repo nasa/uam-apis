@@ -108,7 +108,7 @@ components:
             description: >-
               Name of the file being uploaded.
             type: string
-          x3_location:
+          s3_location:
             description: >-
               S3-bucket URL, once the file is uploaded to S3.
             type: string
