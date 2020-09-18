@@ -1,13 +1,12 @@
 openapi: 3.0.0
 info:
   description: >-
-    Provider of Services to UAM (PSU)
+    NASA Data Collection interface
   version: "1.0.0"
   title: ATI-NC-DATA-COLLECTION-API
   termsOfService: http://uam.arc.nasa.gov/terms/
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
-    url: 'https://uam.arc.nasa.gov/'
     email: shivanjli.sharma@nasa.gov
   license:
     name: NASA Open Source Agreement
@@ -50,7 +49,35 @@ paths:
                 '#/components/schemas/ADSBObject'
         description: top level ADSB object, containing array of ADSB models
         required: true
-
+  /file-metadata:
+    post:
+      summary: Upload an array of FileMetadata models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/FileMetadata'
+        description: Upload an array of FileMetadata
+        required: true
 x-amazon-apigateway-gateway-responses:
   BAD_REQUEST_BODY:
     statusCode: 400
@@ -61,6 +88,98 @@ x-amazon-apigateway-gateway-responses:
 
 components:
   schemas:
+    FileMetadata:
+        description: >-
+          Defines context auxiliary data for a file upload.
+        required:
+          - document_id
+          - title
+          - file_name
+        properties:
+          document_id:
+            description: >-
+              File identifier within ATI.
+            type: string
+          title:
+            description: >-
+              Title of the file being uploaded.
+            type: string
+          file_name:
+            description: >-
+              Name of the file being uploaded.
+            type: string
+          s3_location:
+            description: >-
+              S3-bucket URL, once the file is uploaded to S3.
+            type: string
+          box_location:
+            description: >-
+              box location URL, once the file is uploaded to box
+            type: string
+          description:
+            description: >-
+              Additional description about the file.
+            type: string
+          flight_type:
+            description: Type of flight test.
+            type: string
+            enum:
+              - AIRSPACE_SIMULATION
+              - FLIGHT_SIMULATION
+              - LIVE_FLIGHT
+          data_source:
+            description: Source of the file been uploaded.
+            type: string
+            enum:
+              - DGPS
+              - IMU
+              - FLIGHT_REPORTS
+              - TEST_CARDS
+              - MOF_COMM
+              - AUDIO
+              - VIDEO
+              - VEHICLE_TELEMETRY
+              - FIAPA
+              - WEATHER
+              - OTHER_DATA
+          data_type:
+            description: Type of the file been uploaded.
+            type: string
+            enum:
+              - TIME_SERIES
+              - GEO_SPACIAL
+              - TEXT
+              - CSV
+              - PDF
+              - ZIP
+              - MS_OFFICE
+          scenario_id:
+            description: Associated scenarios
+            type: string
+            enum:
+              - SCENARIO_1
+              - SCENARIO_2
+              - SCENARIO_3A
+              - SCENARIO_3B
+              - SCENARIO_3C
+          checksum_code:
+            description: >-
+              Checksum algorithm generated code
+            type: string
+          checksum_algorithm:
+            description: Checksum algorithm name
+            type: string
+            enum:
+              - MD5
+              - SHA1
+              - SHA256
+          flight_test_date:
+            description: Date the file is generated (UTC Timestamp)
+            type: string
+          submitted_by:
+            description: User name who submitted the data from its origin.
+            type: string
+
     ADSBObject:
       type: object
       required:
