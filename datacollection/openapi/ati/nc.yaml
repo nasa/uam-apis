@@ -29,8 +29,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/r200'
-        '204':
-          $ref: '#/components/responses/r204'
         '400':
           $ref: '#/components/responses/r400'
         '401':
@@ -41,6 +39,8 @@ paths:
           $ref: '#/components/responses/r409'
         '429':
           $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
 
       requestBody:
         content:
@@ -627,16 +627,25 @@ material is also available from the sources indicated in paragraphs (g)(1) and
       maxLength: 24
       example: '2015-08-20T14:11:56.118Z'
 
-  securitySchemes:
-    Authorizer:
-      type: "apiKey"
-      name: "Authorization"
-      in: "header"
-      x-amazon-apigateway-authtype: "cognito_user_pools"
-      x-amazon-apigateway-authorizer:
-        providerARNs:
-        - "arn:aws:cognito-idp:us-east-1:966029537804:userpool/us-east-1_TJmR9ZRxM"
-        type: "cognito_user_pools"
+    UTMRestResponse:
+      type: object
+      required:
+        - http_status_code
+        - message
+      properties:
+        http_status_code:
+          type: integer
+          minimum: 100
+          exclusiveMinimum: false
+          maximum: 599
+          exclusiveMaximum: false
+        message:
+          type: string
+          maxLength: 500
+      example:
+        http_status_code: 400
+        message: Bad Request. Invalid JSON?
+
   responses:
 
     'r200':
@@ -647,13 +656,6 @@ material is also available from the sources indicated in paragraphs (g)(1) and
             $ref:
               https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
 
-    'r201':
-      description: Position data created
-      content:
-        application/json:
-          schema:
-            $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
-
     'r204':
       description: no response supplied
 
@@ -662,16 +664,16 @@ material is also available from the sources indicated in paragraphs (g)(1) and
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref:
+              '#/components/schemas/UTMRestResponse'
 
     'r401':
       description: Invalid or missing access_token provided.
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref:
+              '#/components/schemas/UTMRestResponse'
 
     'r403':
       description: >-
@@ -680,52 +682,29 @@ material is also available from the sources indicated in paragraphs (g)(1) and
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref:
+              '#/components/schemas/UTMRestResponse'
 
     'r409':
       description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
       content:
         application/json:
           schema:
-            $ref: https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref:
+              '#/components/schemas/UTMRestResponse'
 
     'r429':
       description: Too many recent requests from you. Wait to make further queries.
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref:
+              '#/components/schemas/UTMRestResponse'
 
     'r500':
       description: Internal Server Error.
       content:
         application/json:
           schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
-
-    'r502':
-      description: Bad Gateway/Validation Error.
-      content:
-        application/json:
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
-
-    'r503':
-      description: Limit Exceeded/Service Unavailable.
-      content:
-        application/json:
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
-
-    'r504':
-      description: Gateway Timeout.
-      content:
-        application/json:
-          schema:
-            $ref: >-
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+            $ref:
+              '#/components/schemas/UTMRestResponse'
