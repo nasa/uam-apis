@@ -180,10 +180,15 @@ components:
         application/json:
           schema:
             $ref:
-              https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/uam-domain-common-3.0.yaml#/components/schemas/UTMRestResponse
+              '#/components/schemas/UTMRestResponse'
 
     'r204':
       description: no response supplied
+      content:
+        application/json:
+          schema:
+            $ref:
+              '#/components/schemas/UTMRestResponse'
 
     'r400':
       description: Bad request. Typically validation error. Fix your request and retry.
