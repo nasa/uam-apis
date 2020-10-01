@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   description: >-
     NASA Data Collection interface for uploading unstructured data
-  version: "1.0.0"
+  version: "1.0.1"
   title: ATI-NC-Unstructure-Data-Upload
   termsOfService: http://uam.arc.nasa.gov/terms/
   contact:
@@ -23,13 +23,12 @@ x-amazon-apigateway-request-validators:
 
 paths:
   /upload-intent:
+    summary: Generate S3 Presigned URL by submitting FileMetadata models
     post:
       summary: Upload an array of FileMetadata models
       responses:
         '200':
           $ref: '#/components/responses/r200'
-        '204':
-          $ref: '#/components/responses/r204'
         '400':
           $ref: '#/components/responses/r400'
         '401':
@@ -68,11 +67,13 @@ components:
           - document_id
           - title
           - file_name
+          - checksum_code
         properties:
           document_id:
             description: >-
               File identifier within ATI.
             type: string
+            format: uuid
           title:
             description: >-
               Title of the file being uploaded.
@@ -140,7 +141,7 @@ components:
               Checksum algorithm generated code
             type: string
           checksum_algorithm:
-            description: Checksum algorithm name
+            description: Checksum algorithm name. Only MD5 supported at this time.
             type: string
             enum:
               - MD5
@@ -152,6 +153,11 @@ components:
           submitted_by:
             description: User name who submitted the data from its origin.
             type: string
+          submitter_email:
+            description: Submitter email address.
+            type: string
+            format: email
+            maxLength: 254
 
     UTMRestResponse:
       type: object
@@ -172,23 +178,26 @@ components:
         http_status_code: 400
         message: Bad Request. Invalid JSON?
 
+    UploadIntentResponse:
+      description: |-
+        S3 presigned URL response.
+      type: object
+      properties:
+        message:
+          description: S3 presigned URL.
+          type: string
+          example: 'https://url'
+
+
   responses:
 
     'r200':
-      description: resource received
+      description: FileMetadata received
       content:
         application/json:
           schema:
             $ref:
-              '#/components/schemas/UTMRestResponse'
-
-    'r204':
-      description: no response supplied
-      content:
-        application/json:
-          schema:
-            $ref:
-              '#/components/schemas/UTMRestResponse'
+              '#/components/schemas/UploadIntentResponse'
 
     'r400':
       description: Bad request. Typically validation error. Fix your request and retry.
