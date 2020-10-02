@@ -3,7 +3,7 @@ info:
   description: >-
     NASA Data Collection interface for uploading unstructured data
   version: "1.0.1"
-  title: ATI-NC-Unstructure-Data-Upload
+  title: ATI-NC-Unstructured-Data-File-Upload
   termsOfService: http://uam.arc.nasa.gov/terms/
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
