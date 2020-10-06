@@ -306,6 +306,8 @@ components:
               	The primary key of the data that were exchanged. For example, if an Operation or Constraint was exchanged, then this field would contain the reference ID.
 
                 In the case that multiple data elements were exchanged, then just populate this field with one of the primary keys. As a best practice, choose the first one in the array as they were sent between PSUs.
+
+                In the case where there is no Operation, Constraint or reference ID, use 00000000-0000-4000-?000-000000000000 where ? is 8, 9, A, or B.
             type: string
             format: uuid
             maxLength: 36
