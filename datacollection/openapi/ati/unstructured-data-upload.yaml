@@ -3,7 +3,7 @@ info:
   description: >-
     NASA Data Collection interface for uploading unstructured data
   version: "1.0.1"
-  title: ATI-NC-Unstructured-Data-Upload
+  title: ATI-NC-Postflight-Data-Upload
   termsOfService: http://uam.arc.nasa.gov/terms/
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
@@ -65,34 +65,35 @@ components:
           Defines context auxiliary data for a file upload.
         required:
           - document_id
-          - title
           - file_name
+          - flight_type
+          - data_source
+          - scenario_ids
+          - event_id
           - checksum_code
+          - flight_test_date
+          - submitter_email
         properties:
           document_id:
             description: >-
-              File identifier within ATI.
+              An ATI created UUID.
             type: string
             format: uuid
-          title:
-            description: >-
-              Title of the file being uploaded.
-            type: string
           file_name:
             description: >-
-              Name of the file being uploaded.
+              Full path of file being uploaded. File extension highly recommended.
             type: string
           s3_location:
             description: >-
-              S3-bucket URL, once the file is uploaded to S3.
+              S3-bucket URL, once the file is uploaded to S3. LEAVE THIS FIELD BLANK. Pipeline will automatically assign an S3 location.
             type: string
           box_location:
             description: >-
-              box location URL, once the file is uploaded to box
+              Box location URL.
             type: string
           description:
             description: >-
-              Additional description about the file.
+              Additional description about the file  (e.g., This is SODAR data collected from October 31, 2021).
             type: string
           flight_type:
             description: Type of flight test.
@@ -114,41 +115,38 @@ components:
               - VIDEO
               - VEHICLE_TELEMETRY
               - FIAPA
-              - WEATHER
-              - OTHER_DATA
-          data_type:
-            description: Type of the file been uploaded.
+              - WEATHER_SURFACE_STATION
+              - WEATHER_SODAR
+          scenario_ids:
+            description: The scenarios associated with the file upload. Multiple scenarios may be possible, though in most cases only one applies.
+            type: array
+            items:
+              type: string
+              enum:
+                - SCENARIO_1
+                - SCENARIO_2
+                - SCENARIO_3A
+                - SCENARIO_3B
+                - SCENARIO_3C
+          event_id:
+            description: The event associated with the file upload. Only one will apply.
             type: string
             enum:
-              - TIME_SERIES
-              - GEO_SPACIAL
-              - TEXT
-              - CSV
-              - PDF
-              - ZIP
-              - MS_OFFICE
-          scenario_id:
-            description: Associated scenarios
-            type: string
-            enum:
-              - SCENARIO_1
-              - SCENARIO_2
-              - SCENARIO_3A
-              - SCENARIO_3B
-              - SCENARIO_3C
+              - BUILDUP_RUN_1
+              - BUILDUP_RUN_2
+              - BUILDUP_RUN_3
+              - DT
           checksum_code:
             description: >-
-              Checksum algorithm generated code
+              Checksum algorithm generated code.
             type: string
           checksum_algorithm:
             description: Checksum algorithm name. Only MD5 supported at this time.
             type: string
             enum:
               - MD5
-              - SHA1
-              - SHA256
           flight_test_date:
-            description: Date the file is generated (UTC Timestamp)
+            description: The flight test date (UTC Timestamp)
             type: string
           submitted_by:
             description: User name who submitted the data from its origin.
