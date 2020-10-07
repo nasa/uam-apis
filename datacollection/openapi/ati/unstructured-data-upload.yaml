@@ -81,20 +81,25 @@ components:
             format: uuid
           file_name:
             description: >-
-              Full path of file being uploaded. File extension highly recommended.
+              Full path of file being uploaded. File extension highly recommended. Maximum length determined by longest path and filename acceptable to OSX and Linux and Windows.
             type: string
+            maxLength: 1023
           s3_location:
             description: >-
               S3-bucket URL, once the file is uploaded to S3. LEAVE THIS FIELD BLANK. Pipeline will automatically assign an S3 location.
             type: string
+            minLength: 3
+            maxLength: 63
           box_location:
             description: >-
-              Box location URL.
+              Box location URL. Same limits as file_name.
             type: string
+            maxLength: 1023
           description:
             description: >-
               Additional description about the file  (e.g., This is SODAR data collected from October 31, 2021).
             type: string
+            maxLength: 1000
           flight_type:
             description: Type of flight test.
             type: string
@@ -103,7 +108,7 @@ components:
               - FLIGHT_SIMULATION
               - LIVE_FLIGHT
           data_source:
-            description: Source of the file been uploaded.
+            description: Source of the file been uploaded. If OTHER_DATA, note in Description.
             type: string
             enum:
               - DGPS
@@ -138,24 +143,31 @@ components:
               - DT
           checksum_code:
             description: >-
-              Checksum algorithm generated code.
+              Checksum algorithm generated code. Currently only MD5 is supported.
             type: string
+            maxLength: 32
+            minLength: 32
+            pattern: "^[a-f0-9A-F]+$"
           checksum_algorithm:
             description: Checksum algorithm name. Only MD5 supported at this time.
             type: string
             enum:
               - MD5
           flight_test_date:
-            description: The flight test date (UTC Timestamp)
+            description: Date of the flight test to which the file pertains (UTC Timestamp)
             type: string
+            minLength: 20
+            format: date-time
           submitted_by:
             description: User name who submitted the data from its origin.
             type: string
+            maxLength: 1000
           submitter_email:
             description: Submitter email address.
             type: string
             format: email
             maxLength: 254
+            format: ".+@.+"
 
     UTMRestResponse:
       type: object
