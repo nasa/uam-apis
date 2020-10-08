@@ -91,11 +91,10 @@ components:
             description: Type of flight test.
             type: string
             enum:
-              - AIRSPACE_SIMULATION
               - FLIGHT_SIMULATION
               - LIVE_FLIGHT
           data_source:
-            description: Source of the file been uploaded. If OTHER_DATA, note in Description.
+            description: Source of the file being uploaded. Only one will apply. If this is a new data_source type, please contact the DM team as soon as possible.
             type: string
             enum:
               - DGPS
