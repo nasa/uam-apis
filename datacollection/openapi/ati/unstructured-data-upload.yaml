@@ -231,7 +231,7 @@ components:
   responses:
 
     'r200':
-      description: FileMetadata received
+      description: success
       content:
         application/json:
           schema:
@@ -244,7 +244,7 @@ components:
         application/json:
           schema:
             $ref:
-              '#/components/schemas/UTMRestResponse'
+              '#/components/schemas/UploadIntentResponse'
 
     'r401':
       description: Invalid or missing access_token provided.
@@ -252,7 +252,7 @@ components:
         application/json:
           schema:
             $ref:
-              '#/components/schemas/UTMRestResponse'
+              '#/components/schemas/UploadIntentResponse'
 
     'r403':
       description: >-
@@ -262,7 +262,7 @@ components:
         application/json:
           schema:
             $ref:
-              '#/components/schemas/UTMRestResponse'
+              '#/components/schemas/UploadIntentResponse'
 
     'r409':
       description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
@@ -270,7 +270,7 @@ components:
         application/json:
           schema:
             $ref:
-              '#/components/schemas/UTMRestResponse'
+              '#/components/schemas/UploadIntentResponse'
 
     'r429':
       description: Too many recent requests from you. Wait to make further queries.
@@ -278,7 +278,7 @@ components:
         application/json:
           schema:
             $ref:
-              '#/components/schemas/UTMRestResponse'
+              '#/components/schemas/UploadIntentResponse'
 
     'r500':
       description: Internal Server Error.
@@ -286,4 +286,4 @@ components:
         application/json:
           schema:
             $ref:
-              '#/components/schemas/UTMRestResponse'
+              '#/components/schemas/UploadIntentResponse'
