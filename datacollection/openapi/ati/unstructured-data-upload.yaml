@@ -15,15 +15,19 @@ info:
 servers:
   - url: 'https://uss.defined.url/'
 
-#x-amazon-apigateway-request-validator: all
+#MOVE ALL x-amazon TO BOTTOM OF FILE
+x-amazon-apigateway-request-validator: all
 x-amazon-apigateway-request-validators:
   validate_body_and_parameters:
-    validateRequestParameters: true
     validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
 
 paths:
   /upload-intent:
-    summary: Generate S3 Presigned URL by submitting FileMetadata models
+    summary: Generate upload URL
     post:
       summary: Upload an array of FileMetadata models
       responses:
@@ -51,12 +55,39 @@ paths:
         description: Upload an array of FileMetadata
         required: true
 x-amazon-apigateway-gateway-responses:
+  DEFAULT_4XX:
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId\
+        \ , error: $context.error.responseType $context.error.messageString\"\n}"
+  EXPIRED_TOKEN:
+    statusCode: 403
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId\
+        \ , error: $context.error.responseType $context.error.messageString\"\n}"
+  QUOTA_EXCEEDED:
+    statusCode: 429
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \  error: $context.error.responseType $context.error.messageString\"\n}"
+  DEFAULT_5XX:
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \  error: $context.error.responseType $context.error.messageString\"\n}"
   BAD_REQUEST_BODY:
     statusCode: 400
     responseTemplates:
-      application/json: "{\n  \"error\": {\n    \"code\": 400,\n    \"stage\": \"\
-        $context.stage\",\n    \"request\": \"$context.requestId\",\n    \"message\"\
-        : \"$context.error.validationErrorString\"\n  }\n}\n"
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \ error: $context.error.validationErrorString\"\n}"
+  UNAUTHORIZED:
+    statusCode: 401
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \ error: $context.error.responseType \"\n}"
+  ACCESS_DENIED:
+    statusCode: 403
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \ error: $context.error.responseType $context.error.messageString\"\n}"
 
 components:
   schemas:
@@ -86,18 +117,18 @@ components:
             maxLength: 1023
           s3_location:
             description: >-
-              S3-bucket URL, once the file is uploaded to S3. LEAVE THIS FIELD BLANK. Pipeline will automatically assign an S3 location.
+              S3-bucket URL, once the file is uploaded to S3. LEAVE THIS FIELD BLANK. The Data Collection service will assign an S3 location.
             type: string
             minLength: 3
-            maxLength: 63
+            maxLength: 2000
           box_location:
             description: >-
-              Box location URL. Same limits as file_name.
+              Box location URL.
             type: string
             maxLength: 1023
           description:
             description: >-
-              Additional description about the file  (e.g., This is SODAR data collected from October 31, 2021).
+              Additional description about the file upload.
             type: string
             maxLength: 1000
           flight_type:
@@ -143,7 +174,7 @@ components:
               - DT
           checksum_code:
             description: >-
-              Checksum algorithm generated code. Currently only MD5 is supported.
+              Checksum algorithm generated code.
             type: string
             maxLength: 32
             minLength: 32
@@ -165,38 +196,36 @@ components:
           submitter_email:
             description: Submitter email address.
             type: string
-            format: email
             maxLength: 254
             format: ".+@.+"
 
-    UTMRestResponse:
-      type: object
+
+    UploadIntentResponse:
       required:
         - http_status_code
         - message
+      description: |-
+        If successful returns URL to use for uploading your file, else
+        returns an error code.
+      type: object
       properties:
+        upload_url:
+          description: URL to use for uploading your file
+          type: string
+          maxLength: 2000
+          example: 'https://url'
+        message:
+          description: |-
+              If successful returns upload details, else returns information
+              corresponding to the http_status_code.
+          type: string
+          maxLength: 2000
         http_status_code:
           type: integer
           minimum: 100
           exclusiveMinimum: false
           maximum: 599
           exclusiveMaximum: false
-        message:
-          type: string
-          maxLength: 500
-      example:
-        http_status_code: 400
-        message: Bad Request. Invalid JSON?
-
-    UploadIntentResponse:
-      description: |-
-        S3 presigned URL response.
-      type: object
-      properties:
-        message:
-          description: S3 presigned URL.
-          type: string
-          example: 'https://url'
 
 
   responses:
