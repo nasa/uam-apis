@@ -1,4 +1,4 @@
-# NASA Data Pipeline for API data collection
+# NASA Data Pipeline for ATI data collection
 
 Models needed for the NC events fall into 2 categories, ASTM-published and NASA-published.  
 
