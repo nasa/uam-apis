@@ -71,12 +71,6 @@ components:
               Full path of file being uploaded. File extension highly recommended. Maximum length determined by longest path and filename acceptable to OSX and Linux and Windows.
             type: string
             maxLength: 1023
-          s3_location:
-            description: >-
-              S3-bucket URL, once the file is uploaded to S3. LEAVE THIS FIELD BLANK. The Data Collection service will assign an S3 location.
-            type: string
-            minLength: 3
-            maxLength: 2000
           box_location:
             description: >-
               Box location URL.
