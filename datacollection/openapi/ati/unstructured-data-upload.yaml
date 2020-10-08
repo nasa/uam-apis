@@ -15,16 +15,6 @@ info:
 servers:
   - url: 'https://uss.defined.url/'
 
-#MOVE ALL x-amazon TO BOTTOM OF FILE
-x-amazon-apigateway-request-validator: all
-x-amazon-apigateway-request-validators:
-  validate_body_and_parameters:
-    validateRequestBody: true
-    validateRequestParameters: true
-  params-only:
-    validateRequestBody: false
-    validateRequestParameters: true
-
 paths:
   /upload-intent:
     summary: Generate upload URL
@@ -54,40 +44,6 @@ paths:
                 $ref: '#/components/schemas/FileMetadata'
         description: Upload an array of FileMetadata
         required: true
-x-amazon-apigateway-gateway-responses:
-  DEFAULT_4XX:
-    responseTemplates:
-      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId\
-        \ , error: $context.error.responseType $context.error.messageString\"\n}"
-  EXPIRED_TOKEN:
-    statusCode: 403
-    responseTemplates:
-      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId\
-        \ , error: $context.error.responseType $context.error.messageString\"\n}"
-  QUOTA_EXCEEDED:
-    statusCode: 429
-    responseTemplates:
-      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
-        \  error: $context.error.responseType $context.error.messageString\"\n}"
-  DEFAULT_5XX:
-    responseTemplates:
-      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
-        \  error: $context.error.responseType $context.error.messageString\"\n}"
-  BAD_REQUEST_BODY:
-    statusCode: 400
-    responseTemplates:
-      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
-        \ error: $context.error.validationErrorString\"\n}"
-  UNAUTHORIZED:
-    statusCode: 401
-    responseTemplates:
-      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
-        \ error: $context.error.responseType \"\n}"
-  ACCESS_DENIED:
-    statusCode: 403
-    responseTemplates:
-      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
-        \ error: $context.error.responseType $context.error.messageString\"\n}"
 
 components:
   schemas:
@@ -287,3 +243,46 @@ components:
           schema:
             $ref:
               '#/components/schemas/UploadIntentResponse'
+
+x-amazon-apigateway-request-validator: all
+x-amazon-apigateway-request-validators:
+  validate_body_and_parameters:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+x-amazon-apigateway-gateway-responses:
+  DEFAULT_4XX:
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId\
+        \ , error: $context.error.responseType $context.error.messageString\"\n}"
+  EXPIRED_TOKEN:
+    statusCode: 403
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId\
+        \ , error: $context.error.responseType $context.error.messageString\"\n}"
+  QUOTA_EXCEEDED:
+    statusCode: 429
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \  error: $context.error.responseType $context.error.messageString\"\n}"
+  DEFAULT_5XX:
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \  error: $context.error.responseType $context.error.messageString\"\n}"
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \ error: $context.error.validationErrorString\"\n}"
+  UNAUTHORIZED:
+    statusCode: 401
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \ error: $context.error.responseType \"\n}"
+  ACCESS_DENIED:
+    statusCode: 403
+    responseTemplates:
+      application/json: "{\n    \"message\": \n    \"requestId: $context.requestId,\
+        \ error: $context.error.responseType $context.error.messageString\"\n}"
