@@ -3,7 +3,7 @@ info:
   description: >-
     NASA Data Collection interface for uploading unstructured data
   version: "1.0.1"
-  title: ATI-NC-Postflight-Data-Upload
+  title: ATI-Data-Upload
   termsOfService: http://uam.arc.nasa.gov/terms/
   contact:
     name: 'NASA Ames Research Center, Aviation Systems Division'
@@ -15,11 +15,17 @@ info:
 servers:
   - url: 'https://uss.defined.url/'
 
+tags:
+- name: uploading
+  description: Endpoints for uploading data files
+
 paths:
   /upload-intent:
     summary: Generate upload URL
     post:
       summary: Upload an array of FileMetadata models
+      tags:
+        - uploading
       responses:
         '200':
           $ref: '#/components/responses/r200'
@@ -150,6 +156,7 @@ components:
 
 
     UploadIntentResponse:
+
       required:
         - http_status_code
         - message
