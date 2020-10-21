@@ -528,6 +528,8 @@ components:
 
           This model is submitted after Operation enters 'Ended' state.
 
+          The only fields that are allowed to change in updates are Operation_IDs, and call_sign, and once call sign has been set in an update, it is “frozen”.
+
         required:
           - FRI
           - FRI_tag
