@@ -97,17 +97,21 @@ components:
             description: Source of the file being uploaded. Only one will apply. If this is a new data_source type, please contact the DM team as soon as possible.
             type: string
             enum:
-              - DGPS
-              - IMU
-              - FLIGHT_REPORTS
-              - TEST_CARDS
-              - MOF_COMM
               - AUDIO
-              - VIDEO
-              - VEHICLE_TELEMETRY
+              - DGPS
               - FIAPA
-              - WEATHER_SURFACE_STATION
+              - FLIGHT_REPORTS
+              - IMU
+              - MOF_COMM
+              - RADAR_PRIMARY
+              - TEST_CARDS
+              - VEHICLE_TELEMETRY
+              - VIDEO
               - WEATHER_SODAR
+              - WEATHER_SURFACE_STATION
+          industry_partner_name:
+            description: Name of the industry partner associated with the data, if applicable (e.g., DGPS, IMU, RADAR_PRIMARY will likely have an associated partner). Some uploads will not be associated with a particular industry partner (e.g., weather)
+            type: string
           scenario_ids:
             description: The scenarios associated with the file upload. Multiple scenarios may be possible, though in most cases only one applies.
             type: array
