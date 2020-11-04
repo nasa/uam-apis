@@ -303,11 +303,11 @@ components:
               example: "00000000-0000-4444-8888-FEEDDEADBEEF"
           exchanged_data_pk:
             description: >-
-              	The primary key of the data that were exchanged. For example, if an Operation or Constraint was exchanged, then this field would contain the reference ID.
+              	The primary key of the data that were exchanged. For example, if an Operation, Constraint, or Telemetry was exchanged, then this field would contain the reference ID.
 
                 In the case that multiple data elements were exchanged, then just populate this field with one of the primary keys. As a best practice, choose the first one in the array as they were sent between PSUs.
 
-                In the case where there is no Operation, Constraint or reference ID, use 00000000-0000-4000-?000-000000000000 where ? is 8, 9, A, or B.
+                In the case where there is no Operation, Constraint, Telemetry, or reference ID, use 00000000-0000-4000-?000-000000000000 where ? is 8, 9, A, or B.
             type: string
             format: uuid
             maxLength: 36
@@ -328,17 +328,19 @@ components:
             example: "TELEMETRY"
           version_number:
             description: >-
-              The version number of the model that was sent. For Operation and Constraint
+              The version number of the model that was sent. For Operation and Constraint.
+
+              Use 0 if model does not include a version, such as for Telemetry.
             type: "integer"
             example: 4
           source_psu:
             description: >-
-              This is the name of the source_psu, or discovery.
+              This is the base url of the source_psu, or discovery.
             type: "string"
             example: "psu.provider123.net"
           target_psu:
             description: >-
-              This is the name of the target_psu, or discovery.
+              This is the base url of the target_psu, or discovery.
             type: "string"
             example: "psu.provider456.net"
           reporting_psu_role:
