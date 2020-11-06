@@ -216,6 +216,36 @@ paths:
         description: Upload an object of models, containing array of ConPreRunOp
         required: true
 
+  /adsb-metadata:
+    post:
+      summary: Upload an array of Adsb Metadata models
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '204':
+          $ref: '#/components/responses/r204'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdsbMetadata'
+        description: Upload an object of models, containing array of ConPreRunOp
+        required: true
+
 components:
   schemas:
     Timestamp:
@@ -824,6 +854,35 @@ components:
             $ref: '#/components/schemas/LatLonAlt'
           minItems: 1
           maxItems: 10000
+
+    AdsbMetadata:
+      type: object
+      required:
+        - icaoAddress
+        - time_start
+      properties:
+        icaoAddress:
+          description: >-
+            Universally-unique identifier for an Operation. This is the same value used in the 'id' fields in the Operation data
+          type: string
+        additionalNotes:
+          description: >-
+            Any additional notes
+          type: string
+        time_start:
+          description: >-
+            The time the adsb starts
+          $ref: '#/components/schemas/Timestamp'
+        squawk:
+          description: >-
+            Short term 4 octal digit code assigned by ATC
+          type: string
+          maxLength: 1
+          minLength: 10
+        adsbDeviceIdentifier:
+          description: >-
+            ADSB Receiver Device Identifier
+          type: string
 
   responses:
 
