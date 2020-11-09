@@ -674,7 +674,7 @@ components:
         time_start:
           description: >-
             The time the adsb starts
-          $ref: '#/components/schemas/Timestamp'
+          $ref: '#/components/schemas/ADSBtimestamp'
         squawk:
           description: >-
             Short term 4 octal digit code assigned by ATC
