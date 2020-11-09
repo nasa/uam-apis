@@ -52,7 +52,7 @@ paths:
 
   /adsb-metadata:
     post:
-      summary: Upload an array of Adsb Metadata models
+      summary: Upload an array of ADSB Metadata models
       responses:
         '200':
           $ref: '#/components/responses/r200'
@@ -657,7 +657,7 @@ components:
       maxLength: 24
       example: '2015-08-20T14:11:56.118Z'
 
-    AdsbMetadata:
+    ADSBMetadata:
       type: object
       required:
         - icaoAddress
