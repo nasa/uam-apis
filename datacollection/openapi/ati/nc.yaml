@@ -76,7 +76,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/AdsbMetadata'
+                $ref: '#/components/schemas/ADSBMetadata'
         description: Upload an object of models, containing array of ConPreRunOp
         required: true
 
