@@ -679,8 +679,8 @@ components:
           description: >-
             Short term 4 octal digit code assigned by ATC
           type: string
-          maxLength: 1
-          minLength: 10
+          minLength: 1
+          maxLength: 10
         adsbDeviceIdentifier:
           description: >-
             ADSB Receiver Device Identifier
