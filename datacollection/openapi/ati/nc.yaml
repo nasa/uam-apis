@@ -46,7 +46,7 @@ paths:
           application/json:
             schema:
               $ref: >-
-                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/adsb.yaml#/components/schemas/adsb
+                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/adsb.yaml#/components/schemas/ADSBObject
         description: top level ADSB object, containing array of ADSB models
         required: true
 
