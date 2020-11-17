@@ -45,8 +45,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref:
-                'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/adsb.yaml'
+              $ref: >-
+                https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/adsb.yaml#/components/schemas/adsb
         description: top level ADSB object, containing array of ADSB models
         required: true
 
@@ -76,7 +76,8 @@ paths:
             schema:
               type: array
               items:
-                $ref: "'https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/adsb_vehicle_metadata.yaml"
+                $ref: >-
+                  https://raw.githubusercontent.com/nasa/uam-apis/master/datacollection/openapi/v3/schema/adsb_vehicle_metadata.yaml#/components/schemas/adsb_vehicle_metadata
         description: Upload an object of models, containing array of ConPreRunOp
         required: true
 
