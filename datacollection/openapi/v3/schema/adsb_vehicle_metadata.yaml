@@ -10,7 +10,7 @@ components:
       adsb_vehicle_metadata:
         type: object
         required:
-          - icao_address
+          - icaoAddress
           - time_start
         properties:
           icaoAddress:
