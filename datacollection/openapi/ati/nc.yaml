@@ -52,7 +52,7 @@ paths:
 
   /adsb-metadata:
     post:
-      summary: Upload an array of ADSB Metadata models
+      summary: Upload an ADSB Metadata model
       responses:
         '200':
           $ref: '#/components/responses/r200'
