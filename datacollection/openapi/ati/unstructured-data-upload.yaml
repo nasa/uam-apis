@@ -160,18 +160,25 @@ components:
             type: string
             maxLength: 254
             format: ".+@.+"
-          custom_field_names:
-            description: An optional field for capturing specific metadata for a data source. For example, weather data files require the specification of station name and point location. This array captures the field names. Content here requires content in the "custom_field_values" field.
+          custom_fields:
+            description: An optional field for capturing metadata specific to a data source. For example, weather data files require the specification of station name and point location. This array captures the field names and values
             type: array
+            minItems: 1
             items:
-              type: string
-          custom_field_values:
-            description: An optional field for capturing specific metadata for a data source. For example, weather data files require the specification of station name and point location. This array captures the field values. Content here requires content in the "custom_field_names" field. 
-            type: array
-            items:
-              type: string     
+              type: object
+              required:
+                - field_name
+                - field_value
+              properties:
+                field_name:
+                  type: string
+                  minLength: 1
+                  maxLength: 1000
+                field_value:
+                  type: string
+                  minLength: 0
+                  maxLength: 1000
     UploadIntentResponse:
-
       required:
         - http_status_code
         - message
