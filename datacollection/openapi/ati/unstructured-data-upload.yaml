@@ -69,7 +69,7 @@ components:
         properties:
           document_id:
             description: >-
-              An ATI created UUID.
+              A UUID as a unique identifier to the postflight data file. Provided by the person performing for the upload (i.e., the "uploader").
             type: string
             format: uuid
           file_name:
@@ -104,6 +104,7 @@ components:
               - IMU
               - MOF_COMM
               - RADAR_PRIMARY
+              - SBSM_ADSB
               - TEST_CARDS
               - VEHICLE_TELEMETRY
               - VIDEO
@@ -124,13 +125,15 @@ components:
                 - SCENARIO_3B
                 - SCENARIO_3C
           event_id:
-            description: The event associated with the file upload. Only one will apply.
+            description: The event associated with the file upload. Following the [campaign]-[phase]-[event]-[test*] naming convention (* if necessary). Only one will apply.
             type: string
             enum:
-              - BUILDUP_RUN_1
-              - BUILDUP_RUN_2
-              - BUILDUP_RUN_3
-              - DT
+              - NC1-DT1-FAM1
+              - NC1-DT1-BuildupRun1
+              - NC1-DT1-BuildupRun2-Preconnectivity1
+              - NC1-DT1-BuildupRun2-Preconnectivity2
+              - NC1-DT1-BuildupRun2 
+              - NC1-DT1-BuildupRun3
           checksum_code:
             description: >-
               Checksum algorithm generated code.
@@ -157,10 +160,25 @@ components:
             type: string
             maxLength: 254
             format: ".+@.+"
-
-
+          custom_fields:
+            description: An optional field for capturing metadata specific to a data source. For example, weather data files require the specification of station name and point location. This array captures the field names and values
+            type: array
+            minItems: 1
+            items:
+              type: object
+              required:
+                - field_name
+                - field_value
+              properties:
+                field_name:
+                  type: string
+                  minLength: 1
+                  maxLength: 1000
+                field_value:
+                  type: string
+                  minLength: 0
+                  maxLength: 1000
     UploadIntentResponse:
-
       required:
         - http_status_code
         - message
