@@ -61,7 +61,6 @@ components:
           - file_name
           - flight_type
           - data_source
-          - scenario_ids
           - event_id
           - checksum_code
           - flight_test_date
