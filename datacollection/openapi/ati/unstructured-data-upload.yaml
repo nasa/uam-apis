@@ -128,7 +128,6 @@ components:
             type: string
             enum:
               - NC1-DT1-FAM1
-              - NC1-DT1-BuildupRun1
               - NC1-DT1-BuildupRun2-Preconnectivity1
               - NC1-DT1-BuildupRun2-Preconnectivity2
               - NC1-DT1-BuildupRun2 
