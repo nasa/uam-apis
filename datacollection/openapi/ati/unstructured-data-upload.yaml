@@ -127,6 +127,13 @@ components:
             description: The event associated with the file upload. Following the [campaign]-[phase]-[event]-[test*] naming convention (* if necessary). Only one will apply.
             type: string
             enum:
+              - X3
+              - X4
+              - VIRTUAL_DRY_RUN
+              - BUILDUP_RUN_1
+              - BUILDUP_RUN_2
+              - BUILDUP_RUN_3
+              - DT
               - NC1-DT1-FAM1
               - NC1-DT1-BuildupRun2-Preconnectivity1
               - NC1-DT1-BuildupRun2-Preconnectivity2
