@@ -93,7 +93,7 @@ components:
               - FLIGHT_SIMULATION
               - LIVE_FLIGHT
           data_source:
-            description: Source of the file being uploaded. Only one will apply. If this is a new data_source type, please contact the DM team as soon as possible.
+            description: Source of the file being uploaded. Only one will apply. If this is a new data_source type, please contact the DM team as soon as possible. OTHER requires detailed text in the description field, and is used to archive supporting data that is not directly extracted, such as archives of unprocessed DGPS logs, or maps of precise microphone or camera placement.
             type: string
             enum:
               - AUDIO
@@ -103,6 +103,7 @@ components:
               - IADS
               - IMU
               - MOF_COMM
+              - OTHER
               - RADAR_PRIMARY
               - SBSM_ADSB
               - TEST_CARDS
