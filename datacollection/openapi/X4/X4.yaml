@@ -12,9 +12,9 @@ info:
 
 security:
   - Authority:
-    - utm.strategic_coordination
-    - utm.constraint_management
-    - utm.constraint_consumption
+      - utm.strategic_coordination
+      - utm.constraint_management
+      - utm.constraint_consumption
 
 tags:
   - name: "Operation references"
@@ -1350,7 +1350,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.strategic_coordination
+            - utm.strategic_coordination
       summary: Retrieve all Operation references in the specified area/volume/time from the DSS.
       operationId: searchOperationReferences
       responses:
@@ -1407,7 +1407,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.strategic_coordination
+            - utm.strategic_coordination
       summary: Retrieve the specified Operation reference from the DSS.
       operationId: getOperationReference
       responses:
@@ -1460,7 +1460,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.strategic_coordination
+            - utm.strategic_coordination
       summary: Create/Update the specified Operation reference in the DSS.
       operationId: putOperationReference
       responses:
@@ -1524,7 +1524,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.strategic_coordination
+            - utm.strategic_coordination
       summary: Remove the specified Operation reference from the DSS.
       operationId: deleteOperationReference
       responses:
@@ -1594,9 +1594,9 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_management
-          - utm.constraint_consumption
-          - utm.strategic_coordination
+            - utm.constraint_management
+            - utm.constraint_consumption
+            - utm.strategic_coordination
       summary: Retrieve all Constraints references in the specified area/volume from the DSS.
       operationId: queryConstraintReferences
       responses:
@@ -1653,9 +1653,9 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_management
-          - utm.constraint_consumption
-          - utm.strategic_coordination
+            - utm.constraint_management
+            - utm.constraint_consumption
+            - utm.strategic_coordination
       summary: Retrieve the specified Constraint reference from the DSS.
       operationId: getConstraintReference
       responses:
@@ -1708,7 +1708,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_management
+            - utm.constraint_management
       summary: Create/Update the specified Constraint reference in the DSS.
       operationId: putConstraintReference
       responses:
@@ -1771,7 +1771,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_management
+            - utm.constraint_management
       summary: Delete the specified Constraint reference from the DSS.
       operationId: deleteConstraintReference
       responses:
@@ -1840,8 +1840,8 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_consumption
-          - utm.strategic_coordination
+            - utm.constraint_consumption
+            - utm.strategic_coordination
       description: |-
         Retrieve Subscriptions intersecting an area of interest. Subscription
         notifications are only triggered by (and contain full information of) changes to,
@@ -1909,8 +1909,8 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_consumption
-          - utm.strategic_coordination
+            - utm.constraint_consumption
+            - utm.strategic_coordination
       summary: Retrieve the specified Subscription from the DSS.
       operationId: getSubscription
       description: |-
@@ -1956,8 +1956,8 @@ paths:
     put:
       security:
         - Authority:
-          - utm.constraint_consumption
-          - utm.strategic_coordination
+            - utm.constraint_consumption
+            - utm.strategic_coordination
       summary: Create/Update the specified Subscription in the DSS.
       operationId: putSubscription
       description: |-
@@ -2022,8 +2022,8 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_consumption
-          - utm.strategic_coordination
+            - utm.constraint_consumption
+            - utm.strategic_coordination
       summary: Remove the specified Subscription from the DSS.
       operationId: deleteSubscription
       responses:
@@ -2074,9 +2074,9 @@ paths:
     post:
       security:
         - Authority:
-          - utm.constraint_management
-          - utm.constraint_consumption
-          - utm.strategic_coordination
+            - utm.constraint_management
+            - utm.constraint_consumption
+            - utm.strategic_coordination
       summary: Report information about communication issues to a DSS.
       operationId: makeDssReport
       description: Report issues to a DSS. Data sent to this endpoint is archived.
@@ -2144,7 +2144,7 @@ paths:
         - p2p_utm
       security:
         - Authority:
-          - utm.strategic_coordination
+            - utm.strategic_coordination
       summary: Retrieve the specified Operation details from a USS.
       description: |-
         The PSU hosting this endpoint returns the details (and reference) of an
@@ -2210,7 +2210,7 @@ paths:
         - p2p_utm
       security:
         - Authority:
-          - utm.strategic_coordination
+            - utm.strategic_coordination
       summary: Query detailed information on the position of an Operation from a USS.
       operationId: getOperationTelemetry
       responses:
@@ -2272,7 +2272,7 @@ paths:
         - p2p_utm
       security:
         - Authority:
-          - utm.strategic_coordination
+            - utm.strategic_coordination
       summary: Notify a peer USS of changed Operation details.
       operationId: notifyOperationDetailsChanged
       description: Notify a peer USS directly of changed Operation details (usually as a requirement of previous interactions with the DSS).
@@ -2344,8 +2344,8 @@ paths:
         - p2p_utm
       security:
         - Authority:
-          - utm.strategic_coordination
-          - utm.constraint_consumption
+            - utm.strategic_coordination
+            - utm.constraint_consumption
       summary: Retrieve the specified Constraint details from a USS.
       operationId: getConstraintDetails
       description: Retrieve the details of the specified Constraint.
@@ -2396,8 +2396,8 @@ paths:
         - p2p_utm
       security:
         - Authority:
-          - utm.strategic_coordination
-          - utm.constraint_consumption
+            - utm.strategic_coordination
+            - utm.constraint_consumption
       summary: Notify a peer USS of changed Constraint details.
       operationId: notifyConstraintDetailsChanged
       description: Notify a peer USS directly of changed Constraint details (usually as a requirement of previous interactions with the DSS).
@@ -2458,9 +2458,9 @@ paths:
         - p2p_utm
       security:
         - Authority:
-          - utm.strategic_coordination
-          - utm.constraint_consumption
-          - utm.constraint_management
+            - utm.strategic_coordination
+            - utm.constraint_consumption
+            - utm.constraint_management
       summary: Notify USS of an error encountered that might otherwise go unnoticed.
       operationId: makeUssReport
       description: Endpoint to provide feedback (errors, etc.) that might otherwise go unnoticed by this USS. This endpoint is used for all feedback related to Operations and Constraints.
