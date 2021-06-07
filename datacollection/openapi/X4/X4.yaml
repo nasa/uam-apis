@@ -846,14 +846,14 @@ components:
         uss_base_url:
           $ref: '#/components/schemas/ConstraintUssBaseURL'
 
-  GetConstraintReferenceResponse:
-    description: Response to DSS request for the ConstraintReference with the given ID.
-    required:
-      - constraint_reference
-    type: object
-    properties:
-      constraint_reference:
-        $ref: '#/components/schemas/ConstraintReference'
+    GetConstraintReferenceResponse:
+      description: Response to DSS request for the ConstraintReference with the given ID.
+      required:
+        - constraint_reference
+      type: object
+      properties:
+        constraint_reference:
+          $ref: '#/components/schemas/ConstraintReference'
 
     ChangeConstraintReferenceResponse:
       description: Response to a request to create, update, or delete a ConstraintReference. in the DSS.
@@ -1210,14 +1210,14 @@ components:
           description: Location of the TrajectoryPoint.
           anyOf:
             - $ref: '#/components/schemas/Point3D'
-          time:
-            description: |-
-              Estimated time when the vehicle will be at the location of the TrajectoryPoint
-            $ref: '#/components/schemas/Time'
+        time:
+          description: |-
+            Estimated time when the vehicle will be at the location of the TrajectoryPoint
+          $ref: '#/components/schemas/Time'
         speed:
           description: |-
             Speed of the vehicle at this TrajectoryPoint.
-          FIXM allows for two speed entries: predictedAirspace and predictedGroundspeed
+            FIXM allows for two speed entries: predictedAirspace and predictedGroundspeed
           anyOf:
             - $ref: '#/components/schemas/Velocity'
         trajectory_property_array:
@@ -1228,13 +1228,13 @@ components:
             The first point of initial plan must include at a minimum: AIRPORT_REFERENCE_LOCATION, WHEELS_OFF
             The last point must include at a minimum: AIRPORT_REFERENCE_LOCATION, WHEELS_ON
             Each named airspace structure point must include at a minimum: WAYPOINT
-        type: array
-        minItems: 1
-        maxItems: 4
-        items:
-          $ref: '#/components/schemas/TrajectoryProperty'
-        externalDocs:
-          url: https://fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_TrajectoryPoint4DType.html#Link2AC
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/TrajectoryProperty'
+          externalDocs:
+            url: https://fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_TrajectoryPoint4DType.html#Link2AC
       externalDocs:
         description: "See FIXM 4.2.0 for further information."
         url: https://www.fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_TrajectoryPoint4DType.html#Link116
@@ -1572,7 +1572,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        description: The client issued too many requests in a short period of time.
+          description: The client issued too many requests in a short period of time.
 
   #
   # DSS Enpoint: CONSTRAINTS
@@ -2016,113 +2016,113 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
           description: Client already has too many Subscriptions in the area where a new Subscription was requested. To correct this problem, the client may query GET /subscriptions to see which Subscriptions are counting against their limit. This problem should not generally be encountered because the Subscription limit should be above what any consumer that reasonably aggregates their Subscriptions should request. But, a Subscription limit is necessary to bound performance requirements for DSS instances and would likely be hit by, e.g., a large remote ID display provider that created a Subscription for each of their display client users' views. Alternately, the client may have issued too many requests within a small period of time.
 
-      delete:
-        tags:
-          - "Subscriptions"
-          - dss
-        security:
-          - Authority:
-            - utm.constraint_consumption
-            - utm.strategic_coordination
-        summary: Remove the specified Subscription from the DSS.
-        operationId: deleteSubscription
-        responses:
-          "200":
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/DeleteSubscriptionResponse'
-            description: Subscription was successfully removed from DSS.
-          "400":
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-            description: One or more input parameters were missing or invalid.
-          "401":
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-            description: Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
-          "403":
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-            description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
-          "404":
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-            description: A Subscription with the specified ID was not found.
-          "429":
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ErrorResponse'
-            description: The client issued too many requests in a short period of time.
+    delete:
+      tags:
+        - "Subscriptions"
+        - dss
+      security:
+        - Authority:
+          - utm.constraint_consumption
+          - utm.strategic_coordination
+      summary: Remove the specified Subscription from the DSS.
+      operationId: deleteSubscription
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteSubscriptionResponse'
+          description: Subscription was successfully removed from DSS.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: One or more input parameters were missing or invalid.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: A Subscription with the specified ID was not found.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The client issued too many requests in a short period of time.
 
   #
   # DSS Endpoint: REPORT
   #
 
   /dss/v1/reports:
-  summary: Error reports of potential operational issues relevant to DSSs.
+    summary: Error reports of potential operational issues relevant to DSSs.
 
-  post:
-    security:
-      - Authority:
-        - utm.constraint_management
-        - utm.constraint_consumption
-        - utm.strategic_coordination
-    summary: Report information about communication issues to a DSS.
-    operationId: makeDssReport
-    description: Report issues to a DSS. Data sent to this endpoint is archived.
-    requestBody:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorReport'
-      required: true
-    tags:
-      - "Reports"
-      - dss
-    responses:
-      "201":
-        description: A new Report was created successfully (and archived).
+    post:
+      security:
+        - Authority:
+          - utm.constraint_management
+          - utm.constraint_consumption
+          - utm.strategic_coordination
+      summary: Report information about communication issues to a DSS.
+      operationId: makeDssReport
+      description: Report issues to a DSS. Data sent to this endpoint is archived.
+      requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ErrorReport'
-      "400":
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-        description: |-
-          * One or more parameters were missing or invalid.
-          * The report could not be parsed, or contains unrecognized data.
-      "401":
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-        description: Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
-      "403":
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-        description: |-
-          * The access token was decoded successfully but did not include a scope appropriate to this endpoint or the request.
-      "429":
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ErrorResponse'
-        description: The client issued too many requests in a short period of time.
+        required: true
+      tags:
+        - "Reports"
+        - dss
+      responses:
+        "201":
+          description: A new Report was created successfully (and archived).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorReport'
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            * One or more parameters were missing or invalid.
+            * The report could not be parsed, or contains unrecognized data.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            * The access token was decoded successfully but did not include a scope appropriate to this endpoint or the request.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The client issued too many requests in a short period of time.
 
   #
   # USS Endpoint: OPERATIONS
