@@ -318,10 +318,10 @@ components:
       type: object
       properties:
         message:
-        description: |-
-          Human-readable message indicating what error occurred and/or why.
-        type: string
-        example: 'The error occurred because [...]'
+          description: |-
+            Human-readable message indicating what error occurred and/or why.
+          type: string
+          example: 'The error occurred because [...]'
 
     SubscriptionState:
       description: |-
@@ -611,8 +611,8 @@ components:
           externalDocs:
             description: See FIXM 4.2.0 for further information.
             url: https://www.fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_DepartureType.html#Link243
-            anyOf:
-              - $ref: '#/components/schemas/Time'
+          anyOf:
+            - $ref: '#/components/schemas/Time'
         time_end:
           description: End time of Operation. The estimated time at which the aircraft will arrive at the destination vertiport (ETA).
           anyOf:
@@ -1114,11 +1114,11 @@ components:
       description: |-
         Response to peer request for the details of Constraint with the given ID.
       required:
-      - constraint
+        - constraint
       type: object
       properties:
-      constraint:
-      $ref: '#/components/schemas/Constraint'
+        constraint:
+          $ref: '#/components/schemas/Constraint'
 
     GetOperationTelemetryResponse:
       description: Response to a peer request for telemetry of an off-nominal Operation.
@@ -2391,121 +2391,118 @@ paths:
     summary: A USS's representation of detailed information about Constraints.
 
     post:
-    tags:
-    - "Constraint details"
-    - p2p_utm
-    security:
-    - Authority:
-    - utm.strategic_coordination
-    - utm.constraint_consumption
-    summary: Notify a peer USS of changed Constraint details.
-    operationId: notifyConstraintDetailsChanged
-    description: Notify a peer USS directly of changed Constraint details (usually as a requirement of previous interactions with the DSS).
-    requestBody:
-    content:
-    application/json:
-    schema:
-    $ref: '#/components/schemas/PutConstraintDetailsParameters'
-    required: true
-    responses:
-    "204":
-    description: New or updated full Constraint information received successfully.
-    "400":
-    content:
-    application/json:
-    schema:
-    $ref: '#/components/schemas/ErrorResponse'
-    description: |-
-    * One or more parameters were missing or invalid.
-    * The Entity could not be parsed, or contains illegal data.
-    "401":
-    content:
-    application/json:
-    schema:
-    $ref: '#/components/schemas/ErrorResponse'
-    description: Bearer access token was not provided in Authorization header,
-    token could not be decoded, or token was invalid.
-    "403":
-    content:
-    application/json:
-    schema:
-    $ref: '#/components/schemas/ErrorResponse'
-    description: |-
-    * The access token was decoded successfully but did not include a scope appropriate to this endpoint.
-    * The client identified in the access token is not the owner of this Entity according to the receiving client's records.
-    "409":
-    content:
-    application/json:
-    schema:
-    $ref: '#/components/schemas/ErrorResponse'
-    description: The Entity version specified in this message is lower than
-    a previously-received notification, or identical to a previously-received
-    notification and the Entity is different.
-    "429":
-    content:
-    application/json:
-    schema:
-    $ref: '#/components/schemas/ErrorResponse'
-    description: The client issued too many requests in a short period of time.
+      tags:
+        - "Constraint details"
+        - p2p_utm
+      security:
+        - Authority:
+          - utm.strategic_coordination
+          - utm.constraint_consumption
+      summary: Notify a peer USS of changed Constraint details.
+      operationId: notifyConstraintDetailsChanged
+      description: Notify a peer USS directly of changed Constraint details (usually as a requirement of previous interactions with the DSS).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutConstraintDetailsParameters'
+        required: true
+      responses:
+        "204":
+          description: New or updated full Constraint information received successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            * One or more parameters were missing or invalid.
+            * The Entity could not be parsed, or contains illegal data.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            * The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+            * The client identified in the access token is not the owner of this Entity according to the receiving client's records.
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The Entity version specified in this message is lower than a previously-received notification, or identical to a previously-received notification and the Entity is different.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The client issued too many requests in a short period of time.
 
   #
   # PSU Endpoint: (OTHER)
   #
 
-/psu/v1/reports:
-summary: Error reports of issues communicating with a peer USS.
+  /psu/v1/reports:
+    summary: Error reports of issues communicating with a peer USS.
 
-post:
-tags:
-- "Reports"
-- p2p_utm
-security:
-- Authority:
-- utm.strategic_coordination
-- utm.constraint_consumption
-- utm.constraint_management
-summary: Notify USS of an error encountered that might otherwise go unnoticed.
-operationId: makeUssReport
-description: Endpoint to provide feedback (errors, etc.) that might otherwise go unnoticed by this USS. This endpoint is used for all feedback related to Operations and Constraints.
-requestBody:
-content:
-application/json:
-schema:
-$ref: '#/components/schemas/ErrorReport'
-required: true
-responses:
-"201":
-description: Report received and successfully archived.
-content:
-application/json:
-schema:
-$ref: '#/components/schemas/ErrorReport'
-"400":
-content:
-application/json:
-schema:
-$ref: '#/components/schemas/ErrorResponse'
-description: |-
-* One or more parameters were missing or invalid.
-* The report could not be parsed, or contains unrecognized data.
-"401":
-content:
-application/json:
-schema:
-$ref: '#/components/schemas/ErrorResponse'
-description: |-
-Bearer access token was not provided in Authorization header,
-token could not be decoded, or token was invalid.
-"403":
-content:
-application/json:
-schema:
-$ref: '#/components/schemas/ErrorResponse'
-description: |-
-* The access token was decoded successfully but did not include a scope appropriate to this endpoint.
-"429":
-content:
-application/json:
-schema:
-$ref: '#/components/schemas/ErrorResponse'
-description: The client issued too many requests in a short period of time.
+    post:
+      tags:
+        - "Reports"
+        - p2p_utm
+      security:
+        - Authority:
+          - utm.strategic_coordination
+          - utm.constraint_consumption
+          - utm.constraint_management
+      summary: Notify USS of an error encountered that might otherwise go unnoticed.
+      operationId: makeUssReport
+      description: Endpoint to provide feedback (errors, etc.) that might otherwise go unnoticed by this USS. This endpoint is used for all feedback related to Operations and Constraints.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ErrorReport'
+        required: true
+      responses:
+        "201":
+          description: Report received and successfully archived.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorReport'
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            * One or more parameters were missing or invalid.
+            * The report could not be parsed, or contains unrecognized data.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            Bearer access token was not provided in Authorization header,
+            token could not be decoded, or token was invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            * The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The client issued too many requests in a short period of time.
