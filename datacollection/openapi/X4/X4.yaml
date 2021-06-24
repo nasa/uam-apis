@@ -607,7 +607,7 @@ components:
           anyOf:
             - $ref: '#/components/schemas/EntityOVN'
         time_start:
-          description: Beginning time of Operation. The estimated time at which the aircraft will commence movement associated with departure​ (ETD).
+          description: Beginning time of Operation. The estimated time at which the aircraft will commence movement associated with departure (ETD).
           externalDocs:
             description: See FIXM 4.2.0 for further information.
             url: https://www.fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_DepartureType.html#Link243
@@ -983,7 +983,7 @@ components:
             description: See FIXM 4.2.0 for further information.
             url: https://fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_AircraftRegistrationType.html#LinkBC
         operator_name:
-          description: The identifier of the UAM Operator. Required if different than the PSU. ​
+          description: The identifier of the UAM Operator. Required if different than the PSU.
           type: string
           pattern: "[A-Z]{3}"
           example: "AAL"
