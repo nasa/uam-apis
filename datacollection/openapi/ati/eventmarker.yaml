@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  version: "v1.0"
+  title: Event Marker Data
+  description: OpenAPI 3.0 compliant definitions for event marker data.
+
+paths:
+  '/event-marker':
+    post:
+      summary: Upload an array of event marker.
+      responses:
+        '200':
+          $ref: '#/components/responses/r200'
+        '400':
+          $ref: '#/components/responses/r400'
+        '401':
+          $ref: '#/components/responses/r400'
+        '403':
+          $ref: '#/components/responses/r403'
+        '409':
+          $ref: '#/components/responses/r409'
+        '429':
+          $ref: '#/components/responses/r429'
+        '500':
+          $ref: '#/components/responses/r500'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/event_marker'
+        description: top level event marker object, containing array of event marker models
+        required: true
+
+components:
+  schemas:
+      event_marker:
+        type: object
+        required:
+          - eventMarker
+          - startTime
+          - stopTime
+        properties:
+          eventMarker:
+            type: string
+            maxLength: 64
+            description: event marker
+            example: hover-power-margin-ige
+          startTime:
+            type: string
+            format: date-time
+          stopTime:
+            type: string
+            format: date-time
+          pingStationID:
+            type: string
+            maxLength: 1000
+          icaoAddress:
+            type: string
+            pattern: '^[0-9a-fA-F]{6}$'
+            description: ICAO of the aircraft
+          comment:
+            type: string
+            maxLength: 1000
+            description: any comments regarding the event marker
