@@ -21,15 +21,15 @@ components:
         type: object
         required:
           # (91.227.d.1) ? missing in JSON object: no indication of length and width
-          - latDD # (91.227.d.2)
-          - lonDD # (91.227.d.3)
-          - horVelocityCMS # (91.227.d.4)
+          # - latDD # (91.227.d.2)
+          # - lonDD # (91.227.d.3)
+          # - horVelocityCMS # (91.227.d.4)
           # - squawk # (91.227.d.7), but see AC_20-165B.pdf regarding ADS-B functions in transponder
           # (91.227.d.8) ? multifield representation in data model: cannot be simply enforced
           - icaoAddress # (91.227.d.11)
-          - emitterType # (91.227.d.12)
+          # - emitterType # (91.227.d.12)
           # (91.227.d.13) ? missing in JSON object: no indication of ADS-B In capabilities
-          - altitudeMM # (91.227.d.14) # (91.227.d.14) ? not necessarily geometric altitude
+          # - altitudeMM # (91.227.d.14) # (91.227.d.14) ? not necessarily geometric altitude
 
           - timeStamp # not part of ADS-B Out requirements
           # NOTE: SEE Detail: KEY OBJECT FOR MORE REQUIRED FIELDS
@@ -300,16 +300,16 @@ material is also available from the sources indicated in paragraphs (g)(1) and
 
       Detail:
         type: object
-        required: 
-          - tcasAcasOperating # (91.227.d.5)
-          - tcasAcasAdvisory # (91.227.d.6)
-          - emergencyStatus # (91.227.d.9)
-          - identSwActive # (91.227.d.10)
-          - navPositionAccuracy # (91.227.d.15)
-          - navVelocityAccuracy # (91.227.d.16)
-          - navIntegrity # (91.227.d.17)
-          - sysDesignAssurance # (91.227.d.18)
-          - sysIntegrityLevel # (91.227.d.19)
+        # required: 
+          # - tcasAcasOperating # (91.227.d.5)
+          # - tcasAcasAdvisory # (91.227.d.6)
+          # - emergencyStatus # (91.227.d.9)
+          # - identSwActive # (91.227.d.10)
+          # - navPositionAccuracy # (91.227.d.15)
+          # - navVelocityAccuracy # (91.227.d.16)
+          # - navIntegrity # (91.227.d.17)
+          # - sysDesignAssurance # (91.227.d.18)
+          # - sysIntegrityLevel # (91.227.d.19)
         properties:
           navIntegrity:
             type: integer
