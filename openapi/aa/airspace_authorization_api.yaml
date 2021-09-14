@@ -1,0 +1,157 @@
+openapi: 3.0.3
+info:
+  title: X4 Airspace Authorization
+  version: 0.1.0-uam
+  description: |-
+    Interface definitions for 'Airspace Authorization' in X4.
+security:
+  - Authority:
+      - utm.strategic_coordination
+
+paths:
+  /airspace_authorization:
+    description: Submit an operational intent to Airspace Authorization
+
+    put:
+      summary: Submit all operational intent information for this Authorization.
+      security:
+        - Authority:
+            - utm.strategic_coordination
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthOperation'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutAuthOperationResponse'
+          description: Operation was successfully submitted.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: One or more input parameters were missing or invalid.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Bearer access token was not provided in Authorization header,
+            token could not be decoded, or token was invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The access token was decoded successfully but did not include
+            a scope appropriate to this endpoint.
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The client issued too many requests in a short period of time.
+
+components:
+  securitySchemes:
+    Authority:
+      # See PSU API
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://token_vendor.com/oauth/token
+          scopes:
+            utm.strategic_coordination: |-
+              Client may perform planning, strategic conflict detection, and conformance monitoring activities, including reading information about Constraints.
+            utm.constraint_management: |-
+              Client may manage (create, edit, and delete) Constraints they own.
+            utm.constraint_consumption: |-
+              Client may read Constraints from the DSS (references) and partner USSs (details).
+      description: |-
+        Authorization from, or on behalf of, an authorization authority.  This authority shall issue access tokens that are JSON Web Tokens as defined in RFC 7519, using the `RS256` algorithm for the signature, publish to all providers the public key for verifying that signature, and implement standard OAuth server discovery mechanisms as described in RFC 8414.
+        The following fields shall be included in the JWT claim for access tokens issued by this authority:
+            * `iss`, with the URL at which the token generation request was received.
+            * `exp`, with a time no further than 1 hour in the future.
+            * `sub`, with unique ID of the client requesting the access token.
+            * `scope`, with an array of strings indicating the scopes granted.
+            * `jti`, according to RFC 7519.
+        Only one scope shall be granted for a token.  The tokens granted by this authority shall protect against reuse of received tokens to impersonate the sender to other recipients (via use of the `aud` claim or other means).
+        Clients shall provide these access tokens in an `Authorization` header in the form `Bearer <token>` in accordance with RFC 6750.
+
+  schemas:
+    AuthOperation:
+      description: |-
+        Full description of the operation.
+      required:
+        - reference
+        - details
+        - flight_rules
+        - adaptation_hash
+      type: object
+      properties:
+        reference:
+          # See PSU API
+          $ref: '../psu/psu_api.yml#/components/schemas/OperationalIntentReference'
+        details:
+          # See PSU API
+          $ref: '../psu/psu_api.yml#/components/schemas/OperationalIntentDetails'
+        flight_rules:
+          description: |-
+            Describes the planned flight rules (e.g., IFR/VFR) for the operation. Will be held
+            constant throught the operation.
+          type: string
+          enum:
+            - IFR
+            - VFR
+        adaptation_hash:
+          description: |-
+            The hash value from ASDS corresponding to the Adaption ID that was
+            used when planning this operation.
+          anyOf:
+            - $ref: '#/components/schemas/AdaptationHash'
+
+    AdaptationHash:
+      description: |-
+        SHA256 hash from ASDS
+      required:
+        - hash
+      type: object
+      properties:
+        hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+
+    UUIDv4:
+      description: |-
+        Universally-unique identifier (version 4).
+      maxLength: 36
+      minLength: 36
+      type: string
+      format: uuid
+      pattern: >-
+        '^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$'
+      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+
+    PutAuthOperationResponse:
+      description: |-
+        UUID indicating successful submission of an operation
+      anyOf:
+        - $ref: '#/components/schemas/UUIDv4'
+    
+    ErrorResponse:
+      description: |-
+        Human-readable string returned when an error occurs
+        as a result of a PSU - Airspace Authorization transaction.
+      type: object
+      properties:
+        message:
+          description: |-
+            Human-readable message indicating what error occurred and/or why.
+          type: string
+          example: 'The error occurred because [...]'
