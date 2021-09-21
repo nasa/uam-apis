@@ -21,3 +21,10 @@ __Security__ in case of vulnerabilities.
     * ./asds.yaml
     * ./README.MD
     * ./CHANGELOG.MD  
+    
+### [1.0.0-uam] - 09/17/2021
+#### Changed
+* ./asds.yaml changed
+    * the 'configuration' in Adaptation is not required any more
+    * adjusted the min/max size of Polygon
+    * Enroute & transition max & min airpseeds were added to PerformanceRequirements
