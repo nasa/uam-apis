@@ -4,7 +4,7 @@ info:
   title: Adaptation API
   description: |-
     Endpoints to request the available adaptation data, and airspace details for a specific location.
-  version: 0.1.0-uam
+  version: 1.0.0-uam
         
 tags:
   - name: ansp
@@ -94,7 +94,6 @@ components:
       - id
       - name
       - version
-      - configuration
       - uam_airspaces
       - boundary
       - vertiports
@@ -137,7 +136,6 @@ components:
           allOf:
             - $ref: '#/components/schemas/Polygon'
         vertiports:
-          # @TODO insert some contingency construct.
           type: array
           items:
             $ref: '#/components/schemas/Vertiport'
@@ -171,7 +169,6 @@ components:
         name:
           type: string
           description: Names are descriptive for purpose of this point. Can denote entry or exit points, or a vertiport. 5 alphanumeric characters following traditional ATM formatting
-          # @TODO add reference to the definition of waypoint naming
           example: ee123
         lat_lng:
           $ref: '#/components/schemas/LatLngPoint'
@@ -254,7 +251,6 @@ components:
             - $ref: '#/components/schemas/UUIDv4'
         name:
           description: Name of this Track
-          # @TODO add some reference to how name would follow a geographical reference/name
           type: string
           example: examplename
         waypoints:
@@ -312,11 +308,11 @@ components:
         name:
           type: string
           description: Names are descriptive for purpose of this point. Can denote entry or exit points, or a vertiport. 5 alphanumeric characters following traditional ATM formatting
-          # @TODO add reference to the definition of waypoint naming
           example: ee123
         type:
           description: Associated type of waypoint for this point
-          $ref: '#/components/schemas/WaypointType'
+          allOf:
+          - $ref: '#/components/schemas/WaypointType'
         scheduling_types:
           description: A list of scheduling point types
           type: array
@@ -342,36 +338,53 @@ components:
       description: Performance capabilities needed by the vehicle to use this airspace element. Target speed, maximum speed, minimum speed are allocated to Track. Maximum bank turn, maximum ascent gradient, and maximum descent gradient are allocated to Vertiport. Maximum bank turn and Navigation requirements are allocated to Corridor.
       type: object
       properties:
-        #TODO Should speeds be airspeed or groundspeed? What units?
         target_speed:
-          description: Target speed the vehicle should to be able to fly in knots (kts)
-          maximum: 300
+          description: Target speed the vehicle should to be able to fly in knots (kts). Target speed is not being used at this time.
+          maximum: 200
           exclusiveMaximum: false
           minimum: 0
           exclusiveMinimum: false
           type: number
           format: double
-          example: 125
-        max_speed:
-          description: Maximum speed the vehicle is allowed to fly in knots (kts)
-          maximum: 300
+          example: 130
+        enroute_max_speed:
+          description: Maximum enroute cruise speed the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values with be less than the enroute maximum speed values. An enroute maximum speed value of 130 knots is generally used.
+          maximum: 150
           exclusiveMaximum: false
-          minimum: 0
+          minimum: 50
           exclusiveMinimum: false
           type: number
           format: double
-          example: 150
-        min_speed:
-          description: Minimum speed the vehicle is allowed to fly in knots (kts)
-          maximum: 300
+          example: 130
+        enroute_min_speed:
+          description: Minimum enroute cruise speed the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values with be less than the enroute maximum speed values. An enroute minimum speed value of 110 knots is generally used.
+          maximum: 130
           exclusiveMaximum: false
-          minimum: 0
+          minimum: 50
           exclusiveMinimum: false
           type: number
           format: double
-          example: 100
+          example: 110          
+        transition_max_speed:
+          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents maximum transition speed the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values with be less than the transition maximum speed values. A transition maximum speed value of 70 knots is generally used.
+          maximum: 150
+          exclusiveMaximum: false
+          minimum: 50
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 70
+        transition_min_speed:
+          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents minimum transition speed the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values with be less than the transition maximum speed values. A transition minimum speed value of 30 knots is generally used.
+          maximum: 120
+          exclusiveMaximum: false
+          minimum: 20
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 30    
         max_bank_turn:
-          description: Maximum bank turn angle the vehicle is allowed to fly in degrees (degrees)
+          description: Maximum bank turn angle the vehicle is allowed to fly in degrees.
           maximum: 30
           exclusiveMaximum: false
           minimum: 0
@@ -380,7 +393,7 @@ components:
           format: double
           example: 20
         max_ascent_gradient:
-          description: Maximum ascent gradient the vehicle is allowed to fly in degrees (degrees)
+          description: Maximum ascent gradient the vehicle is allowed to fly in degrees.
           maximum: 9
           exclusiveMaximum: false
           minimum: 0
@@ -389,7 +402,7 @@ components:
           format: double
           example: 8
         max_descent_gradient:
-          description: Maximum descent gradient the vehicle is allowed to fly in degrees (degrees)
+          description: Maximum descent gradient the vehicle is allowed to fly in degrees.
           maximum: 9
           exclusiveMaximum: false
           minimum: 0
@@ -426,8 +439,8 @@ components:
         vertices:
           description: The number of vertices in this geometry.
           type: array
-          maxItems: 100
-          minItems: 4
+          maxItems: 400
+          minItems: 3
           items:
             $ref: '#/components/schemas/LatLngPoint'
       externalDocs:
