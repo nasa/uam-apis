@@ -12,12 +12,20 @@ security:
   - aom.telemetry_producer
 
 paths:
+  /health:
+    get:
+      summary: Health endpoint
+      tags:
+        - Health
+      responses:
+        '200':
+          description: OK
   /producer:
-    
+
     put:
       summary: Add telemetry data
       tags:
-        - telemetry
+        - Telemetry Producer
       responses:
         '201':
           description: OK
@@ -27,6 +35,34 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+
+
+  /connect:
+    get:
+      summary:  Pseudo-endpoints not intended to be implemented literally, but rather to illustrate consumer streaming protocol
+      tags:
+        - Telemetry Consumer
+      responses:
+        '200':
+          description: OK
+
+  /disconnect:
+    get:
+      summary:  Pseudo-endpoints not intended to be implemented literally, but rather to illustrate consumer streaming protocol
+      tags:
+        - Telemetry Consumer
+      responses:
+        '200':
+          description: OK
+  /read:
+    get:
+      summary:  Pseudo-endpoints not intended to be implemented literally, but rather to illustrate consumer streaming protocol
+      tags:
+        - Telemetry Consumer
+      responses:
+        '200':
+          description: OK
 
 components:
   securitySchemes:
