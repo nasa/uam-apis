@@ -1,0 +1,106 @@
+openapi: 3.0.2
+info:
+  title: AOM Telemetry Data Provider
+  version: 0.0.1
+  description: |-
+    Interface definitions for communication between NASA and a Telemetry Data producer,
+    as well as for communication between a consumer and NASA.
+
+security:
+- Authority:
+  - aom.telemetry_consumer
+  - aom.telemetry_producer
+
+paths:
+  /producer:
+    
+    put:
+      summary: Add telemetry data
+      tags:
+        - telemetry
+      responses:
+        '201':
+          description: OK
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    Authority:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.nasa.gov/oauth/token
+          scopes:
+            aom.telemetry_consumer: |-
+              Client may read telemetry.
+            aom.telemetry_producer: |-
+              Client may create telemetry.
+      description: |-
+        Authorization from, or on behalf of, an authorization authority.
+
+
+  schemas:
+    ProducerStream:
+      type: object
+      required:
+        - stream
+      properties:
+        stream:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProducerObject'
+    ProducerObject:
+      type: object
+      required:
+        - time
+        - data
+      properties:
+        time:
+          $ref:
+            '#/components/schemas/StreamTimestamp'
+        data:
+          type: array
+          items:
+            $ref:
+              '#/components/schemas/NameValuePair'
+
+    ConsumerObject:
+      type: object
+      required:
+        - time
+        - nv
+      properties:
+        time:
+          $ref:
+            '#/components/schemas/StreamTimestamp'
+        nv:
+          $ref:
+            '#/components/schemas/NameValuePair'
+
+    NameValuePair:
+      type:
+        object
+      required:
+        - n
+        - v
+      properties:
+        n:
+          type: string
+          maxLength: 256
+        v:
+          type: string
+          maxLength: 1024
+
+    StreamTimestamp:
+      type: string
+      pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,8})?Z$"
+      example: '2015-08-20T14:11:56.11834521Z'
+
+    Error:
+      type: string
+      example: ''
