@@ -128,14 +128,16 @@ components:
         n:
           type: string
           maxLength: 256
+          example: altitude_W84_M
         v:
           type: string
           maxLength: 1024
+          example: 100321
 
     StreamTimestamp:
       type: string
       pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,8})?Z$"
-      example: '2015-08-20T14:11:56.11834521Z'
+      example: '2021-08-20T14:11:56.11834521Z'
 
     Error:
       type: string
