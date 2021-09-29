@@ -8,14 +8,20 @@ components:
   schemas:
       ADSBObject:
         type: object
-        required:
-          - aircraft
         properties:
           aircraft:
             type: array
             items:
               $ref: 
                 '#/components/schemas/ADSBModel'
+          status:
+            $ref:
+                '#/components/schemas/pingStationStatus'
+          statuses:
+            type: array
+            items:
+              $ref:
+                  '#/components/schemas/pingStationStatus'
 
       ADSBModel:
         type: object
@@ -571,3 +577,46 @@ material is also available from the sources indicated in paragraphs (g)(1) and
         minLength: 22
         maxLength: 24
         example: '2015-08-20T14:11:56.118Z'
+
+      pingStationStatus:
+        type: object
+        required:
+          - pingStationGuid
+          - pingStationVersionMajor
+          - pingStationVersionMinor
+          - pingStationBuild
+          - timeStamp
+          - pingStationLatDD
+          - pingStationLonDD
+          - pingStationAltType
+          - pingStationAltMM
+          - gpsStatus
+          - receiverStatus
+        properties:
+          pingStationGuid:
+            type: string
+            pattern: '^[a-fA-F0-9]{16}$'
+          pingStationVersionMajor:
+            type: integer
+          pingStationVersionMinor:
+            type: integer
+          pingStationBuild:
+            type: integer
+          timeStamp:
+            $ref:
+              '#/components/schemas/ADSBtimestamp'            
+          pingStationLatDD:
+            type: number
+          pingStationLonDD:
+            type: number
+          pingStationAltType:
+            type: integer
+            enum: [0,1]
+          pingStationAltMM:
+            type: number
+          gpsStatus:
+            type: integer
+            enum: [0,1,2,3,4]
+          receiverStatus:
+            type: integer
+            enum: [0,1,2]
