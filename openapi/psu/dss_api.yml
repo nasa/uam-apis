@@ -2,21 +2,23 @@
 openapi: 3.0.3
 info:
   title: X4 UAM API (PSU->DSS)
-  version: 0.1.0-uam
+  version: 0.2.0-uam
   description: |-
-    Interface definitions between 'Discovery and Synchronization Service' (DSS) and a 'Provider of Services UAM' (PSU).
+    Interface definitions for communication between a Provider of Services UAM (PSU) and a Discovery and Synchronization Service
+    (DSS) .
     DSS functionality includes identification of peer UAM PSU instances (managing flight operations and constraints).
-    Note: Unless otherwise specified, fields specified in a message but not declared in the API shall be ignored.
+    Note: Unless otherwise specified, fields specified in a message but not declared in the API must be ignored.
  
-    Note: Version 0.3.15 Commit fde915a of the ASTM UTM API was used as starting point for editing this API.
+    Note: Version 0.3.17 Commit ed1eac6 of the ASTM UTM API was used as starting point for editing this API.
  
      
 security:
-  - Authority:
-    - utm.strategic_coordination
-    - utm.constraint_management
-    - utm.constraint_ingestion
-    - utm.availability_arbitration
+- Authority:
+  - utm.strategic_coordination
+  - utm.constraint_management
+  - utm.constraint_processing
+  - utm.conformance_monitoring_sa
+  - utm.availability_arbitration
  
 tags:
   - name: Operational intent references
@@ -48,27 +50,29 @@ components:
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: https://token_vendor.com/oauth/token
+          tokenUrl: https://auth.example.com/oauth/token
           scopes:
             utm.strategic_coordination: |-
-              Client may perform planning, strategic conflict detection, and conformance monitoring activities.
+              Client may perform actions encompassed by the strategic coordination role including strategic conflict detection.
             utm.constraint_management: |-
-              Client may manage (create, edit, and delete) constraints they manage.
-            utm.constraint_ingestion: |-
-              Client may read constraint references from the DSS and details from the partner USSs.
+              Client may manage (create, edit, and delete) constraints according to the constraint management role.
+            utm.constraint_processing: |-
+              Client may read constraint references from the DSS and details from the partner USSs according to the constraint processing role.
+            utm.conformance_monitoring_sa: |-
+              Client may perform actions encompassed by the conformance monitoring for situational awareness role.
             utm.availability_arbitration: |-
               Client may set the availability state of USSs in the DSS.
       description: |-
-        Authorization from, or on behalf of, an authorization authority.  This authority shall issue access tokens that are JSON Web Tokens as defined in RFC 7519, using the `RS256` algorithm for the signature, publish to all providers the public key for verifying that signature, and implement standard OAuth server discovery mechanisms as described in RFC 8414.
-        The following fields shall be included in the JWT claim for access tokens issued by this authority:
+        Authorization from, or on behalf of, an authorization authority.  This authority will issue access tokens that are JSON Web Tokens as defined in RFC 7519, using the `RS256` algorithm for the signature, publish to all providers the public key for verifying that signature, and implement standard OAuth server discovery mechanisms as described in RFC 8414.
+        The following fields must be included in the JWT claim for access tokens issued by this authority:
             * `iss`, with the URL at which the token generation request was received.
             * `exp`, with a time no further than 1 hour in the future.
             * `sub`, with unique ID of the client requesting the access token.
             * `scope`, with a string composed of a space-separated list of strings indicating the scopes granted, per RFC 6749.
             * `jti`, according to RFC 7519.
-        Following the principle of least privilege, only one of the scopes enumerated in this document shall be granted in a single token (though other scopes may accompany it).  The tokens granted by this authority shall protect against reuse of received tokens to impersonate the sender to other recipients (via use of the `aud` claim or other means).
-        When using the `aud` claim to protect against the reuse of received tokens, and absent guidance on behalf of the competent authority to the contrary, the JWT `aud` claim requested by the client shall be included in each access token and shall contain the fully qualified domain name of the URL the access token will be used to access.  For example, if a USS were querying the endpoint at https://dss.example.com:8888/rid/v2/dss/identification_service_areas, the access token included in the request should specify `"aud": "dss.example.com"`.
-        Clients shall provide these access tokens in an `Authorization` header in the form `Bearer <token>` in accordance with RFC 6750.
+        Following the principle of least privilege, only one of the scopes enumerated in this document should be granted in a single token (though other scopes may accompany it).  The tokens granted by this authority must protect against reuse of received tokens to impersonate the sender to other recipients (via use of the `aud` claim or other means).
+        When using the `aud` claim to protect against the reuse of received tokens, and absent guidance on behalf of the competent authority to the contrary, the JWT `aud` claim requested by the client must be included in each access token and must contain the fully qualified domain name of the URL the access token will be used to access.  For example, if a USS were querying the endpoint at https://dss.example.com:8888/rid/v2/dss/identification_service_areas, the access token included in the request should specify `"aud": "dss.example.com"`.
+        Clients must provide these access tokens in an `Authorization` header in the form `Bearer <token>` in accordance with RFC 6750.
   schemas:
     UUIDv4Format:
       description: |-
@@ -175,7 +179,7 @@ components:
             The numeric value of the altitude. Note that min and max values are
             added as a sanity check. As use cases evolve and more options are
             made available in terms of units of measure or reference systems,
-            these bounds should be re-evaluated.
+            these bounds may be re-evaluated.
           type: number
           format: double
           minimum: -8000
@@ -225,11 +229,11 @@ components:
     Polygon:
       description: |-
         An enclosed area on the earth.
-        The bounding edges of this polygon shall be the shortest paths between connected vertices.  This means, for instance, that the edge between two points both defined at a particular latitude is not generally contained at that latitude.
-        The winding order shall be interpreted as the order which produces the smaller area.
-        The path between two vertices shall be the shortest possible path between those vertices.
+        The bounding edges of this polygon are defined to be the shortest paths between connected vertices.  This means, for instance, that the edge between two points both defined at a particular latitude is not generally contained at that latitude.
+        The winding order must be interpreted as the order which produces the smaller area.
+        The path between two vertices is defined to be the shortest possible path between those vertices.
         Edges may not cross.
-        Vertices may not be duplicated.  In particular, the final polygon vertex shall not be identical to the first vertex.
+        Vertices may not be duplicated.  In particular, the final polygon vertex must not be identical to the first vertex.
       required:
         - vertices
       type: object
@@ -264,8 +268,8 @@ components:
  
     Volume3D:
       description: |-
-        A three-dimensional geographic volume consisting of a vertically-extruded shape.  Exactly
-        one outline must be specified.
+        A three-dimensional geographic volume consisting of a vertically-extruded shape.
+        Exactly one outline must be specified.
       type: object
       properties:
         outline_circle:
@@ -364,11 +368,11 @@ components:
           $ref: '#/components/schemas/SubscriptionID'
         version:
           description: |-
-            Version that the DSS changes every time a USS changes the subscription.  The DSS
-            incrementing the notification_index does not constitute a change that triggers a
-            new version.  A USS must specify this version when modifying an existing
-            subscription to ensure consistency in read-modify-write operations and distributed
-            systems.
+            Version of the subscription that the DSS changes every time a USS changes the 
+            subscription.  The DSS incrementing the notification_index does not constitute a
+            change that triggers a new version.  A USS must specify this version when modifying 
+            an existing subscription to ensure consistency in read-modify-write operations and 
+            distributed systems.
           type: string
         notification_index:
           $ref: '#/components/schemas/SubscriptionNotificationIndex'
@@ -389,13 +393,15 @@ components:
         notify_for_operational_intents:
           description: If true, trigger notifications when operational intents are
             created, updated, or deleted.  Otherwise, changes in operational intents
-            should not trigger notifications.
+            should not trigger notifications.  The scope utm.strategic_coordination is
+            required to set this flag true.
           type: boolean
           default: false
         notify_for_constraints:
           description: If true, trigger notifications when constraints are created,
             updated, or deleted.  Otherwise, changes in constraints should not trigger
-            notifications.
+            notifications.  The scope utm.constraint_processing is required to set this
+            flag true.
           type: boolean
           default: false
         implicit_subscription:
@@ -477,13 +483,15 @@ components:
         notify_for_operational_intents:
           description: If true, trigger notifications when operational intents are
             created, updated, or deleted.  Otherwise, changes in operational intents
-            should not trigger notifications.
+            should not trigger notifications.  The scope utm.strategic_coordination is
+            required to set this flag true.
           type: boolean
           default: false
         notify_for_constraints:
           description: If true, trigger notifications when constraints are created,
             updated, or deleted.  Otherwise, changes in constraints should not trigger
-            notifications.
+            notifications.  The scope utm.constraint_processing is required to set this
+            flag true.
           type: boolean
           default: false
  
@@ -535,7 +543,7 @@ components:
         of a particular resource can be constructed by appending, e.g., `/uss/v1/{resource}/{id}` to this base URL.
         Accordingly, this URL may not have a trailing '/' character.
       type: string
-      example: https://utm_uss.com/utm
+      example: https://uss.example.com/utm
  
     OperationalIntentState:
       description: |-
@@ -546,24 +554,26 @@ components:
         'Activated': Operational intent is in active use; see standard text for more details.
         The create or update request for this operational intent reference must include a Key containing all OVNs for
         all relevant Entities.
-        'NonConforming': This Operation did not meet the horizontal and/or vertical uncertanties at the time of its most 
-        recent trajectory point. The create or update request for this Operation may omit a Key in this case because 
-        the Operation is being adjusted as flown and cannot necessarily deconflict.
+        'Nonconforming': This Operation is not conforming to its operational intent per the Community Based Rules (CBR). 
+        The create or update request for this operational intent may omit a Key 
+        in this case because the operational intent is being adjusted as flown and cannot necessarily deconflict.
         'Contingent': UA is considered unrecoverably unable to conform with its coordinate operational intent; see
-        standard text for more details. Operations may not leave this state, and can only be deleted. The create or 
-        update request for this operational intent may omit a Key in this case because the operational intent is being 
-        adjusted as flown and cannot necessarily deconflict.
+        standard text for more details. 
+        This state must transition to Ended.
+        The create or update request for
+        this operational intent may omit a Key in this case because the operational intent is being adjusted as flown 
+        and cannot necessarily deconflict.
       type: string
       enum:
         - Accepted
         - Activated
-        - NonConforming
+        - Nonconforming
         - Contingent
  
     OperationalIntentReference:
       description: |-
         The high-level information of a planned or active operational intent with the URL
-        of a USS to query for details.  Note: 'OVN' is returned ONLY to the USS that
+        of a USS to query for details.  Note: 'ovn' is returned ONLY to the USS that
         created the operational intent but NEVER to other USS instances.
       required:
         - id
@@ -649,7 +659,10 @@ components:
           description: |-
             Spacetime extents that bound this operational intent.
             Start and end times, as well as lower and upper altitudes, are required for each
-            volume. The end time may not be in the past.
+            volume. The end time may not be in the past. All volumes, both nominal and off-nominal,
+            must be encompassed in these extents. However, these extents do not need to match the
+            precise volumes of the operational intent; a single bounding extent may be provided
+            instead, for instance.
           type: array
           items:
             $ref: '#/components/schemas/Volume4D'
@@ -658,12 +671,12 @@ components:
           description: |-
             Proof that the USS creating or mutating this operational intent was aware of the current state of the
             airspace, with the expectation that this operational intent is therefore deconflicted from all relevant
-            features in the airspace.  This field is not required when declaring an operational intent NonConforming
+            features in the airspace.  This field is not required when declaring an operational intent Nonconforming
             or Contingent, or when there are no relevant Entities in the airspace, but is otherwise required.
-            OVNs for constraints are required if and only if the USS managing this operational intent is considering
-            constraints, which is determined by whether the subscription associated with this operational intent
-            triggers notifications for constraints.  The key does not need to contain the OVN for an
-            operational intent being updated.
+            OVNs for constraints are required if and only if the USS managing this operational intent is performing
+            the constraint processing role, which is indicated by whether the subscription associated with this
+            operational intent triggers notifications for constraints.  The key does not need to contain the OVN for
+            the operational intent being updated.
           anyOf:
             - $ref: '#/components/schemas/Key'
         state:
@@ -704,7 +717,10 @@ components:
             - $ref: '#/components/schemas/SubscriptionUssBaseURL'
         notify_for_constraints:
           description: |-
-            True if this operational intent's subscription should trigger notifications when constraints change.  Otherwise, changes in constraints should not trigger notifications.
+            True if this operational intent's subscription should trigger notifications when constraints change.
+            Otherwise, changes in constraints should not trigger notifications.  The scope
+            utm.constraint_processing is required to set this flag true, and a USS performing the constraint
+            processing role should set this flag true.
           type: boolean
           default: false
  
@@ -731,7 +747,7 @@ components:
           description: |-
             DSS subscribers that this client now has the obligation to
             notify of the operational intent changes just made.  This client must call POST
-            for each provided URL according to the USS-USS `/uss/v1/operational_intents/{entityid}`
+            for each provided URL according to the USS-USS `/uss/v1/operational_intents`
             path API.  The client's own subscriptions will also be included in this list.
           type: array
           items:
@@ -832,6 +848,10 @@ components:
           description: |-
             Spacetime extents that bound this constraint.
             The end time may not be in the past.
+            All volumes of the constraint must be encompassed in these extents.
+            However, these extents do not need to match the precise volumes of
+            the constraint; a single bounding extent may be provided instead,
+            for instance.
           type: array
           items:
             $ref: '#/components/schemas/Volume4D'
@@ -859,7 +879,7 @@ components:
         subscribers:
           description: DSS subscribers that this client now has the obligation to
             notify of the constraint changes just made.  This client must call POST
-            for each provided URL according to the USS-USS `/uss/v1/constraints/{entityid}`
+            for each provided URL according to the USS-USS `/uss/v1/constraints`
             path API.  The client's own subscriptions will also be included in this
             list.
           type: array
@@ -951,7 +971,6 @@ components:
           * Delete an operational intent
         A USS in the Unknown state possesses all the capabilities, within the DSS, of a USS in the
         Normal state.
-
     SetUssAvailabilityStatusParameters:
       type: object
       required:
@@ -1078,7 +1097,9 @@ paths:
         - dss
       security:
         - Authority:
-            - utm.strategic_coordination
+          - utm.strategic_coordination
+        - Authority:
+          - utm.conformance_monitoring_sa
       summary: Query all operational intent references in the specified area/volume/time
         from the DSS.
       description: |-
@@ -1146,7 +1167,9 @@ paths:
         - dss
       security:
         - Authority:
-            - utm.strategic_coordination
+          - utm.strategic_coordination
+        - Authority:
+          - utm.conformance_monitoring_sa
       summary: Retrieve the specified operational intent reference from the DSS.
       operationId: getOperationalIntentReference
       responses:
@@ -1201,7 +1224,12 @@ paths:
         - dss
       security:
         - Authority:
-            - utm.strategic_coordination
+          - utm.strategic_coordination
+        - Authority:
+          - utm.strategic_coordination
+          - utm.constraint_processing
+        - Authority:
+          - utm.conformance_monitoring_sa
       summary: Create the specified operational intent reference in the DSS.
       operationId: createOperationalIntentReference
       responses:
@@ -1291,6 +1319,11 @@ paths:
       security:
       - Authority:
         - utm.strategic_coordination
+      - Authority:
+        - utm.strategic_coordination
+        - utm.constraint_processing
+      - Authority:
+        - utm.conformance_monitoring_sa
       summary: Update the specified operational intent reference in the DSS.
       operationId: updateOperationalIntentReference
       responses:
@@ -1358,7 +1391,9 @@ paths:
         - dss
       security:
         - Authority:
-            - utm.strategic_coordination
+          - utm.strategic_coordination
+        - Authority:
+          - utm.conformance_monitoring_sa
       summary: Remove the specified operational intent reference from the DSS.
       operationId: deleteOperationalIntentReference
       responses:
@@ -1441,7 +1476,7 @@ paths:
         - Authority:
           - utm.constraint_management
         - Authority:
-          - utm.constraint_ingestion
+          - utm.constraint_processing
       summary: Query all constraint references in the specified area/volume from the
         DSS.
       description: |-
@@ -1510,7 +1545,7 @@ paths:
         - Authority:
           - utm.constraint_management
         - Authority:
-          - utm.constraint_ingestion
+          - utm.constraint_processing
       summary: Retrieve the specified constraint reference from the DSS.
       operationId: getConstraintReference
       responses:
@@ -1777,7 +1812,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_ingestion
+          - utm.constraint_processing
         - Authority:
           - utm.strategic_coordination
       description: |-
@@ -1849,7 +1884,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_ingestion
+          - utm.constraint_processing
         - Authority:
           - utm.strategic_coordination
       summary: Retrieve the specified subscription from the DSS.
@@ -1899,7 +1934,7 @@ paths:
     put:
       security:
         - Authority:
-          - utm.constraint_ingestion
+          - utm.constraint_processing
         - Authority:
           - utm.strategic_coordination
       summary: Create the specified subscription in the DSS.
@@ -1981,7 +2016,7 @@ paths:
     put:
       security:
       - Authority:
-        - utm.constraint_ingestion
+        - utm.constraint_processing
       - Authority:
         - utm.strategic_coordination
       summary: Update the specified subscription in the DSS.
@@ -2052,7 +2087,7 @@ paths:
         - dss
       security:
         - Authority:
-          - utm.constraint_ingestion
+          - utm.constraint_processing
         - Authority:
           - utm.strategic_coordination
       summary: Remove the specified subscription from the DSS.
@@ -2120,9 +2155,13 @@ paths:
         - Authority:
           - utm.constraint_management
         - Authority:
-          - utm.constraint_ingestion
+          - utm.constraint_processing
         - Authority:
           - utm.strategic_coordination
+        - Authority:
+          - utm.conformance_monitoring_sa
+        - Authority:
+          - utm.availability_arbitration
       summary: Report information about communication issues to a DSS.
       operationId: makeDssReport
       description: Report issues to a DSS. Data sent to this endpoint is archived.
@@ -2243,6 +2282,8 @@ paths:
         - utm.availability_arbitration
       - Authority:
         - utm.strategic_coordination
+      - Authority:
+        - utm.conformance_monitoring_sa
       summary: Get availability status of a USS.
       operationId: getUssAvailability
       description: Get availability status of a USS.

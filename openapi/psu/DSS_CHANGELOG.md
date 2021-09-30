@@ -16,6 +16,12 @@ __Security__ in case of vulnerabilities.
 ## Log
 Change logging is descending by time.
 
+### [0.2.0-uam] - 
+#### Changed
+- external/psu/DSS_CHANGELOG.md
+- external/psu/dss_api.yml
+    - Updated the file based on the Version 0.3.17 Commit ed1eac6 of the ASTM UTM API.
+
 ### [0.1.0-uam] - Mon Sep 13 13:41:08 PDT 2021
 #### Added
 - openapi/psu/DSS_CHANGELOG.md
