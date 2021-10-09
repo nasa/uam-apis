@@ -1,15 +1,10 @@
 openapi: 3.0.2
 info:
   title: NASA AOM Telemetry Data Provider
-  version: 0.0.1
+  version: 0.0.2
   description: |-
     Interface definitions for communication between NASA and a Telemetry Data producer,
     as well as for communication between a consumer and NASA.
-
-security:
-- Authority:
-  - aom.telemetry_consumer
-  - aom.telemetry_producer
 
 paths:
   /health:
@@ -20,29 +15,41 @@ paths:
       responses:
         '200':
           description: OK
-  /producer:
 
+  /producer:
     put:
       summary: Add telemetry data
       tags:
         - Telemetry Producer
+      security:
+        - Authority:
+          - aom.telemetry_producer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProducerStream"
       responses:
-        '201':
-          description: OK
-        default:
-          description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ProducerObject"
-
-
+        '204':
+          description: no content
+        '400':
+          description: bad format
+        '403':
+          description: forbidden
+        '504':
+          description: gateway timeout
+        '5XX':
+          description: server error
 
   /connect:
     get:
       summary:  Pseudo-endpoints not intended to be implemented literally, but rather to illustrate consumer streaming protocol
       tags:
         - Telemetry Consumer
+      security:
+        - Authority:
+          - aom.telemetry_consumer
       responses:
         '200':
           description: OK
@@ -52,9 +59,13 @@ paths:
       summary:  Pseudo-endpoints not intended to be implemented literally, but rather to illustrate consumer streaming protocol
       tags:
         - Telemetry Consumer
+      security:
+        - Authority:
+          - aom.telemetry_consumer
       responses:
         '200':
           description: OK
+
   /read:
     get:
       summary:  Pseudo-endpoints not intended to be implemented literally, but rather to illustrate consumer streaming protocol
@@ -79,17 +90,25 @@ components:
       description: |-
         Authorization from, or on behalf of, an authorization authority.
 
-
   schemas:
     ProducerStream:
       type: object
       required:
         - stream
+        - sequence
       properties:
+        version:
+          type: string
+          pattern: '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$"
+          description: semantic version number, like 0.0.0
+        sequence:
+          type: integer
+          description: monotonically increasing integer to detect duplicates
         stream:
           type: array
           items:
             $ref: '#/components/schemas/ProducerObject'
+
     ProducerObject:
       type: object
       required:
@@ -138,7 +157,3 @@ components:
       type: string
       pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,8})?Z$"
       example: '2021-08-20T14:11:56.11834521Z'
-
-    Error:
-      type: string
-      example: ''
