@@ -1,0 +1,269 @@
+openapi: 3.0.2
+info:
+  title: Data Collection for X4
+  version: 0.1.0-uam
+  description: |-
+    Definition of the models to be used for Data Collection in X4.
+    This model is based on the USSLogSet model in the ASTM v0.3.15 commit fde915a. Only
+    schemas applicable to X4 are included.
+
+components:
+  schemas:
+    #
+    # Data structures for logging
+    #
+
+    PSULogSet:
+      type: object
+      description: |-
+        The set of log data fulfilling this standard's Logging requirements.
+      required:
+        - operation_id
+        - messages
+        - planning_attempts
+        - operational_intent_positions
+      properties:
+        operation_id:
+          description: UUID of the operational intent the content of this model 
+            corresponds to.
+          $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
+        messages:
+          description: Outgoing messages sent to other PSUs and the DSS, and incoming
+            messages received from other PSUs, including instances where an expected
+            response to a request is not received.
+            This includes all messages recieved for this operation_id and its corresponding
+            subscription
+          type: array
+          items:
+            $ref: '#/components/schemas/ExchangeRecord'
+          default: []
+        planning_attempts:
+          description: For a PSU that manages operational intents, instances where
+            an operational intent could not be planned or replanned due to conflicts
+            with other operational intents or constraints.
+          type: array
+          items:
+            $ref: '#/components/schemas/PlanningRecord'
+          default: []
+        operational_intent_positions:
+          description: For a PSU performing conformance monitoring, all position data
+            used for conformance monitoring that is ingested from the UAM Vehicle.
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationalIntentPositions'
+          default: []
+
+    ExchangeRecord:
+      type: object
+      description: Details of a request/response data exchange.
+        All exchanges between the PSU and other PSUs, and between 
+        the PSU and the DSS
+      required:
+        - url
+        - method
+        - recorder_role
+        - request_time
+        - response_time
+        - response_code
+      properties:
+        url:
+          type: string
+          description: Full URL of request.
+        method:
+          type: string
+          description: HTTP verb used by requestor (e.g., "PUT," "GET," etc.).
+        headers:
+          description: |-
+            Set of headers associated with request or response. Requires 'Authorization:' field (at a minimum)
+          type: array
+          items:
+            type: string
+          default: []
+        recorder_role:
+          type: string
+          description: |-
+            A coded value that indicates the role of the logging PSU: 'Client' (initiating a request to a remote PSU) or 'Server' (handling a request from a remote PSU)
+          enum:
+          - Client
+          - Server
+        request_time:
+          description: The time at which the request was sent/received.
+          anyOf:
+          - $ref: '../psu/psu_api.yml#/components/schemas/Time'
+        request_body:
+          description: Base64-encoded body content sent/received as a request.
+            Required for messages to/from the DSS.
+          type: string
+          default: ''
+        response_time:
+          description: The time at which the response was sent/received.
+          anyOf:
+          - $ref: '../psu/psu_api.yml#/components/schemas/Time'
+        response_body:
+          type: string
+          default: ''
+          description: Base64-encoded body content sent/received in response to request.
+            Required for messages to/from the DSS.
+        response_code:
+          type: integer
+          format: int32
+          default: 0
+          description: HTTP response code sent/received in response to request.
+        problem:
+          type: string
+          description: Human-readable description of the problem with the exchange,
+            if any.
+
+    PositionRecord:
+      type: object
+      description: |-
+        A record of vehicle telemetry information received by this PSU (typically for conformance monitoring).
+      required:
+      - time_received
+      - telemetry
+      properties:
+        time_received:
+          $ref: '../psu/psu_api.yml#/components/schemas/Time'
+          description: |-
+            Time that this position data was received by the PSU
+        telemetry:
+          $ref: '../psu/psu_api.yml#/components/schemas/VehicleTelemetry'
+
+    OperationalIntentPositions:
+      type: object
+      description: |-
+        A record of position data gathered through the course of an operational
+        intent
+      required:
+      - operational_intent_id
+      properties:
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PositionRecord'
+          default: []
+        operational_intent_id:
+          description: ID of the operational intent associated with `positions`
+          anyOf:
+          - $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
+
+    PlanningRecord:
+      type: object
+      description: |-
+        A record of a single attempt to (successfully or unsuccessfully) create or modify an operational intent.
+      required:
+      - time
+      - ovns
+      properties:
+        time:
+          anyOf:
+          - $ref: '../psu/psu_api.yml#/components/schemas/Time'
+          description: Time that this planning event occurred
+        ovns:
+          description: |-
+            OVNs the planning PSU was aware of when it was planning the operational intent
+          type: array
+          default: []
+          items:
+            $ref: '../psu/psu_api.yml#/components/schemas/EntityOVN'
+        missing_operational_intents:
+          description: |-
+            List of missing operational intents (for planning attempts that were denied by the DSS with code 409)
+            Required if operational intents were missing.
+          type: array
+          items:
+            $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
+          default: []
+        missing_constraints:
+          description: |-
+            List of missing constraints (for planning attempts that were denied by the DSS with code 409)
+            Required if constraints were missing.
+          type: array
+          items:
+            $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
+          default: []
+        operational_intent_id:
+          description: ID of the operational intent being planned
+          anyOf:
+          - $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
+        problem:
+          type: string
+          description: |-
+            A free text description of the problem(s) encountered during this planning attempt.
+
+    UAMRestResponse:
+      type: object
+      required:
+        - http_status_code
+        - message
+      properties:
+        http_status_code:
+          type: integer
+          minimum: 100
+          exclusiveMinimum: false
+          maximum: 599
+          exclusiveMaximum: false
+        message:
+          type: string
+          maxLength: 500
+      example:
+        http_status_code: 400
+        message: Bad Request. Invalid JSON?
+
+paths:
+  /log_sets:
+    post:
+      description: Endpoint to provide data for an individual operation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PSULogSet'
+      responses:
+        '200':
+          description: okay
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UAMRestResponse'
+        '204':
+          description: no response supplied
+        '400':
+          description: Bad request. Typically validation error. Fix your request and retry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UAMRestResponse'
+        '401':
+          description: Invalid or missing access_token provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UAMRestResponse'
+        '403':
+          description: >-
+            Forbidden. Do not retry with same access token. Reason not provided,
+            but do you have the right scopes? Does uss_name match the sub claim?
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UAMRestResponse'
+        '409':
+          description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UAMRestResponse'
+        '429':
+          description: Too many recent requests from you. Wait to make further queries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UAMRestResponse'
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UAMRestResponse'
+
