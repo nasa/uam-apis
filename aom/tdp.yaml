@@ -35,14 +35,12 @@ paths:
           description: no content
         '400':
           description: Bad Request Exception
-        '403':
+        '403'
           description: Access Denied Exception
         '404':
           description: Not Found Exception
         '409':
           description: Conflict Exception
-        '429':
-          description: TLimit Exceeded Exception
         '429':
           description: Too Many Requests Exception
         '503':
@@ -52,8 +50,7 @@ paths:
         '4XX':
           description: Bad Request
         '5XX':
-          description: server error
-
+          description: Server Error
   /connect:
     get:
       summary:  Pseudo-endpoints not intended to be implemented literally, but rather to illustrate consumer streaming protocol
