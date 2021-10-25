@@ -43,6 +43,8 @@ paths:
           description: Conflict Exception
         '429':
           description: Too Many Requests Exception
+        '500':
+          description: Service Error
         '503':
           description: Service Unavailable Exception
         '504':
