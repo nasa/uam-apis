@@ -34,11 +34,23 @@ paths:
         '204':
           description: no content
         '400':
-          description: bad format
+          description: Bad Request Exception
         '403':
-          description: forbidden
+          description: Access Denied Exception
+        '404':
+          description: Not Found Exception
+        '409':
+          description: Conflict Exception
+        '429':
+          description: TLimit Exceeded Exception
+        '429':
+          description: Too Many Requests Exception
+        '503':
+          description: Service Unavailable Exception
         '504':
-          description: gateway timeout
+          description: Endpoint Request Timed-out Exception
+        '4XX':
+          description: Bad Request
         '5XX':
           description: server error
 
