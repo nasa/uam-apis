@@ -15,6 +15,24 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Bad Request Exception
+        '403':
+          description: Access Denied Exception
+        '404':
+          description: Not Found Exception
+        '409':
+          description: Conflict Exception
+        '429':
+          description: Too Many Requests Exception
+        '503':
+          description: Service Unavailable Exception
+        '504':
+          description: Endpoint Request Timed-out Exception
+        '4XX':
+          description: Bad Request
+        '5XX':
+          description: Server Error
 
   /producer:
     put:
