@@ -35,7 +35,7 @@ paths:
           description: no content
         '400':
           description: Bad Request Exception
-        '403'
+        '403':
           description: Access Denied Exception
         '404':
           description: Not Found Exception
