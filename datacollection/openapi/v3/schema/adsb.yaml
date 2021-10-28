@@ -573,7 +573,6 @@ material is also available from the sources indicated in paragraphs (g)(1) and
 
       ADSBtimestamp:
         type: string
-        format: date-time
         example: '2015-08-20T14:11:56.118Z'
 
       pingStationStatus:
