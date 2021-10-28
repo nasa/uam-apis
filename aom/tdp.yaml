@@ -15,6 +15,24 @@ paths:
       responses:
         '200':
           description: OK
+        '400':
+          description: Bad Request Exception
+        '403':
+          description: Access Denied Exception
+        '404':
+          description: Not Found Exception
+        '409':
+          description: Conflict Exception
+        '429':
+          description: Too Many Requests Exception
+        '503':
+          description: Service Unavailable Exception
+        '504':
+          description: Endpoint Request Timed-out Exception
+        '4XX':
+          description: Bad Request
+        '5XX':
+          description: Server Error
 
   /producer:
     put:
@@ -34,14 +52,23 @@ paths:
         '204':
           description: no content
         '400':
-          description: bad format
+          description: Bad Request Exception
         '403':
-          description: forbidden
+          description: Access Denied Exception
+        '404':
+          description: Not Found Exception
+        '409':
+          description: Conflict Exception
+        '429':
+          description: Too Many Requests Exception
+        '503':
+          description: Service Unavailable Exception
         '504':
-          description: gateway timeout
+          description: Endpoint Request Timed-out Exception
+        '4XX':
+          description: Bad Request
         '5XX':
-          description: server error
-
+          description: Server Error
   /connect:
     get:
       summary:  Pseudo-endpoints not intended to be implemented literally, but rather to illustrate consumer streaming protocol
@@ -157,3 +184,15 @@ components:
       type: string
       pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,8})?Z$"
       example: '2021-08-20T14:11:56.11834521Z'
+
+    ResponseString:
+      description: |-
+        Human-readable string returned when an error occurs
+        as a result of a USS - DSS transaction.
+      type: object
+      properties:
+        message:
+          description: |-
+            Human-readable message indicating what error occurred and/or why.
+          type: string
+          example: 'The error occurred because [...]'
