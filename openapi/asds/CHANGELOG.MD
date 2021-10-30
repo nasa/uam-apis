@@ -21,6 +21,7 @@ __Security__ in case of vulnerabilities.
     * ./asds.yaml
     * ./README.MD
     * ./CHANGELOG.MD  
+
     
 ### [1.0.0-uam] - 09/17/2021
 #### Changed
@@ -28,3 +29,14 @@ __Security__ in case of vulnerabilities.
     * the 'configuration' in Adaptation is not required any more
     * adjusted the min/max size of Polygon
     * Enroute & transition max & min airpseeds were added to PerformanceRequirements
+
+### [1.1.0-uam] - 10/28/2021
+#### Changed
+* The 'servers' section was removed.
+* Bearer authorization security scheme was added for all operation.
+* Added more error responses
+    * 401 - invalidate token
+    * 403 - unauthorized operation
+* Added more fields to ErrorResponse schema
+    * status - response status code
+    * error - a short description of the error

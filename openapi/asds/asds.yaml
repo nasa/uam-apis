@@ -4,18 +4,17 @@ info:
   title: Adaptation API
   description: |-
     Endpoints to request the available adaptation data, and airspace details for a specific location.
-  version: 1.0.0-uam
+  version: 1.1.0-uam
         
 tags:
   - name: ansp
     description: Operations available to ansp-actors
   - name: other
     description: Operations available to non-ansp-actors
-        
-# Adaptation Service will be listening at port 8085
-servers:
-  - url: http://localhost:8085
-    
+         
+security:
+  - fimsAzAuth: []
+
 paths:
   /adaptation:
     get:
@@ -39,6 +38,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Unauthorized operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'               
+                
   /adaptation/{adaptationid}:
     get:
       tags:
@@ -68,12 +80,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-    
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Unauthorized operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
+         
 components:
+  securitySchemes:
+    fimsAzAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |- 
+         This security scheme is applied to all operations, and the bearer token
+         must be acquired from the Fims-AZ. The scope must be 'utm.strategic_coordination'.
+
   schemas:
     AdaptationID:
       description: |-
-        List of all available Adapation
+        List of all available Adaptation
       required:
       - id
       - name
@@ -229,7 +262,7 @@ components:
           type: string
           example: central
         volume:
-          description: The volumn of the corridor
+          description: The volume of the corridor
           allOf:
             - $ref: '#/components/schemas/Volume3D'
         tracks:
@@ -237,7 +270,7 @@ components:
           items:
             $ref: '#/components/schemas/Track'
     Track:
-      description: Additional structure within the UAM Corridor to help organize UAM traffic at higher operational tempo.For X4, all corridors have tracks
+      description: Additional structure within the UAM Corridor to help organize UAM traffic at higher operational tempo. For X4, all corridors have tracks
       required:
       - id
       - name
@@ -600,6 +633,14 @@ components:
         as a result of a transaction with the Adaptation Service.
       type: object
       properties:
+        status:
+          description: HTTP response status code from ASDS
+          type: string
+          example: 401
+        error:
+          description: A short description of the response status code
+          type: string
+          example: Unauthorized
         message:
           description: |-
             Human-readable message indicating what error occurred and/or why.
