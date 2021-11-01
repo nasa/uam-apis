@@ -175,12 +175,10 @@ components:
           type: string
           maxLength: 256
           example: altitude_W84_M
-          required: true
         v:
           type: string
           maxLength: 1024
           example: 100321
-          required: true
 
     StreamTimestamp:
       type: string
