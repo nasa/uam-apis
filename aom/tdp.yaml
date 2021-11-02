@@ -124,6 +124,10 @@ components:
         - stream
         - sequence
       properties:
+        version:
+          type: string
+          pattern: '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$'
+          description: semantic version number, like 0.0.0
         sequence:
           type: integer
           description: monotonically increasing integer to detect duplicates
@@ -131,10 +135,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ProducerObject'
-        version:
-          type: string
-          pattern: '^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}'
-          description: semantic version number, like 0.0.0
+
 
     ProducerObject:
       type: object
