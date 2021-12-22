@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Data Collection for X4
-  version: 0.1.0-uam
+  version: 0.2.0-uam
   description: |-
     Definition of the models to be used for Data Collection in X4.
     This model is based on the USSLogSet model in the ASTM v0.3.15 commit fde915a. Only
@@ -22,6 +22,7 @@ components:
         - messages
         - planning_attempts
         - operational_intent_positions
+        - initial_operational_intent
       properties:
         operation_id:
           description: UUID of the operational intent the content of this model 
@@ -52,6 +53,8 @@ components:
           items:
             $ref: '#/components/schemas/OperationalIntentPositions'
           default: []
+        initial_operational_intent:
+          $ref: '#/components/schemas/InitialOperationalIntent'
 
     ExchangeRecord:
       type: object
@@ -210,6 +213,27 @@ components:
         http_status_code: 400
         message: Bad Request. Invalid JSON?
 
+    InitialOperationalIntent:
+      type: object
+      description: Operational intent prior to any strategic conflict management adjustments
+      required:
+        - operation_id
+        - time_request_intitiated
+        - operational_intent_details
+      properties:
+        operation_id:
+          description: UUID of the operational intent the content of this model 
+            corresponds to.
+          $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
+        time_request_intitiated:
+          description: Time that the operational intent was received prior to strategic conflict 
+            management assessment 
+          $ref: '../psu/psu_api.yml#/components/schemas/Time'
+        operational_intent_details:
+          description: Initial details of an operational intent before any strategic
+            conflict management adjustments are performed
+          $ref: '../psu/psu_api.yml#/components/schemas/OperationalIntentDetails'
+
 paths:
   /log_sets:
     post:
@@ -266,4 +290,3 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UAMRestResponse'
-
