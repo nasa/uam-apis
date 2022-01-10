@@ -15,6 +15,12 @@ __Security__ in case of vulnerabilities.
   
 ## Log  
 
+### [1.0.0-uam] - Mon Jan 10 08:37:00 PDT 2022
+#### Changed
+- external/aa/CHANGELOG.md
+- external/aa/airspace_authorization_api.yaml
+    - Updated Authority to match the model in the PSU API
+
 ### [0.1.0-uam] - Mon Sep 13 13:41:08 PDT 2021 
 #### Added
 - openapi/aa/CHANGELOG.md

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: X4 Airspace Authorization
-  version: 0.1.0-uam
+  version: 1.0.0-uam
   description: |-
     Interface definitions for 'Airspace Authorization' in X4.
 security:
@@ -60,28 +60,31 @@ paths:
 components:
   securitySchemes:
     Authority:
-      # See PSU API
       type: oauth2
       flows:
         clientCredentials:
-          tokenUrl: https://token_vendor.com/oauth/token
+          tokenUrl: https://auth.example.com/oauth/token
           scopes:
             utm.strategic_coordination: |-
-              Client may perform planning, strategic conflict detection, and conformance monitoring activities, including reading information about Constraints.
-            utm.constraint_management: |-
-              Client may manage (create, edit, and delete) Constraints they own.
-            utm.constraint_consumption: |-
-              Client may read Constraints from the DSS (references) and partner USSs (details).
+              Client may perform actions encompassed by the strategic coordination role including strategic conflict detection.
       description: |-
-        Authorization from, or on behalf of, an authorization authority.  This authority shall issue access tokens that are JSON Web Tokens as defined in RFC 7519, using the `RS256` algorithm for the signature, publish to all providers the public key for verifying that signature, and implement standard OAuth server discovery mechanisms as described in RFC 8414.
-        The following fields shall be included in the JWT claim for access tokens issued by this authority:
-            * `iss`, with the URL at which the token generation request was received.
-            * `exp`, with a time no further than 1 hour in the future.
-            * `sub`, with unique ID of the client requesting the access token.
-            * `scope`, with an array of strings indicating the scopes granted.
-            * `jti`, according to RFC 7519.
-        Only one scope shall be granted for a token.  The tokens granted by this authority shall protect against reuse of received tokens to impersonate the sender to other recipients (via use of the `aud` claim or other means).
-        Clients shall provide these access tokens in an `Authorization` header in the form `Bearer <token>` in accordance with RFC 6750.
+        Authorization from, or on behalf of, an authorization authority.  This authority will issue access tokens that are JSON Web Tokens as 
+        defined in RFC 7519, using the `RS256` algorithm for the signature, publish to all providers the public key for verifying that signature, 
+        and implement standard OAuth server discovery mechanisms as described in RFC 8414.
+        The following fields must be included in the JWT claim for access tokens issued by this authority:
+        * `iss`, with the URL at which the token generation request was received.
+        * `exp`, with a time no further than 1 hour in the future.
+        * `sub`, with unique ID of the client requesting the access token.
+        * `scope`, with a string composed of a space-separated list of strings indicating the scopes granted, per RFC 6749.
+        * `jti`, according to RFC 7519.
+        Following the principle of least privilege, only one of the scopes enumerated in this document should be granted in a single token (though other scopes 
+        may accompany it).  The tokens granted by this authority must protect against reuse of received tokens to impersonate the sender to other recipients 
+        (via use of the `aud` claim or other means).
+        When using the `aud` claim to protect against the reuse of received tokens, and absent guidance on behalf of the competent authority to the contrary, 
+        the JWT `aud` claim requested by the client must be included in each access token and must contain the fully qualified domain name of the URL the access 
+        token will be used to access.  For example, if a PSU were querying the endpoint at https://sub.example.com:8888/airspace_authorization, the access token 
+        included in the request should specify `"aud": "sub.example.com"`.
+        Clients must provide these access tokens in an `Authorization` header in the form `Bearer <token>` in accordance with RFC 6750.
 
   schemas:
     AuthOperation:
