@@ -4,7 +4,7 @@ info:
   title: Adaptation API
   description: |-
     Endpoints to request the available adaptation data, and airspace details for a specific location.
-  version: 1.1.0-uam
+  version: 1.2.0-uam
         
 tags:
   - name: ansp
@@ -101,7 +101,11 @@ components:
       bearerFormat: JWT
       description: |- 
          This security scheme is applied to all operations, and the bearer token
-         must be acquired from the Fims-AZ. The scope must be 'utm.strategic_coordination'.
+         must be acquired from the Fims-AZ. The scope must be 'utm.strategic_coordination',
+         and the audience claim must be the fully qualified domain name of the URL the access 
+         token will be used to access. For example, if the URL is 
+         https://sub.example.com:8888/asds/adaptation, the access token included in the 
+         request should specify "aud": "sub.example.com"`.
 
   schemas:
     AdaptationID:
@@ -180,7 +184,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Waypoint'
-        adapation_hash:
+        adaptation_hash:
           $ref: '#/components/schemas/AdaptationHash'
     Vertiport:
       description: |-
@@ -189,7 +193,8 @@ components:
       - id
       - name
       - lat_lng
-      - altitude
+      - ground_level_altitude_egm96
+      - ground_level_altitude_wgs84
       - inner_radius
       - outer_radius
       - final_waypoints
@@ -205,10 +210,14 @@ components:
           example: ee123
         lat_lng:
           $ref: '#/components/schemas/LatLngPoint'
-        altitude:
-          description: Altitude of the vertipad
+        ground_level_altitude_egm96:
+          description: Ground level altitude of the vertiport in reference to the EGM96 geoid model
           allOf:
             - $ref: '#/components/schemas/Altitude'
+        ground_level_altitude_wgs84:
+          description: Ground level altitude of the vertiport in reference to the WGS84 ellipsoid model
+          allOf:
+            - $ref: '#/components/schemas/Altitude'            
         volume:
           description: The volume around the vertiport.
           allOf:
@@ -223,7 +232,7 @@ components:
             - $ref: '#/components/schemas/Radius'  
         final_waypoints:
           type: array
-          description: List of final waypoints, which help in navigation with arrival/departures in around the immediate vicinity of vertiports
+          description: List of final waypoints, which help in navigation with arrival/departures around the immediate vicinity of vertiports
           items:
             $ref: '#/components/schemas/Reference'        
     UamAirspace:
@@ -298,11 +307,13 @@ components:
             $ref: '#/components/schemas/Reference'
     Volume3D:
       description: |-
-        A three-dimensional geographic volume consisting of a vertically-extruded shape. Includes performance requirements need to use the volume. Volume may be either a cylinder for vertiport use, or a polygon for corridors.
+        A three-dimensional geographic volume consisting of a vertically-extruded shape. Includes performance requirements needed to use the volume. Volume may be either a cylinder for vertiport use, or a polygon for corridors.
       required:
       - id
-      - altitude_lower
-      - altitude_upper
+      - altitude_lower_egm96
+      - altitude_lower_wgs84
+      - altitude_upper_egm96
+      - altitude_upper_wgs84
       - performance_requirements
       type: object
       properties:
@@ -314,14 +325,22 @@ components:
           allOf:
             - $ref: '#/components/schemas/Polygon'
           description: A polygonal geographic shape on the surface of the earth.
-        altitude_lower:
-          description: Minimum bounding altitude of this volume.
+        altitude_lower_egm96:
+          description: Minimum bounding altitude of this volume in reference to the EGM96 geoid model.
           allOf:
             - $ref: '#/components/schemas/Altitude'
-        altitude_upper:
-          description: Maximum bounding altitude of this volume.
+        altitude_lower_wgs84:
+          description: Minimum bounding altitude of this volume in reference to the WGS84 ellipsoid model. 
+          allOf:
+            - $ref: '#/components/schemas/Altitude'            
+        altitude_upper_egm96:
+          description: Maximum bounding altitude of this volume in reference to the EGM96 geoid model.
           allOf:
             - $ref: '#/components/schemas/Altitude'
+        altitude_upper_wgs84:
+          description: Maximum bounding altitude of this volume in reference to the WGS84 ellipsoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'            
         performance_requirements:
           $ref: '#/components/schemas/PerformanceRequirements'
     Waypoint:
@@ -353,26 +372,38 @@ components:
             $ref: '#/components/schemas/SchedulingType'
         lat_lng:
           $ref: '#/components/schemas/LatLngPoint'
-        altitude:
-          description: This is available only for non Navigational waypoints and denote the enroute altitude of this waypoint.        
+        cruising_altitude_egm96:
+          description: An altitude maintained during an en route level flight, in reference to the EGM96 geoid model.
           allOf:
             - $ref: '#/components/schemas/Altitude'
-        remain_at_or_below_altitude:
-          description: This is available only for Navigational waypoints and the aircraft must fly at or below this altitude.
+        cruising_altitude_wgs84:
+          description: An altitude maintained during an en route level flight, in reference to the WGS84 ellipsoid model.          
           allOf:
             - $ref: '#/components/schemas/Altitude'
-        ground_level_altitude:
-          description: This is the ground level altitude of this waypoint.
+        remain_at_or_below_altitude_egm96:
+          description: An identified altitude the aircraft must fly at or below. An assigned altitude is based on many factors and may vary depending on airspace environment, waypoint location, or waypoint type. This altitude is in reference to the EGM96 geoid model.
           allOf:
             - $ref: '#/components/schemas/Altitude'
+        remain_at_or_below_altitude_wgs84:
+          description: An identified altitude the aircraft must fly at or below. An assigned altitude is based on many factors and may vary depending on airspace environment, waypoint location, or waypoint type. This altitude is in reference to the WGS84 ellipsoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'            
+        ground_level_altitude_egm96:
+          description: This is the ground level altitude of this waypoint in reference to the EGM96 geoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'
+        ground_level_altitude_wgs84:
+          description: This is the ground level altitude of this waypoint in reference to the WGS84 ellipsoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'             
         performance_requirements:
           $ref: '#/components/schemas/PerformanceRequirements'
     PerformanceRequirements:
-      description: Performance capabilities needed by the vehicle to use this airspace element. Target speed, maximum speed, minimum speed are allocated to Track. Maximum bank turn, maximum ascent gradient, and maximum descent gradient are allocated to Vertiport. Maximum bank turn and Navigation requirements are allocated to Corridor.
+      description: Performance capabilities needed by the vehicle to use this airspace element. Target speed, maximum speed, and minimum speed are allocated to Track. Maximum bank turn, maximum ascent gradient, and maximum descent gradient are allocated to Vertiport. Maximum bank turn and Navigation requirements are allocated to Corridor.
       type: object
       properties:
         target_speed:
-          description: Target speed the vehicle should to be able to fly in knots (kts). Target speed is not being used at this time.
+          description: Target speed the vehicle should be able to fly in knots (kts). Target speed is not being used at this time.
           maximum: 200
           exclusiveMaximum: false
           minimum: 0
@@ -381,7 +412,7 @@ components:
           format: double
           example: 130
         enroute_max_speed:
-          description: Maximum enroute cruise speed the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values with be less than the enroute maximum speed values. An enroute maximum speed value of 130 knots is generally used.
+          description: Maximum enroute cruise speed the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values should be less than the enroute maximum speed values. An enroute maximum speed value of 130 knots is generally used.
           maximum: 150
           exclusiveMaximum: false
           minimum: 50
@@ -390,7 +421,7 @@ components:
           format: double
           example: 130
         enroute_min_speed:
-          description: Minimum enroute cruise speed the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values with be less than the enroute maximum speed values. An enroute minimum speed value of 110 knots is generally used.
+          description: Minimum enroute cruise speed the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values should be less than the enroute maximum speed values. An enroute minimum speed value of 110 knots is generally used.
           maximum: 130
           exclusiveMaximum: false
           minimum: 50
@@ -399,7 +430,7 @@ components:
           format: double
           example: 110          
         transition_max_speed:
-          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents maximum transition speed the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values with be less than the transition maximum speed values. A transition maximum speed value of 70 knots is generally used.
+          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents maximum transition speed the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values should be less than the transition maximum speed values. A transition maximum speed value of 70 knots is generally used.
           maximum: 150
           exclusiveMaximum: false
           minimum: 50
@@ -408,7 +439,7 @@ components:
           format: double
           example: 70
         transition_min_speed:
-          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents minimum transition speed the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values with be less than the transition maximum speed values. A transition minimum speed value of 30 knots is generally used.
+          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents minimum transition speed the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values should be less than the transition maximum speed values. A transition minimum speed value of 30 knots is generally used.
           maximum: 120
           exclusiveMaximum: false
           minimum: 20
@@ -454,7 +485,7 @@ components:
           - RNAV_1
           - RNP_4
           - RNP_2
-          - RNP_0_1
+          - RNP_0.1
           - BASIC_RNP_1
           - ADVANCED_RNP_1
           - RNP_APCH
@@ -614,7 +645,7 @@ components:
       type: string
       format: uuid
       pattern: >-
-        '^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$'
+        '^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[89abAB][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$'
       example: d290f1ee-6c54-4b01-90e6-d701748f0851
     AdaptationHash:
       description: |-
@@ -630,7 +661,7 @@ components:
     ErrorResponse:
       description: |-
         Human-readable string returned when an error occurs
-        as a result of a transaction with the Adaptation Service.
+        as a result of a transaction with the ASDS.
       type: object
       properties:
         status:
