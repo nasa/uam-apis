@@ -16,6 +16,10 @@ __Security__ in case of vulnerabilities.
 ## Log
 Change logging is descending by time.
 
+### [0.3.0-uam] - Mon Jan 31 8:54:00 PDT 2021
+#### Changed
+- Updated path to '/psu_log_sets'
+
 ### [0.2.0-uam] - Wed Dec 22 11:04:00 PDT 2021
 #### Changed
 - Added the InitialOperationalIntent to the PSULogSet Schema 

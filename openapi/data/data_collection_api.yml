@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Data Collection for X4
-  version: 0.2.0-uam
+  version: 0.3.0-uam
   description: |-
     Definition of the models to be used for Data Collection in X4.
     This model is based on the USSLogSet model in the ASTM v0.3.15 commit fde915a. Only
@@ -235,7 +235,7 @@ components:
           $ref: '../psu/psu_api.yml#/components/schemas/OperationalIntentDetails'
 
 paths:
-  /log_sets:
+  /psu_log_sets:
     post:
       description: Endpoint to provide data for an individual operation
       requestBody:
