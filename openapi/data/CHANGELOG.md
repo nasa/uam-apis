@@ -16,7 +16,15 @@ __Security__ in case of vulnerabilities.
 ## Log
 Change logging is descending by time.
 
-### [0.3.0-uam] - Mon Jan 31 8:54:00 PDT 2021
+### [0.4.0-uam] - Thu Feb 24 12:52:00 PDT 2022
+#### Changed
+- Added description details to PSULogSet
+- Added maxItems to arrays
+- Added securitySchemes
+- Added HTTP 413 response
+- Removed HTTP 200 response
+
+### [0.3.0-uam] - Mon Jan 31 8:54:00 PDT 2022
 #### Changed
 - Updated path to '/psu_log_sets'
 

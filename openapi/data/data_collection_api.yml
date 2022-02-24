@@ -1,13 +1,31 @@
 openapi: 3.0.2
 info:
   title: Data Collection for X4
-  version: 0.3.0-uam
+  version: 0.4.0-uam
   description: |-
     Definition of the models to be used for Data Collection in X4.
     This model is based on the USSLogSet model in the ASTM v0.3.15 commit fde915a. Only
     schemas applicable to X4 are included.
 
+security:
+  - DataCollectionSecurity: []
+
 components:
+  securitySchemes:
+    DataCollectionSecurity:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.com/oauth/token
+          scopes:
+            datacollection:write: |-
+              Client may send log set data.
+      description: Clients must provide these access tokens in an `Authorization` header in 
+        the form `Bearer <token>` in accordance with RFC 6750. 
+        
+        For X4, the token is served from AWS Cognito using the credentials provided by the NASA 
+        team.
+
   schemas:
     #
     # Data structures for logging
@@ -17,6 +35,14 @@ components:
       type: object
       description: |-
         The set of log data fulfilling this standard's Logging requirements.
+
+        For X4, the server can support a maximum payload size of about 1.5MB. The 
+        array limits identified in this model are intended to support that
+        maximum size.
+
+        If the total log set is larger than the identified array limits, multiple submissions 
+        for a given operational intent, each under the size limit, may be performed. Data 
+        should not be duplicated in a given property array between submissions. 
       required:
         - operation_id
         - messages
@@ -35,6 +61,7 @@ components:
             This includes all messages recieved for this operation_id and its corresponding
             subscription
           type: array
+          maxItems: 20
           items:
             $ref: '#/components/schemas/ExchangeRecord'
           default: []
@@ -43,6 +70,7 @@ components:
             an operational intent could not be planned or replanned due to conflicts
             with other operational intents or constraints.
           type: array
+          maxItems: 20
           items:
             $ref: '#/components/schemas/PlanningRecord'
           default: []
@@ -50,6 +78,7 @@ components:
           description: For a PSU performing conformance monitoring, all position data
             used for conformance monitoring that is ingested from the UAM Vehicle.
           type: array
+          maxItems: 1
           items:
             $ref: '#/components/schemas/OperationalIntentPositions'
           default: []
@@ -142,9 +171,10 @@ components:
       properties:
         positions:
           type: array
+          minItems: 1
+          maxItems: 600
           items:
             $ref: '#/components/schemas/PositionRecord'
-          default: []
         operational_intent_id:
           description: ID of the operational intent associated with `positions`
           anyOf:
@@ -166,6 +196,7 @@ components:
           description: |-
             OVNs the planning PSU was aware of when it was planning the operational intent
           type: array
+          maxItems: 100
           default: []
           items:
             $ref: '../psu/psu_api.yml#/components/schemas/EntityOVN'
@@ -174,6 +205,7 @@ components:
             List of missing operational intents (for planning attempts that were denied by the DSS with code 409)
             Required if operational intents were missing.
           type: array
+          maxItems: 100
           items:
             $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
           default: []
@@ -182,6 +214,7 @@ components:
             List of missing constraints (for planning attempts that were denied by the DSS with code 409)
             Required if constraints were missing.
           type: array
+          maxItems: 100
           items:
             $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
           default: []
@@ -244,14 +277,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PSULogSet'
       responses:
-        '200':
-          description: okay
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UAMRestResponse'
         '204':
-          description: no response supplied
+          description: Received successfully
         '400':
           description: Bad request. Typically validation error. Fix your request and retry.
           content:
@@ -274,6 +301,13 @@ paths:
                 $ref: '#/components/schemas/UAMRestResponse'
         '409':
           description: Conflict for a PUT that is unsuccessful due to a 3rd-party modification
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UAMRestResponse'
+        '413':
+          description: Payload too large. For X4, the server can support a maximum payload size 
+            of about 1.5MB. 
           content:
             application/json:
               schema:
