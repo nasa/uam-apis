@@ -16,6 +16,11 @@ __Security__ in case of vulnerabilities.
 ## Log
 Change logging is descending by time.
 
+### [0.5.0-uam] - Thu Mar 24 10:37:48 PDT 2022
+#### Changed
+- Correct misspelling
+- Increase OVN max array to 400
+
 ### [0.4.0-uam] - Thu Feb 24 12:52:00 PDT 2022
 #### Changed
 - Added description details to PSULogSet

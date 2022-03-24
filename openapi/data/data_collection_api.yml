@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Data Collection for X4
-  version: 0.4.0-uam
+  version: 0.5.0-uam
   description: |-
     Definition of the models to be used for Data Collection in X4.
     This model is based on the USSLogSet model in the ASTM v0.3.15 commit fde915a. Only
@@ -196,7 +196,7 @@ components:
           description: |-
             OVNs the planning PSU was aware of when it was planning the operational intent
           type: array
-          maxItems: 100
+          maxItems: 400
           default: []
           items:
             $ref: '../psu/psu_api.yml#/components/schemas/EntityOVN'
@@ -251,14 +251,14 @@ components:
       description: Operational intent prior to any strategic conflict management adjustments
       required:
         - operation_id
-        - time_request_intitiated
+        - time_request_initiated
         - operational_intent_details
       properties:
         operation_id:
           description: UUID of the operational intent the content of this model 
             corresponds to.
           $ref: '../psu/psu_api.yml#/components/schemas/EntityID'
-        time_request_intitiated:
+        time_request_initiated:
           description: Time that the operational intent was received prior to strategic conflict 
             management assessment 
           $ref: '../psu/psu_api.yml#/components/schemas/Time'
