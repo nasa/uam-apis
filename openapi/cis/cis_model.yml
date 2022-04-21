@@ -1,0 +1,131 @@
+---
+openapi: 3.0.1
+info:
+  title: Capacity Identification Service (CIS) Model Definition
+  version: 1.1.0-uam
+  description: Data model definitions for capacity information that would have been provided 
+     by the proposed Capacity Information Service (CIS) if it were implemented. 
+     <br><br>
+     *Note - In X4, this CIS service is not implemented as a service, but rather, 
+           the data is provided as a static JSON file to all test participants.  
+           The JSON data file follows this data model definition.*
+paths:
+  /example:
+    get:
+      summary: Example of a get call to CIS for airspace capacity information.
+        This example has been added as a placeholder for future functionality
+        implementation for a CIS service.  This request will not be implemented
+        as defined here.
+      responses:
+        '200':
+          description: Return the capacity constraints and information within the airspace.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdaptationCapacity"
+
+components:          
+  schemas:
+    AdaptationCapacity:
+      description: |-
+        The capacity information for applicable waypoints within an identified Adaptation ID.
+      required:
+        - id
+        - name
+        - version
+        - adaptation_hash
+        - WaypointCapacity
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this adaptation that matches the UUID for the adaptation defined in ASDS
+          $ref: '#/components/schemas/UUIDv4'
+        name:
+          description: Associated name for this adaptation that matches the name for the adaptation defined in ASDS
+          type: string
+          example: DFW
+        version:
+          description: Version of the applicable ASDS data
+          type: string
+          example: 0.0.2-UAMX4
+        adaptation_hash:
+          $ref: '#/components/schemas/AdaptationHash'
+        configuration:
+          description: Associated airspace configuration for this adaptation that matches the airspace configuration 
+            for the adaptation defined in ASDS 
+          type: string
+          nullable: true
+          example: North
+          enum:
+              - North
+              - NorthEast
+              - East
+              - SouthEast
+              - South
+              - SouthWest
+              - West
+              - NorthWest
+        WaypointCapacity:
+          type: array
+          items:
+            $ref: '#/components/schemas/WaypointCapacity'
+
+    WaypointCapacity:
+      description: |-
+        Capacity data for a defined ASDS waypoint.
+        Should be interpreted as the capacity is <value> operations per <duration> second bin.
+      required:
+        - id
+        - name
+        - value
+        - duration
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this point that matches the UUID for the waypoint defined in ASDS
+          $ref: '#/components/schemas/UUIDv4'
+        name:
+          type: string
+          description: Associated name for this point that matches the name for the waypoint defined in ASDS
+          example: ee123
+        value:
+          description: The numeric value of the capacity at this point
+          type: integer
+          minimum: 0
+          exclusiveMinimum: false
+          maximum: 200
+          exclusiveMaximum: false
+        duration:
+          description: Number of seconds to support the capacity value.
+            Increment from the top of the hour. Bins are half-open with 
+            the lower bound included and upper bound excluded. This can 
+            be interpreted as [12:00, 12:12), for example.
+            Must be a factor of 3600.
+          type: integer
+          minimum: 5
+          exclusiveMinimum: false
+          maximum: 3600
+          exclusiveMaximum: false
+
+    UUIDv4:
+      description: |-
+        Universally-unique identifier (version 4).
+      maxLength: 36
+      minLength: 36
+      type: string
+      format: uuid
+      pattern: >-
+        '^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[89abAB][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$'
+      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+
+    AdaptationHash:
+      description: |-
+        SHA256 hash of the Adaptation ID data from ASDS
+      required:
+        - hash
+      type: object
+      properties:
+        hash:
+          type: string
+          maxLength: 64
+          minLength: 64
