@@ -15,6 +15,18 @@ __Security__ in case of vulnerabilities.
 
 ## Log  
 
+### [1.8.0-uam] - Tue Jun 14 23:49:59 PDT 2022
+#### Changed
+
+* 'inner_radius' and 'outer_radius' in Vertiport became optional.
+* 'Transition' and 'Navigational' were removed from WaypointType.
+* Descriptions were improved for the following properties and schemas.
+  * 'transition_max_speed'
+  * 'transition_min_speed'
+  * 'Vertiport'
+* Corrected a typo.
+* A link to an external document was updated.
+
 ### [1.2.0-uam] - Mon Aug  9 16:48:16 PDT 2021  
 #### Added
 * Public release version change

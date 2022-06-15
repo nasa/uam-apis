@@ -4,7 +4,7 @@ info:
   title: Adaptation API
   description: |-
     Endpoints to request the available adaptation data, and airspace details for a specific location.
-  version: 1.2.0-uam
+  version: 1.8.0-uam
         
 tags:
   - name: ansp
@@ -105,7 +105,7 @@ components:
          and the audience claim must be the fully qualified domain name of the URL the access 
          token will be used to access. For example, if the URL is 
          https://sub.example.com:8888/asds/adaptation, the access token included in the 
-         request should specify "aud": "sub.example.com"`.
+         request should specify "aud": "sub.example.com".
 
   schemas:
     AdaptationID:
@@ -188,15 +188,13 @@ components:
           $ref: '#/components/schemas/AdaptationHash'
     Vertiport:
       description: |-
-        A Lat/Lon/Alt corresponding to a Vertiport reference point. For X4, assume 1 vertipad per vertiport. Vertiport description includes inner and outer radius and associated waypoints.
+        A Lat/Lon/Alt corresponding to a Vertiport reference point. Vertiport description includes associated waypoints. Note that inner radius and outer radius are optional.
       required:
       - id
       - name
       - lat_lng
       - ground_level_altitude_egm96
       - ground_level_altitude_wgs84
-      - inner_radius
-      - outer_radius
       - final_waypoints
       type: object
       properties:
@@ -322,9 +320,9 @@ components:
           allOf:
             - $ref: '#/components/schemas/UUIDv4'
         outline_polygon:
+          description: A polygonal geographic shape on the surface of the earth.
           allOf:
             - $ref: '#/components/schemas/Polygon'
-          description: A polygonal geographic shape on the surface of the earth.
         altitude_lower_egm96:
           description: Minimum bounding altitude of this volume in reference to the EGM96 geoid model.
           allOf:
@@ -508,7 +506,7 @@ components:
           items:
             $ref: '#/components/schemas/LatLngPoint'
       externalDocs:
-        url: https://tools.ietf.org/html/rfc7946#section-3.1.6
+        url: https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6
     LatLngPoint:
       description: Point on the earth's surface.
       required:
@@ -605,9 +603,7 @@ components:
         Type of waypoint.
       type: string
       enum:
-          - Transition
           - Final
-          - Navigational
           - Track
           - Undefined
       example: Final
