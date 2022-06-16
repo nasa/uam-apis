@@ -410,8 +410,8 @@ components:
           format: double
           example: 130
         enroute_max_speed:
-          description: Maximum enroute cruise speed the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values should be less than the enroute maximum speed values. An enroute maximum speed value of 130 knots is generally used.
-          maximum: 150
+          description: Maximum enroute cruise speed the vehicle is allowed to fly in knots (KTS).  Enroute speeds are utilized while on tracks within a corridor.  Each waypoint that constructs the tracks shall have a maximum enroute speed associated with it except for (VVxxx) waypoints which identify the end/start of tracks at vertiport volumes.  Given similar speed ranges, enroute minimum speed values shall be less than the enroute maximum speed values.  An enroute speed shall not exceed a value of more than 130 KTS.
+          maximum: 130
           exclusiveMaximum: false
           minimum: 50
           exclusiveMinimum: false
@@ -419,17 +419,17 @@ components:
           format: double
           example: 130
         enroute_min_speed:
-          description: Minimum enroute cruise speed the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values should be less than the enroute maximum speed values. An enroute minimum speed value of 110 knots is generally used.
+          description: Minimum enroute cruise speed the vehicle is allowed to fly in knots (KTS).  Enroute speeds are utilized while on tracks within a corridor.  Each waypoint that constructs the tracks shall have a minimum enroute speed associated with it, except for (VVxxx) waypoints which identify the end/start of tracks at vertiport volumes.  Given similar speed ranges, enroute minimum speed values shall be less than the enroute maximum speed values.  An enroute speed shall not be less than a value of 70 KTS.
           maximum: 130
           exclusiveMaximum: false
-          minimum: 50
+          minimum: 70
           exclusiveMinimum: false
           type: number
           format: double
           example: 110          
         transition_max_speed:
-          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents maximum transition speed the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values should be less than the transition maximum speed values. A transition maximum speed value of 70 knots is generally used.
-          maximum: 150
+          description: Transition speed the vehicle is allowed to fly in knots (KTS).  Transition speeds are utilized while on tracks within a corridor.  Each waypoint that constructs the tracks may have a maximum transition speed associated with it, including (VVxxx) waypoints which identify the end/start of tracks at vertiport volumes.  Transition speed shall be used when a track changes direction by more than 30 degrees or identified as the only speed for that waypoint.  Given similar speed ranges, transition minimum speed values shall be less than the transition maximum speed values.  A transition speed shall not exceed a value of more than 90 KTS.
+          maximum: 90
           exclusiveMaximum: false
           minimum: 50
           exclusiveMinimum: false
@@ -437,10 +437,10 @@ components:
           format: double
           example: 70
         transition_min_speed:
-          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents minimum transition speed the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values should be less than the transition maximum speed values. A transition minimum speed value of 30 knots is generally used.
+          description: Transition speed the vehicle is allowed to fly in knots (KTS).  Transition speeds are utilized while on tracks within a corridor.  Each waypoint that constructs the tracks may have a minimum transition speed associated with it, including (VVxxx) waypoints which identify the end/start of tracks at vertiport volumes.  Transition speed shall be used when a track changes direction by more than 30 degrees or identified as the only speed for that waypoint.  Given similar speed ranges, transition minimum speed values shall be less than the transition maximum speed values.  A transition speed shall not be less than a value of 30 KTS.
           maximum: 120
           exclusiveMaximum: false
-          minimum: 20
+          minimum: 30
           exclusiveMinimum: false
           type: number
           format: double

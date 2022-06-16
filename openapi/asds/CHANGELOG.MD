@@ -15,27 +15,25 @@ __Security__ in case of vulnerabilities.
 
 ## Log  
 
-### [1.8.0-uam] - Tue Jun 14 23:49:59 PDT 2022
+  
+### [1.8.0-uam] - 06/16/2022
 #### Changed
 
 * 'inner_radius' and 'outer_radius' in Vertiport became optional.
 * 'Transition' and 'Navigational' were removed from WaypointType.
 * Descriptions were improved for the following properties and schemas.
+  * 'enroute_max_speed'
+  * 'enroute_min_speed'
   * 'transition_max_speed'
   * 'transition_min_speed'
   * 'Vertiport'
+* Min & max ranges were adjusted for transition and enroute speeds to be consistent with the new descriptions.
 * Corrected a typo.
 * A link to an external document was updated.
 
-### [1.2.0-uam] - Mon Aug  9 16:48:16 PDT 2021  
-#### Added
-* Public release version change
-    * ./asds.yaml
-    * ./CHANGELOG.MD  
-  
-  
-### [1.1.2-uam] - 12/21/2021
 
+
+### [1.1.2-uam] - 12/21/2021
 #### Changed
 
 * The 'altitude' property in Vertiport schema was changed to 'ground_level_altitude'.
@@ -48,11 +46,13 @@ __Security__ in case of vulnerabilities.
   * The first digit of the fourth part was changed from '[8-b]' to '[89abAB]'.
 
 
+      
 ### [1.1.1-uam] - 11/04/2021
 #### Changed
 * Several typo corrections in the descriptions.
 * The enumerator, "RNP_0_1", was changed to "RNP_0.1".
-  
+
+
 
 ### [1.0.2-uam] - 10/14/2021
 #### Changed
@@ -63,29 +63,35 @@ __Security__ in case of vulnerabilities.
 * Added more fields to ErrorResponse schema
     * status - response status code
     * error - a short description of the error
-  
+    
+    
 
 ### [1.0.1-uam] - 10/06/2021
 #### Changed
 * The 'servers' section was removed.
-  
 
+
+    
 ### [1.0.0-uam] - 09/17/2021
 #### Changed
 * version update from 0.1.2-uam to 1.0.0-uam
-  
+
+
 
 ### [0.1.2-uam] - 09/13/2021
 #### Changed
 * ./asds.yaml changed
     * Enroute & transition max & min airpseeds were added to PerformanceRequirements
+    
+    
 
 ### [0.1.1-uam] - 09/07/2021
 #### Changed
 * ./asds.yaml changed
     * the 'configuration' in Adaptation is not required any more
     * the min/max size of Polygon adjusted
-  
+    
+    
 
 ### [0.1.0-uam] - Mon Aug  9 16:48:16 PDT 2021  
 #### Added
@@ -93,3 +99,4 @@ __Security__ in case of vulnerabilities.
     * ./asds.yaml
     * ./README.MD
     * ./CHANGELOG.MD  
+    
