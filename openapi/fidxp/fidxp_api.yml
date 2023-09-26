@@ -1,0 +1,419 @@
+openapi: 3.0.0
+servers:
+  - description: FIDXP (FAA-Industry Data Exchange Protocol) Service
+    url: "https://fidxs.arc.nasa.gov/"
+info:
+  description: |-
+    The FAA-Industry Data Exchange Protocol (FIDXP), as stated in UAM ConOps v2.0, provides an interface for the FAA to request UAM operational data on demand and send FAA information to the federated service network for distribution to UAM operators, Pilots-In-Command (PIC), UAM aircraft, and public interest stakeholders through the Service Security Gateway. 
+
+    This interface between the FAA and UAM stakeholders is a gateway such that external entities do not have direct access to FAA systems and data. FAA data sources available via this FAA-industry data exchange include, but are not limited to, flight data, restrictions, charted routes, and active Special Activity Airspaces (SAAs).
+    - See Urban Air Mobility (UAM) Concept of Operations (ConOps) 2.0_0.pdf (https://www.faa.gov/sites/faa.gov/files/Urban%20Air%20Mobility%20%28UAM%29%20Concept%20of%20Operations%202.0_0.pdf) for more details.
+
+    *NOTE:* This is an initial definition of the interface that would be needed to enable mid-term operations exchange. This definition only covers potential information that UAM operators would share with existing FAA systems (e.g. ERAM), via the Provider of Services for Urban Air Mobility (PSU).  This definition is expected to update and change over time.
+  version: 1.0.0-alpha-1
+  title: FIDXP (FAA-Industry Data Exchange Protocol) Service (FIDXS) Interface
+  contact:
+    name: NASA
+
+# Assumption: Below is based on UAM X5 requirement, see https://atmconfluence.arc.nasa.gov/pages/viewpage.action?spaceKey=ATMX&title=FIDXP+Requirements, to submit a Visual Flight Rule (VFR) flight plan to a ERAM (En Route Automation Modernization) system simulation running at FAA's William J. Hughes Technical Center (https://www.faa.gov/about/office_org/headquarters_offices/ang/offices/tc) to get an acknowledgement response.
+
+security:
+  - fimsAzAuth:
+      - utm.strategic_coordination
+
+tags:
+  - name: Operations
+    description: |-
+      Endpoints exposed by FIDXP Services (FIDXS) for interaction about exchange about UAM operational data.
+
+paths:
+  /fidxs/v1/eram_flight_plan:
+    post:
+      tags:
+        - Operations
+      security:
+        - fimsAzAuth:
+            - utm.strategic_coordination
+      summary: >-
+        Submit an acceptable Visual Flight Rule (VFR) flight plan to FAA ERAM (En Route Automation Modernization) system to get a 4-digit beacon or transponder code as acknowledgment of acceptance and receipt.
+      requestBody:
+        description: |-
+          VFR Flight plan acceptable to FAA ERAM system.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ERAMFlightPlan"
+        required: true
+      responses:
+        "200":
+          description: >-
+            Accepted and acknowledged receipt of flight plan. Expect response to have a four-digit beacon or transponder code. Transponder codes are transmitted by an aircraft transponder in response to a secondary surveillance radar interrogation signal to assist air traffic controllers with traffic separation. A 'squawk' code is often assigned by air traffic controllers to identify an aircraft uniquely in a flight information region (FIR). This allows easy identification of aircraft on radar.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlightPlanAcknowledgement"
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: |-
+            One or more parameters were missing or invalid in request.
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: >-
+            Unauthorized. Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: >-
+            Forbidden. This status is similar to 401, but for the 403 Forbidden status code re-authenticating makes no difference. The access is permanently forbidden and tied to the application logic, such as insufficient rights to a resource.
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: >-
+            The server cannot find the requested resource. In an API, this can also means that the endpoint is valid but the resource itself does not exist. Servers may also send this response instead of 403 Forbidden to hide the existence of a resource from an unauthorized client. This response code is probably the most well known due to its frequent occurrence on the web.
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: |-
+            Internal server or FAA ERAM error processing request.
+        "501":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: |-
+            Not Implemented. The request method is not supported by the server and cannot be handled.
+        "502":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: |-
+            Bad Gateway. This error response means that the server, while working as a gateway to get a response needed to handle the request, got an invalid response. Include bad connection to FAA ERAM.
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: |-
+            Service unavailable. The server or FAA ERAM is not ready to handle the request. Common causes are a server or FAA ERAM is down for maintenance.
+        "504":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: |-
+            Gateway Timeout. This error response is given when the server or FAA ERAM is acting as a gateway and cannot get a response in time.
+
+components:
+  securitySchemes:
+    fimsAzAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |-
+        This security scheme is applied to all operations, and the bearer token
+        must be acquired from FIMS Authorization Server (FIMS-Authz). The scope must be 'utm.strategic_coordination' and the 'aud' claim must match the base URL of the this server.
+        - See https://github.com/nasa/utm-apis/tree/master/fimsauthz-api
+
+  schemas:
+    ERAMFlightPlan:
+      type: object
+      description: >-
+        VFR (Visual Flight Rule) flight plan to be submitted to FAA ERAM (En Route Automation Modernization) system.
+        For ERAM to accept VFR flight plan, plan should have following:
+          - fixes must be recognized by ERAM system.
+          - coordination_fix must be included in route.
+          - route has to have coordination_fix but is not first/origin fix.
+          - proposed_time is expected time when aircraft will at coordination_fix at requested altitude and speed.
+          - For UAM, consider using values from Provider of Services for Urban Air Mobility (PSU) API, see https://github.com/nasa/uam-apis/blob/x4/openapi/psu/psu_api.yml.
+      required:
+        - flight_id
+        - aircraft_type
+        - airborne_equipment_qualifier
+        - tail_number
+        - flight_level
+        - coordination_fix
+        - true_air_speed
+        - route
+        - proposed_time
+      properties:
+        flight_id:
+          description: >-
+            Aircraft Identifier (AID) consisting of two to seven alphanumeric characters where the first character must be a letter.  When the AID length is two, the first character must be a letter and the second character must be a digit.  Examples would be AAL113, TRS182, N17263, or HINASA. See NAS-MD-311 for information.
+          type: string
+          pattern: "^[A-Z].*"
+          minimum: 2
+          maximum: 7
+          default: "CTY6994"
+          externalDocs:
+            description: See NAS-MD-311 for further information.
+            url: https://www.tc.faa.gov/its/worldpac/standards/nas/nas-md-311.pdf
+        aircraft_type:
+          description: >-
+            Identifier of the aircraft airframe type. One letter followed by 1 to 3 alphanumeric characters. Some examples of this are B737, A321, or NQDE. See NAS-MD-311 for information.
+          type: string
+          pattern: "^[A-Z].*"
+          minimum: 2
+          maximum: 4
+          default: "NQDE"
+          externalDocs:
+            description: See NAS-MD-311 for further information.
+            url: https://www.tc.faa.gov/its/worldpac/standards/nas/nas-md-311.pdf
+        airborne_equipment_qualifier:
+          description: >-
+            Airborne equipment qualifiers are mentioned in ICAO to NAS Equipment Qualifier Conversion Tables. Also, Radio Communication, Navigation, and Approach Aid Equipment considered airborne equipment. See NAS-MD-311 for information.
+          type: string
+          enum:
+            - L
+            - M
+          default: "L"
+          externalDocs:
+            description: See NAS-MD-311 for further information.
+            url: https://www.tc.faa.gov/its/worldpac/standards/nas/nas-md-311.pdf
+        tail_number:
+          description: >-
+            ICAO-4444 identifier of the airframe used by the flight. Up to 8 characters. Some examples are 821DX, 481D, or 4016MR. See  Order JO 7110.10W (Appendix A ICAO Flight Plans)
+              - For UAM, consider using values from operational_intent -> details -> aircraft_registration of PSU API.
+          type: string
+          minimum: 1
+          maximum: 8
+          default: "NASAU021"
+          externalDocs:
+            description: See Order JO 7110.10W (Appendix A ICAO Flight Plans) for further information.
+            url: https://www.faa.gov/documentLibrary/media/Order/JO_7110.10W.pdf
+        flight_level:
+          $ref: "#/components/schemas/FlightLevel"
+        coordination_fix:
+          $ref: "#/components/schemas/Fix"
+        true_air_speed:
+          $ref: "#/components/schemas/AirSpeed"
+        route:
+          description: >-
+            NAVAID codes, airport codes, and airway names describing the path the flight will take during its airborne activity. Represented in Order JO 7110.10W (ICAO Flight Plan guidance), item 13, section C Route. Example, 'KACY..LEEAH..ATR..SBY..KMCO'.
+              - Default example given, 'ACY122009..ACY132008..KACY', where 'ACY122009' is a fix-bearing-distance (FRD) point within ERAM or STARS (Standard Terminal Arrival Procedure) adaptation, 'ACY132008' is the in-bound route entry FRD point and 'KACY' is the destination for an airport because there are no existing vertiports that ERAM currently knows about.
+              - Must include fix for coordination_fix.
+              - For UAM, consider using values from operational_intent -> details -> trajectory -> point_designator of PSU API, converted to NAS-MD-312 formatted fix names and concatenated together.
+          type: string
+          minimum: 6
+          default: "ACY122009..ACY132008..KACY"
+          externalDocs:
+            description: See Order JO 7110.10W (Appendix A ICAO Flight Plans) for further information.
+            url: https://www.faa.gov/documentLibrary/media/Order/JO_7110.10W.pdf
+        proposed_time:
+          $ref: "#/components/schemas/ProposedTime"
+
+    AirSpeed:
+      description: |-
+        The planned cruising speed, True Air Speed in knots, for the first or whole cruising potion of the flight. Depends on coordination fix at which the aircraft flying the flight plan is expected to be active at. Examples are 381, 360, or 271.
+          - Indicated Air Speed (IAS) is from direct aircraft instrument reading obtained from the Airspeed Indicator (ASI), uncorrected for variations in atmospheric density, installation error, or instrument error. It is calculated directly off an aircraft’s pitot-static system and depends on the aircraft’s dynamic pressure – the difference between its total pressure and static pressure.
+          - Calibrated Air Speed (CAS) is Indicated Airspeed (IAS) corrected for installation error and instrument error. At cruising and higher airspeed ranges, IAS and CAS are approximately the same. Calibrated airspeed for an aircraft can be found in the calibration chart of the aircraft manual.
+              - For UAM X5, IAS will be assumed to be equivalent to CAS.
+          - True Air Speed (TAS) which is Calibrated Air Speed (CAS) corrected for altitude and non-standard temperature. Because air density decreases with an increase in altitude, an aircraft has to be flown faster at higher altitudes to maintain a given CAS and vice versa.
+      type: object
+      required:
+        - speed_value
+        - speed_unit
+      properties:
+        speed_value:
+          type: string
+          description: |-
+            Speed numerical value.
+          pattern: "^[0-9][0-9][0-9]$"
+          minimum: 3
+          example: "093"
+        speed_unit:
+          type: string
+          enum:
+            - Knots
+          default: Knots
+      externalDocs:
+        description: FIXM definition of predictedAirspeed in TrajectoryPointPropertyType
+        url: https://fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_TrajectoryPoint4DType.html#Link1CA
+
+    FlightLevel:
+      description: |-
+        The planned cruising altitude for the first or the whole portion of the route to be flown. Formatted as FL (Flight Level, hundreds of feet) above the WGS84 geodetic earth model. This position is relative to the aircraft's center of mass with the assumption of an empty fuselage and no fuel. Examples we would expect are 300, 280, or 165
+          - For Air Traffic Control purposes, every altitude 18,000 feet and above is abbreviated beginning with FL for “Flight Level” and then the first three numbers of the altitude so 21,000 feet is FL210, FL300 is 30,000 feet. See https://www.faa.gov/air_traffic/publications/atpubs/atc_html/chap4_section_5.html
+          - For UAM, consider using values from operational_intent -> details -> trajectory -> altitude of PSU API. UAM cruise altitude is much lower than typical above 18,000 feet but still need conversion to Flight Level like 1,100 feet altitude should be FL011.
+      type: object
+      required:
+        - value
+        - reference
+        - units
+      properties:
+        value:
+          description: |-
+            Three-digit Flight Level in hundreds of feet above the WGS84 geodetic earth model.
+          type: string
+          pattern: "^[0-9][0-9][0-9]$"
+          minimum: 3
+          maximum: 3
+          example: "012"
+        reference:
+          description: |-
+            A code indicating the reference for a vertical distance. See AIXM 5.1
+            and FIXM 4.2.0. Currently, UAM only allows WGS84 with no immediate
+            plans to allow other options. FIXM and AIXM allow for 'SFC', elevation above surface, which is equivalent to AGL.
+          type: string
+          enum:
+            - W84
+          default: "W84"
+        units:
+          description: |-
+            The reference quantities used to express the value of altitude. See
+            FIXM 4.2. Currently, UAM only allows meters with no immediate plans
+            to allow other options so conversion is needed.
+          type: string
+          enum:
+            - FEET
+          default: "FEET"
+      externalDocs:
+        description: See NAS-MD-311 for further information.
+        url: https://www.tc.faa.gov/its/worldpac/standards/nas/nas-md-311.pdf
+
+    Fix:
+      type: object
+      description: >-
+        Fix names are coded designators assigned to an enroute point. Fix names have certain format requirements. Examples would be: KDEN or HIISS or ACY132008 (a Fix Radial Distance name). See NAS-MD-312 for more information.
+          - A Fix Radial Distance (FRD) name identifies a geographic point in terms of a radial with a distance from that fix name:
+            - The radial must be three digits in units of degrees appended after fix name. 
+            - The distance must be the last three digits in units of nautical miles from fix name.
+          - For UAM, consider using values from operational_intent -> details -> trajectory -> point_designator of PSU API. Convert to NAS-MD-312 formatted fix name.
+      required:
+        - fix_name
+      properties:
+        fix_name:
+          type: string
+          description: >-
+            A fix name is a sequence of 2−5 alphanumerics. The sequence of alphanumerics, if adapted, identifies a geographic point. 
+              - NOTE: A four character fix name must include at least one letter.
+          minimum: 2
+          maximum: 5
+          default: "ACY"
+        radial:
+          type: string
+          description: >-
+            A Fix Radial Distance (FRD) fix name identifies a geographic point, for a given fix name, with a radial and distance from the fix. The radial must be three digits in units of degrees. Example above, ACY132008, has 132 degrees from 'ACY' fix.
+          pattern: "^[3][0-5][0-9]|[0-2][0-9][0-9]$"
+          default: "132"
+        distance:
+          type: string
+          description: >-
+            A Fix Radial Distance (FRD) fix name identifies a geographic point, for a given fix name, with a radial and distance from the fix. The distance must be the last three digits, in units of nautical miles, in the FRD fix name. Example above, ACY132008, has 8 nautical miles from 'ACY' fix.
+          pattern: "^[0-9][0-9][0-9]$"
+          default: "008"
+      externalDocs:
+        description: See NAS-MD-312 for more information.
+        url: https://www.tc.faa.gov/its/worldpac/standards/nas/nas-md-312.pdf
+
+    ProposedTime:
+      type: object
+      description: >-
+        The time at which the flight is expected to be active (flying) and at or near (within certain nautical miles) of the provided coordination fix. Examples of proposed time sent to ERAM system are 'E1020', 'EXX15', 'D0040', 'P1050', etc.
+          - Default example, 'E1947' is expected time over the coordination fix ACY132008 (see route default) at 7:47 pm UTC matching ERAM's time. 
+          - For UAM, consider using values from operational_intent -> details -> trajectory -> time  of PSU API, Convert to NAS-MD-312 formatted time for when coordination_fix will be active.
+      required:
+        - flight_indicator
+        - proposed_time
+      properties:
+        flight_indicator:
+          type: string
+          description: >-
+            Proposed time sent to ERAM system must be prepended with 'E', 'P' or 'D' (see below) before 4-digit hour and minutes in the following formats:
+              - 'D' indicates that flight is a departure. The flight will automatically be correlated and requires no Controller interaction as long as the flight is close to the indicated altitude/speed/location of coordination fix. Example, 'D0040' means departing flight will be over coordination fix 40 minutes from ERAM's current time.
+              - 'E' indicates when flight will be active. The flight will automatically be correlated and requires no Controller interaction as long as the flight is close to the indicated altitude/speed/location of coordination fix. Example, 'EXX15' means flight is active over coordination fix 15 minutes from ERAM's current ime.
+              - 'P' indicates that the flight plan is a proposed departure. Flight must be manually correlated which entails an active Controller entering a DM or QT for the flight once its track is present (that is, seen on radar) and assuming correlated flight has similar altitude/speed with what was proposed, then it will be correlated. Example, 'P1050' means proposed departing flight expected to go active at ERAM's 10:50 am UTC time and will be manually coorelated.
+          enum:
+            - D
+            - E
+            - P
+          default: "E"
+        proposed_time:
+          type: string
+          description: >-
+            Four-digit hour and minutes for when flight will be active near its proposed coordination fix or number of minutes from ERAM's current time:
+              - 'HHMM' is hour and minutes relative to UTC (Zulu) time. Must match the UTC time ERAM system is tracking which may, or may not, be equal to a real wall clock. Example, 1715 would be 5:15 PM UTC time.
+              - 'XXMM' is literally using 'XX' before 2-digit minutes. This indicates to ERAM when the flight will be active and near the coordination fix within the indicated number of minutes from whatever current time is within ERAM. For example 'XX20' indicates that 20 minutes from ERAM's current time, the flight will be over the coordination fix.
+          pattern: "^([X][X]|[0-2][0-3])[0-5][0-9]$"
+          minimum: 4
+          maximum: 4
+          default: "1947"
+      externalDocs:
+        description: See NAS-MD-312 for more information.
+        url: https://www.tc.faa.gov/its/worldpac/standards/nas/nas-md-312.pdf
+
+    FlightPlanAcknowledgement:
+      type: object
+      description: >-
+        Acceptance and acknowledgement of receipt of flight plan submitted to FAA ERAM system.
+      required:
+        - flight_id
+        - beacon_code_assignment
+        - timestamp
+      properties:
+        flight_id:
+          description: >-
+            The Aircraft Identifier (AID) of the flight, same as in ERAMFlightPlan, that will identify a flight whose Flight Plan was accepted.
+          type: string
+          pattern: "^[A-Z].*"
+          minimum: 2
+          maximum: 7
+          default: "CTY6994"
+          externalDocs:
+            description: See NAS-MD-311 for further information.
+            url: https://www.tc.faa.gov/its/worldpac/standards/nas/nas-md-311.pdf
+        beacon_code_assignment:
+          description: >-
+            Code emitted by a mode 3/A transponder, if applicable, this is what the system would like the flight to 'squawk' while flying accepted flight plan. This is represented in the octal range of 0000 to 7777.
+              - From https://en.wikipedia.org/wiki/Transponder_(aeronautics), Transponder codes are four-digit numbers transmitted by an aircraft transponder in response to a secondary surveillance radar interrogation signal to assist air traffic controllers with traffic separation. A discrete transponder code (often called a squawk code) is assigned by air traffic controllers to identify an aircraft uniquely in a flight information region (FIR). This allows easy identification of aircraft on radar. Codes are made of four octal digits; the dials on a transponder read from zero to seven, inclusive. Four octal digits can represent up to 4096 different codes, which is why such transponders are sometimes described as "4096 code transponders."
+          type: string
+          pattern: "^[0-7][0-7][0-7][0-7]$"
+          minimum: 4
+          maximum: 4
+          default: 1234
+          externalDocs:
+            description: See NAS-MD-311 beacon code allocation, which is specified in NAS−MD−313.
+            url: https://www.tc.faa.gov/its/worldpac/standards/nas/nas-md-311.pdf
+        timestamp:
+          description: >-
+            The number of nanoseconds elapsed since midnight GMT, 01/01/1970. Logical time at which the the accompanying parameters are valid. The publisher must use current logical time. The subscriber can use the timestamp to make adjustments as to when the aircraft truly had these values in the local time context.
+          type: integer
+          format: int64
+          default: 1687199082
+
+    ErrorResponse:
+      description: |-
+        Provides error response codes, mainly client errors with 400s or server errors with 500s, and reason for failure.
+      type: object
+      required:
+        - "msg"
+      properties:
+        status_code:
+          description: >-
+            the status code of the response
+          type: integer
+          format: int32
+          externalDocs:
+            description: See HTML status codes for examples.
+            url: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+        msg:
+          description: >-
+            message should have reason for response
+          type: string
+        entity_id:
+          type: string
+          format: uuid
+        request_id:
+          type: string

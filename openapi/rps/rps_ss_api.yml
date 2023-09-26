@@ -1,0 +1,1129 @@
+openapi: 3.0.0
+servers:
+  - description: Resources Planning Service For Sequence Scheduling
+    url: 'https://rps-ss.arc.nasa.gov'
+info:
+  description: |- 
+    Resources Planning Service Sequence Scheduling (RPS-SS) Interface. RPS-SS provides Earliest Spaced Time of Arrival (ESTA) for each resource along trajectory given resource constraints, like spacing, overtake rules, etc. between aircraft at resource. If needed, adjust ESTAs within 4-D trajectory so aircraft arriving at entry, exit, crossing or merge resource, within controlled airspace, do not violate constraints.
+    - Provider of Services for Urban Air Mobility (PSU) API, see https://github.com/nasa/uam-apis/blob/x4/openapi/psu/psu_api.yml
+    - Discovery & Synchronization Service (DSS) API, see https://github.com/nasa/uam-apis/blob/x4/openapi/psu/dss_api.yml
+    - Capacity Information Service (CIS) model in https://github.com/nasa/uam-apis/blob/x4/openapi/cis/cis_model.yml
+  version: 2.0.5
+  title: RPS Interface
+  contact:
+    name: NASA
+
+# Assumption: Resource Planning Service has input certain configurations for resources from CIS.
+# Based on Sequence Diagrams documented in https://atmconfluence.arc.nasa.gov/display/ATMX/X5+Sequence+Diagrams+and+APIs
+
+security:
+  - fimsAzAuth: 
+    - utm.strategic_coordination
+
+tags:
+  - name: Resources
+    description: |-
+      Endpoints exposed by Resources Planning Services (RPS) for reporting about resources, its availability, etc.
+  - name: Scheduling
+    description: |-
+      Endpoints exposed by Resources Planning Services (RPS) for resource scheduling based on spacing and sequencing constraints.
+  - name: Operations
+    description: |-
+      Endpoints exposed by Resources Planning Services (RPS) for interaction about operations at resources.
+  - name: p2p_uam
+    description: |-
+      Endpoints exposed by PSUs (Provider of UAM Services) for peer-peer communication.
+
+paths:
+  /rps/ss/v1/resources_scheduling/{resource}:
+    post:
+      tags:
+        - Scheduling
+      security:
+        - fimsAzAuth:
+            - utm.strategic_coordination
+      summary: >-
+        Request service to check timings in 4-D trajectory against given resource constraint information, like spacing, overtake rules, etc. between aircraft at resource. If needed, adjust Estimated Time of Arrival (ETA) at waypoints within given 4-D trajectory so aircraft arriving at entry, exit, crossing or merge resource, within controlled airspace, do not violate constraints. 
+      parameters:
+        - name: resource
+          in: path
+          required: true
+          description: |-
+            Resource name that matches the 'point_designator' field in the TrajectoryPoint4D object within the operational intent 
+            - see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryPoint4D.
+          schema:
+            type: string
+          example: "EB003"
+      description: |-
+        Factors like aircraft speed, altitude, etc. may be needed to determine resource availability. Minimum delay of arrival time at a resource needs to satisfy spacing criteria for that resource. Spacing should be an actual usable slot, not just delay required to follow aircraft to make room; thus, should consider leading and trailing spacing between aircraft. Return 4-D trajectory, with or without adjusted timings, and one of these scheduling outcomes:
+        
+            - FEASIBLE_AS_IS means timings in operation's 4-D trajectory were not changed.
+            - FEASIBLE_WITH_CHANGE means timings in operation's 4-D trajectory were changed.
+            - INFEASIBLE means unable to adjust operation's 4-D trajectory even by changing timings would still not satisfy resource constraints.
+      requestBody:
+        description: |-
+          All 4-D trajectory of operation plan. Based on PSU-to-PSU API 
+          - see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/OperationalIntent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourcesSchedulingRequest'
+        required: true
+      responses:
+        '200':
+          description: >- 
+            OK. Service has information to perform scheduling at resource. Returns feasible timings after scheduling.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcesSchedulingResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            Bad request. One or more parameters were missing or invalid. Examples:
+            - No resource provided.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Unauthorized. Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Forbidden. This status is similar to 401, but for the 403 Forbidden status code re-authenticating makes no difference. The access is permanently forbidden and tied to the application logic, such as insufficient rights to a resource.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Not found. Resources requested were not found.
+        '405':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Method not allowed. The request method is known by the server but is not supported by the target resource. Examples:
+            - Resource without spacing between aircraft constraint cannot respond to this query.
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            No available 4-D trajectory can satisfy resource constraints. No usable slot can be found with leading and trailing spacing between aircraft that satisfies criteria at resource so unable to provide Earliest Spaced Time of Arrival (ESTA) at resource.
+            - INFEASIBLE should be in reason message returned.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            RPS server or processing error.
+
+  /rps/ss/v1/resources_ovns/query/{resource}:
+    post:
+      tags:
+        - Resources
+      security:
+        - fimsAzAuth:
+            - utm.strategic_coordination
+      summary: >-
+        Get Opaque Version Numbers (OVN) assigned by Discovery Synchronization Service (DSS) for other operational intents planned for resource.
+      parameters:
+        - name: resource
+          in: path
+          required: true
+          description: |-
+            Resource name that matches the 'point_designator' field in the TrajectoryPoint4D object within the operational intent - see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryPoint4D.
+          schema:
+            type: string
+          example: "EB003"
+      description: |- 
+        Return OVNs without checking for resource availability.
+        Note: DSS 'ovn' is returned ONLY to the PSU that created the operational intent but NEVER to other PSU instances.
+        - For more details see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/OperationalIntentReference
+      requestBody:
+        description: |-
+          With information about start and end timings of operation and resource planned within 4-D trajectory of operation plan. Based on PSU-to-PSU API 
+          - see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryPoint4D
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceEntityOVNsRequest'
+        required: true
+      responses:
+        '200':
+          description: >- 
+            OK. Get Opaque Version Numbers (OVN) assigned by Discovery Synchronization Service (DSS) for other operational intents submitted using resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceEntityOVNsResponse'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            Bad request. One or more parameters were missing or invalid. Examples:
+            - No resource provided.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Unauthorized. Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Forbidden. This status is similar to 401, but for the 403 Forbidden status code re-authenticating makes no difference. The access is permanently forbidden and tied to the application logic, such as insufficient rights to a resource.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Not found. Resources requested were not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            RPS server or processing error.
+
+  /rps/ss/v1/operations/{resource}:
+    get:
+      summary: >-
+        Get operations already scheduled at resource within time window.
+      tags:
+        - Operations
+      security:
+        - fimsAzAuth:
+            - utm.strategic_coordination
+      parameters:
+        - name: resource
+          in: path
+          required: true
+          description: |-
+            Resource name that matches the 'point_designator' field in the TrajectoryPoint4D object within the operational intent - see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryPoint4D. 
+          schema:
+            type: string
+          example: "DF30"
+        - name: time_start
+          in: query
+          required: true
+          description: |-
+            Parameter defining the start time for the interval for querying operations scheduled at resource.
+          schema:
+            $ref: '#/components/schemas/TimeParam'
+        - name: time_end
+          in: query
+          required: false
+          description: |-
+            Parameter defining the end time for the interval for querying operations at resource.
+            - If no end time provided, assume end time is 2 hours later.
+          schema:
+            $ref: '#/components/schemas/TimeParam'
+      responses:
+        '200':
+          description: >- 
+            OK. Information about operations scheduled at resource is available.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceOperations'
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            Bad request. One or more parameters were missing or invalid. Examples:
+            - No resources provided.
+            - If end time is earlier than start time.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Unauthorized. Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Forbidden. This status is similar to 401, but for the 403 Forbidden status code re-authenticating makes no difference. The access is permanently forbidden and tied to the application logic, such as insufficient rights to a resource.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: >-
+            Not found. Resources requested were not found.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            RPS server or processing error.
+
+  #
+  # PSU-PSU path components - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml
+  # 
+  /rps/ss/psu/v1/operational_intents:
+    post:
+      tags:
+        - p2p_uam
+      security:
+        - fimsAzAuth:
+            - utm.strategic_coordination
+      summary: Notified by a PSU of new or changed operational intent details.
+      description: |- 
+        Notified by PSU or other airspace subscribers directly of new or changed operational intent details (usually as a requirement of previous interactions with the DSS).
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutOperationalIntentDetailsParameters'
+        required: true
+      responses:
+        '204':
+          description: Created. New or updated full operational intent information received successfully.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            * One or more parameters were missing or invalid.
+            * The Entity could not be parsed, or contains illegal data.
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            * The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+            * The client identified in the access token is not the manager of this Entity according to the receiving client's records.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: |-
+            The Entity version specified in this message is lower than a previously-received notification, or identical to a previously-received notification and the Entity is different.
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: The client issued too many requests in a short period of time.
+
+components:
+  securitySchemes:
+    fimsAzAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |-
+         This security scheme is applied to all operations, and the bearer token
+         must be acquired from the Fims-AZ. The scope must be 'utm.strategic_coordination' and the 'aud' claim must match the base URL of the RPS server.
+          
+  schemas:
+    ResourceEntityOVNsRequest:
+      type: object
+      description: |-
+        Request body to query for Opaque Version Numbers (OVN), assigned by Discovery Synchronization Service (DSS), at resource managed by RPS. DSS OVN is a token associated with a particular UAM Entity+version created by the DSS upon creation or modification of an operational intent reference and provided to the client creating or modifying the operational intent reference.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/EntityOVN
+      required:
+        - gufi
+        - time_start
+        - time_end
+        - resource_planned
+      properties:
+        gufi:
+          description: >-
+            Should be Operational Intent identifier for use in a response or an ErrorResponse.
+          $ref: '#/components/schemas/EntityID'
+        time_start:
+          description: Beginning time of operational intent.
+          $ref: '#/components/schemas/Time'
+        time_end:
+          description: End time of operational intent.
+          $ref: '#/components/schemas/Time'
+        resource_planned:
+          description: >-
+            4-D trajectory from operational intent planned at resource
+          $ref: '#/components/schemas/TrajectoryPoint4D'
+
+    ResourcesSchedulingRequest:
+      type: object
+      description: |-
+        Request body given to schedule resources needed by 4-D trajectories of operational intent planned.  
+        Based on constraint information, like spacing between aircraft, overtake rules, etc. at resources 
+        for entry, exit, crossing or merge within controlled airspace, timings in 4-D trajectories may or 
+        may not have to be adjusted to satisfy constraints.
+      required:
+        - gufi
+        - trajectory
+      properties:
+        gufi:
+          description: >-
+            Should be Operational Intent identifier for use in a response or an ErrorResponse.
+          $ref: '#/components/schemas/EntityID'
+        trajectory:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          description: |-
+            The list of TrajectoryPoints for this scheduling request. This list must contain all significant TrajectoryPoints. For additional insight on points to be included, see the enumeration of property types in the TrajectoryPoint4D model.
+          items:
+            $ref: '#/components/schemas/TrajectoryPoint4D'
+
+    ResourceEntityOVNsResponse:
+      description: |-
+        Response to query to get Opaque Version Numbers (OVN) assigned by Discovery Synchronization Service (DSS) for other operational intents planned at resource. Note: DSS 'ovn' is returned ONLY to the PSU that created the operational intent but NEVER to other PSU instances.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/OperationalIntentReference
+      required:
+        - gufi
+        - resource_ovns
+      properties:
+        gufi:
+          description: >-
+            From original request which should be operational intent identifier.
+          $ref: '#/components/schemas/EntityID'
+        resource_ovns:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceOVNs'
+          default: []
+
+    ResourceOVNs:
+      description: |-
+        Opaque Version Numbers (OVN) assigned by Discovery Synchronization Service (DSS) for other operational intents planned at resource. 
+            Note: DSS 'ovn' is returned ONLY to the PSU that created the operational intent but NEVER to other PSU instances.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/OperationalIntentReference
+      required:
+        - resource
+        - ovn_array
+      properties:
+        resource:
+          type: string
+          description: >-
+            Name of resource matches the 'point_designator' field in the TrajectoryPoint4D object within the operational intent - see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryPoint4D.
+        ovn_array:
+          type: array
+          description: >-
+            DSS Opaque Version Numbers (OVN) of other operational intents already scheduled at resource.
+          items:
+            $ref: '#/components/schemas/EntityOVN'
+          default: []
+
+    ResourcesSchedulingResponse:
+      type: object
+      description: |-
+        Information about outcome of scheduling of resources for operational intent with Earliest Spaced Time of Arrival (ESTA) at waypoints within original 4-D trajectory.
+      required:
+        - resource
+        - gufi
+        - scheduling_result
+        - trajectory
+        - resources_volumes
+        - ovn_array
+      properties:
+        resource:
+          type: string
+          description: >-
+            Name of resource matches the 'point_designator' field in the TrajectoryPoint4D object within the operational intent - see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryPoint4D.
+          example: 'EB003'
+        gufi:
+          description: >-
+            Should be Operational Intent identifier for use in this response or an ErrorResponse.
+          $ref: '#/components/schemas/EntityID'
+        scheduling_result:
+          type: string
+          enum:
+            - FEASIBLE_AS_IS
+            - FEASIBLE_WITH_CHANGE
+          description: |-
+            Outcomes of scheduling resources for operational intents are:
+            * FEASIBLE_AS_IS means timings in operation 4-D trajectories were not changed.
+            * FEASIBLE_WITH_CHANGE means timings in operation 4-D trajectories were changed.
+        trajectory:
+          type: array
+          minItems: 1
+          maxItems: 1000
+          description: |-
+            The list of 4-D trajectories from this scheduling request with original or delayed timings depending on post sequencing, spacing, etc. constraints of resources. This list must contain all significant trajectory points. For additional insight on points to be included, see the enumeration of property types in the TrajectoryPoint4D model.
+          items:
+            $ref: '#/components/schemas/TrajectoryPoint4D'
+        resources_volumes:
+          description: >- 
+            3-D volumes, with start and end timings, to schedule resource in operational intent
+          type: array
+          items:
+            $ref: '#/components/schemas/Volume4D'
+          default: []
+        ovn_array:
+          type: array
+          description: >-
+            DSS Opaque Version Numbers (OVN) of other operational intents already scheduled at resource.
+          items:
+            $ref: '#/components/schemas/EntityOVN'
+          default: []
+
+    ResourceOperations:
+      type: object
+      description: |-
+        Information about operational intents scheduled at resources.
+      required:
+        - resource
+        - resource_operations
+      properties:
+        resource:
+          type: string
+          description: >-
+            Name of resource matches the 'point_designator' field in the TrajectoryPoint4D object within the operational intent - see https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryPoint4D.
+          example: 'DF101'
+        resource_operations:
+          type: array
+          description: >- 
+            Array of operations scheduled at resource.
+          items:
+            $ref: '#/components/schemas/OperationalIntentReference'
+          default: []
+
+    ErrorResponse:
+      type: object
+      required:
+        - "msg"
+      properties:
+        status_code:
+          description: >-
+            the status code of the response
+          type: integer
+          format: int32
+        msg:
+          description: >-
+            message should have reason for response
+          type: string
+        entity_id:
+          type: string
+          format: uuid
+        request_id:
+          type: string
+    #
+    # DSS-PSU schema components - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml
+    #         
+    EntityOVN:
+      title: EntityOVN
+      description: |-
+        A token associated with a particular UAM Entity+version created by the DSS upon creation or modification of an Entity reference and provided to the client creating or modifying the Entity reference. The EntityOVN is stored privately by the DSS and then compared against entries in a Key provided to mutate the airspace.  The EntityOVN is also provided by
+        the client whenever that client transmits the full information of the Entity (either via GET, or via a subscription notification).
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/EntityOVN
+      type: string
+      minLength: 16
+      maxLength: 128
+      example: 9d158f59-80b7-4c11-9c0c-8a2b4d936b2d
+          
+    Volume3D:
+      description: |-
+        A three-dimensional geographic volume consisting of a vertically-extruded shape.
+        Exactly one outline must be specified.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/Volume3D
+      type: object
+      properties:
+        outline_circle:
+          $ref: '#/components/schemas/Circle'
+          description: A circular geographic shape on the surface of the earth.
+        outline_polygon:
+          $ref: '#/components/schemas/Polygon'
+          description: A polygonal geographic shape on the surface of the earth.
+        altitude_lower:
+          description: Minimum bounding altitude of this volume. Must be less than
+            altitude_upper, if specified.
+          $ref: '#/components/schemas/Altitude'
+        altitude_upper:
+          description: Maximum bounding altitude of this volume. Must be greater than
+            altitude_lower, if specified.
+          $ref: '#/components/schemas/Altitude'
+
+    Volume4D:
+      description: |- 
+        Contiguous block of geographic spacetime.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/Volume4D
+      required:
+        - volume
+      type: object
+      properties:
+        volume:
+          $ref: '#/components/schemas/Volume3D'
+        time_start:
+          description: Beginning time of this volume. Must be before time_end.
+          $ref: '#/components/schemas/Time'
+        time_end:
+          description: End time of this volume. Must be after time_start.
+          $ref: '#/components/schemas/Time'
+
+    Circle:
+      description: |-
+        A circular area on the surface of the earth.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/Circle
+      type: object
+      properties:
+        center:
+          $ref: '#/components/schemas/LatLngPoint'
+        radius:
+          $ref: '#/components/schemas/Radius'
+
+    Radius:
+      description: >-
+        See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/Radius
+      required:
+        - value
+        - units
+      type: object
+      properties:
+        value:
+          format: float
+          description: Distance from the centerpoint of a circular area, along the
+            WGS84 ellipsoid.
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          example: 300.183
+        units:
+          type: string
+          description: FIXM-compatible units.  Only meters ("M") are acceptable for
+            UAM.
+          enum:
+            - M
+
+    Polygon:
+      description: |-
+        An enclosed area on the earth.
+        The bounding edges of this polygon are defined to be the shortest paths between connected vertices.  This means, for instance, that the edge between two points both defined at a particular latitude is not generally contained at that latitude.
+        The winding order must be interpreted as the order which produces the smaller area.
+        The path between two vertices is defined to be the shortest possible path between those vertices.
+        Edges may not cross.
+        Vertices may not be duplicated.  In particular, the final polygon vertex must not be identical to the first vertex.
+            - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/Polygon
+      required:
+        - vertices
+      type: object
+      properties:
+        vertices:
+          minItems: 3
+          type: array
+          items:
+            $ref: '#/components/schemas/LatLngPoint'
+
+    Altitude:
+      type: object
+      required:
+        - value
+        - reference
+        - units
+      properties:
+        value:
+          description: |-
+            The numeric value of the altitude. Note that min and max values are added as a sanity check. As use cases evolve and more options are made available in terms of units of measure or reference systems, these bounds may be re-evaluated.
+            - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/Altitude
+          type: number
+          format: double
+          minimum: -8000
+          exclusiveMinimum: false
+          maximum: 100000
+          exclusiveMaximum: false
+        reference:
+          description: |-
+            A code indicating the reference for a vertical distance. See AIXM 5.1
+            and FIXM 4.2.0. Currently, UAM only allows WGS84 with no immediate
+            plans to allow other options. FIXM and AIXM allow for 'SFC' (Surface Elevation) which is
+            equivalent to AGL (Above Ground Level).
+          type: string
+          enum:
+            - W84
+        units:
+          description: |-
+            The reference quantities used to express the value of altitude. See
+            FIXM 4.2. Currently, UAM only allows meters with no immediate plans
+            to allow other options.
+          type: string
+          enum:
+            - M
+
+    Latitude:
+      description: Degrees of latitude north of the equator, with reference to the WGS84 ellipsoid.
+            - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/Latitude
+      maximum: 90
+      exclusiveMaximum: false
+      minimum: -90
+      exclusiveMinimum: false
+      type: number
+      format: double
+      example: 34.123
+ 
+    Longitude:
+      description: Degrees of longitude east of the Prime Meridian, with reference to the WGS84 ellipsoid.
+            - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/Longitude
+      minimum: -180
+      exclusiveMaximum: false
+      maximum: 180
+      exclusiveMinimum: false
+      type: number
+      format: double
+      example: -118.456
+
+    LatLngPoint:
+      description: |- 
+        Point on the earth's surface.
+            - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/LatLngPoint
+      required:
+        - lat
+        - lng
+      type: object
+      properties:
+        lng:
+          $ref: '#/components/schemas/Longitude'
+        lat:
+          $ref: '#/components/schemas/Latitude'
+ 
+    #
+    # PSU-PSU schema components - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml
+    # 
+    TrajectoryPoint4D:
+      description: |
+        A point for use within a planned trajectory.
+        Tolerance around the point is standardized, and will be applicable to all operations in a given area.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryPoint4D
+        Currently Flight Rule is not expected to change during an operation. If it does, the following may be added as a new property:
+          https://fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_RouteTrajectoryElementType.html#Link2A3
+      required:
+        - lat_lng_point
+        - altitude
+        - time
+        - speed
+        - trajectory_property_array
+      type: object
+      properties:
+        point_designator:
+          description: The name of the designated point.
+            This is required for all named airspace structure point from airspace adaptation data, including vertipads.
+          type: string
+          example: ee123
+        lat_lng_point:
+          description: Latitude and Longitude of the point. If this is for a named airspace structure 
+            point from airspace adaptation data, it should be the same value.
+          $ref: '#/components/schemas/LatLngPoint'
+        altitude:
+          description: Altitude of the point. If this is for a named airspace structure 
+            point from airspace adaptation data, it should be the same value.
+          $ref: '#/components/schemas/Altitude'  
+        time:
+          description: |-
+            Estimated time when the vehicle will be at the location of the TrajectoryPoint
+          $ref: '#/components/schemas/Time'
+        speed:
+          description: |-
+            Speed of the vehicle at this TrajectoryPoint.
+            FIXM allows for two speed entries:  predictedAirspeed and predictedGroundspeed
+          $ref: '#/components/schemas/Velocity'
+        trajectory_property_array:
+          description: |-
+            Describes any applicable properties of the trajectory point.
+            May include multiple properties per point. FIXM allows up to 2000 properties per
+            trajectory point. For X4 we are allowing up to 4.
+            The first point of initial plan must include at a minimum: AIRPORT_REFERENCE_LOCATION, WHEELS_OFF
+            The last point must include at a minimum: AIRPORT_REFERENCE_LOCATION, WHEELS_ON
+            A named airspace structure point from airspace adaptation data must include at a minimum: WAYPOINT
+            If the airspace structure point has a SchedulingType, it must be included as follows:
+              SchedulingType enum   |   Property enum
+              Entry                 |   ENTRY_CORRIDOR
+              Exit                  |   EXIT_CORRIDOR
+              Crossing              |   CROSSING_TRACK
+              Merge                 |   MERGE_TRACK
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/TrajectoryProperty'
+          externalDocs:
+            url: https://fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_TrajectoryPoint4DType.html#Link2AC                   
+      externalDocs:
+        description: See FIXM 4.2.0 for further information.
+        url: https://www.fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_TrajectoryPoint4DType.html#Link116     
+ 
+    TrajectoryProperty:
+      description: |- 
+        Describes any applicable properties of the trajectory point.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/TrajectoryProperty
+      type: object
+      required:
+        - property_type
+      properties:
+        property_type:
+          description: |
+            Provides the type of trajectory point property. Enum list is based on the FIXM definition
+            of TrajectoryPointPropertyType.
+          type: string
+          enum:
+            - TOP_OF_CLIMB
+            - TOP_OF_DESCENT
+            - TCP_VERTICAL
+            - TCP_SPEED
+            - TCP_LATERAL
+            - WHEELS_OFF
+            - WHEELS_ON
+            - AIRPORT_REFERENCE_LOCATION
+            - WAYPOINT
+            - ENTRY_CORRIDOR
+            - EXIT_CORRIDOR
+            - CROSSING_TRACK
+            - MERGE_TRACK
+          externalDocs:
+            description: FIXM definition of TrajectoryPointPropertyType
+            url: https://fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_TrajectoryPointPropertyType.html#Link2B0
+
+    Velocity:
+      description: |-
+        Velocity of the associated vehicle at the time_measured.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/Velocity
+      required:
+        - speed
+        - units_speed
+      type: object
+      properties:
+        speed:
+          format: float
+          type: number
+          description: |-
+            Speed numerical value.
+          example: 200.1
+        units_speed:
+          type: string
+          enum:
+            - MetersPerSecond
+            - Knots
+        track:
+          format: float
+          type: number
+          description: |-
+            Direction of flight expressed as a "True North-based" ground track angle.
+            This value is provided in degrees East of North with a minimum resolution of 1 degree.
+            A value of 360 indicates invalid, no value, or unknown.
+          example: 120
+          default: 0
+        speed_type:
+          description: |-
+            Air speed or ground speed
+          type: string
+          enum:
+            - GROUND
+            - AIR
+          default: GROUND
+
+    OperationalIntentDetails:
+      description: |-
+        Details of a UAM operational intent. Note that this data is not stored in the DSS; only with the clients.
+      required:
+        - trajectory
+      type: object
+      properties:
+        aircraft_registration:
+          type: string
+          pattern: "[A-Z0-9]{1,7}"
+          description: |
+            A unique, alphanumeric string that identifies a civil aircraft and consists of the Aircraft
+            Nationality or Common Mark and an additional alphanumeric string, the registration mark,
+            assigned by the state of registry or common mark registering authority. [FIXM]
+          minLength: 1
+          maxLength: 7
+          x-uam-data-accessibility: PUBLIC
+          externalDocs:
+            description: See FIXM 4.2.0 for further information.
+            url: https://fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_AircraftRegistrationType.html#LinkBC
+        operator_name:
+          description: The identifier of the UAM Operator. Required if different than the PSU. 
+            For X4 this can be any code that meets the required pattern, and does not need to be
+            an ICAO Airline Code.
+          type: string
+          pattern: "[A-Z]{3}"
+          example: "AAL" 
+          externalDocs:
+            description: See FIXM 4.2.0 for further information.
+            url: https://www.fixm.aero/releases/FIXM-4.2.0/doc/schema_documentation/Fixm_AircraftOperatorType.html#Link1E3
+        trajectory:
+          type: array
+          minItems: 2
+          maxItems: 1000
+          description: |-
+            The list of TrajectoryPoints for this operation.  This list must contain
+            all significant TrajectoryPoints per the Community Based Rules (CBR). For additional insight on 
+            points to be included, see the enumeration of property types in the 
+            TrajectoryPoint4D model.
+          items:
+            $ref: '#/components/schemas/TrajectoryPoint4D'
+
+    OperationalIntent:
+      description: Full description of a UAM operational intent.
+      required:
+        - reference
+        - details
+      type: object
+      properties:
+        reference:
+          $ref: '#/components/schemas/OperationalIntentReference'
+        details:
+          $ref: '#/components/schemas/OperationalIntentDetails'
+
+    PutOperationalIntentDetailsParameters:
+      description: |-
+        Parameters of a message informing of detailed information for a peer operational intent.
+        Pushed (by a client, not the DSS) directly to clients with subscriptions when
+        another client makes a change to airspace within a cell with a subscription.
+      required:
+        - operational_intent_id
+        - subscriptions
+      type: object
+      properties:
+        operational_intent_id:
+          description: ID of operational intent that has changed.
+          $ref: '#/components/schemas/EntityID'
+        operational_intent:
+          description: |-
+            Full information about the operational intent that has changed.  If this field is omitted,
+            the operational intent was deleted.  The `ovn` field in the nested `reference` must be
+            populated.
+          $ref: '#/components/schemas/OperationalIntent'
+        subscriptions:
+          type: array
+          description: Subscription(s) prompting this notification.
+          items:
+            $ref: '#/components/schemas/SubscriptionState'
+          minItems: 1
+
+    #
+    # USS-to-USS schema components where USS is Unmanned Aircraft Systems Service Providers
+    # from https://www.faa.gov/sites/faa.gov/files/2022-08/UTM_ConOps_v2.pdf
+    # See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml
+    #
+    UssAvailabilityState:
+      type: string
+      enum:
+      - Unknown
+      - Normal
+      - Down
+      description: |-
+        A USS is presumed to be in the Unknown state absent indication otherwise by a USS with
+        availability arbitration scope.  Upon determination via availability arbitration, a USS is
+        Down when it does not respond appropriately, and a Down USS may not perform the following
+        operations in the DSS:
+          * Create an operational intent in the Accepted or Activated states
+          * Modify an operational intent whose new or unchanged state is Accepted or Activated
+          * Delete an operational intent
+        A USS in the Unknown state possesses all the capabilities, within the DSS, of a USS in the
+        Normal state.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/UssAvailabilityState
+
+    OperationalIntentState:
+      description: |-
+        State of an operational intent.
+        'Accepted': Operational intent is created and shared, but not yet in use; see standard text for more details.
+        The create or update request for this operational intent reference must include a Key containing all OVNs for
+        all relevant Entities.
+        'Activated': Operational intent is in active use; see standard text for more details.
+        The create or update request for this operational intent reference must include a Key containing all OVNs for
+        all relevant Entities.
+        'Nonconforming': This Operation is not conforming to its operational intent per the Community Based Rules (CBR). 
+        The create or update request for this operational intent may omit a Key 
+        in this case because the operational intent is being adjusted as flown and cannot necessarily deconflict.
+        'Contingent': UA is considered unrecoverable unable to conform with its coordinate operational intent; see
+        standard text for more details. 
+        This state must transition to Ended.
+        The create or update request for
+        this operational intent may omit a Key in this case because the operational intent is being adjusted as flown 
+        and cannot necessarily deconflict.
+      type: string
+      enum:
+        - Accepted
+        - Activated
+        - Nonconforming
+        - Contingent
+
+    SubscriptionState:
+      description: |-
+        State of subscription which is causing a notification to be sent.
+      required:
+        - subscription_id
+        - notification_index
+      type: object
+      properties:
+        subscription_id:
+          $ref: '#/components/schemas/SubscriptionID'
+        notification_index:
+          $ref: '#/components/schemas/SubscriptionNotificationIndex'
+ 
+    SubscriptionNotificationIndex:
+      format: int32
+      description: Tracks the notifications sent for a subscription so the subscriber
+        can detect missed notifications more easily.
+      type: integer
+      minimum: 0
+      exclusiveMinimum: false
+      default: 0
+
+    UssBaseURL:
+      description: |-
+        The base URL of a USS implementation of part or all of the USS-USS API. Per the USS-USS API, the full URL of a particular resource can be constructed by appending, e.g., `/uss/v1/{resource}/{id}` to this base URL. Accordingly, this URL may not have a trailing '/' character.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/UssBaseURL
+      type: string
+      example: https://uss.example.com/utm
+      
+    OperationalIntentUssBaseURL:
+      description: |-
+        The base URL of a USS implementation that implements the parts of the USS-USS API necessary for
+        providing the details of this operational intent, and telemetry during non-conformance or contingency,
+        if applicable.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/psu_api.yml#/components/schemas/OperationalIntentUssBaseURL
+      $ref: '#/components/schemas/UssBaseURL'
+        
+    OperationalIntentReference:
+      description: |-
+        The high-level information of a planned or active operational intent with the URL
+        of a USS to query for details.  Note: 'ovn' is returned ONLY to the USS that
+        created the operational intent but NEVER to other USS instances.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/OperationalIntentReference
+      required:
+        - id
+        - manager
+        - uss_availability
+        - version
+        - state
+        - time_start
+        - time_end
+        - uss_base_url
+        - subscription_id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityID'
+        manager:
+          type: string
+          example: uss1
+          description: |-
+            Created by the DSS based on creating client's ID (via access token).  Used internal
+            to the DSS for restricting mutation and deletion operations to manager.  Used by USSs
+            to reject operational intent update notifications originating from a USS that does not manage
+            the operational intent.
+        uss_availability:
+          $ref: '#/components/schemas/UssAvailabilityState'
+        version:
+          type: integer
+          format: int32
+          example: 1
+          description: |-
+            Numeric version of this operational intent which increments upon each change in the operational intent,
+            regardless of whether any field of the operational intent reference changes.  A USS with the
+            details of this operational intent when it was at a particular version does not need to retrieve
+            the details again until the version changes.
+        state:
+          $ref: '#/components/schemas/OperationalIntentState'
+        ovn:
+          description: |-
+            Opaque version number of this operational intent.  Populated only when the OperationalIntentReference
+            is managed by the USS retrieving or providing it.  Not populated when the
+            OperationalIntentReference is not managed by the USS retrieving or providing it (instead, the
+            USS must obtain the OVN from the details retrieved from the managing USS).
+          $ref: '#/components/schemas/EntityOVN'
+        time_start:
+          description: Beginning time of operational intent.
+          $ref: '#/components/schemas/Time'
+        time_end:
+          description: End time of operational intent.
+          $ref: '#/components/schemas/Time'
+        uss_base_url:
+          $ref: '#/components/schemas/OperationalIntentUssBaseURL'
+        subscription_id:
+          description: |-
+            The ID of the subscription that is ensuring the operational intent manager receives relevant
+            airspace updates.
+          $ref: '#/components/schemas/SubscriptionID'
+
+    SubscriptionID:
+      description: |-
+        Identifier for a subscription communicated through the DSS.  Formatted
+        as a UUIDv4.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/SubscriptionID
+      $ref: '#/components/schemas/UUIDv4Format'
+      example: 78ea3fe8-71c2-4f5c-9b44-9c02f5563c6f
+      
+    UUIDv4Format:
+      description: |-
+        String whose format matches a version-4 UUID according to RFC 4122.
+        See https://www.rfc-editor.org/info/rfc4122
+      maxLength: 36
+      minLength: 36
+      type: string
+      format: uuid
+      pattern: >-
+        '^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[8-b][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$'
+      example: 03e5572a-f733-49af-bc14-8a18bd53ee39
+
+    EntityID:
+      description: |-
+        Identifier for an Entity, like an operation, communicated through the DSS. Formatted as a UUIDv4.
+            - See https://raw.githubusercontent.com/nasa/uam-apis/x4/openapi/psu/dss_api.yml#/components/schemas/EntityID
+      $ref: '#/components/schemas/UUIDv4Format'
+      example: 2f8343be-6482-4d1b-a474-16847e01af1e
+      
+    Time:
+      required:
+        - value
+        - format
+      type: object
+      properties:
+        value:
+          type: string
+          description: RFC3339-formatted time/date string. The time zone must be 'Z'.
+          format: date-time
+          pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,3})?Z$"
+          example: '1985-04-12T23:20:50.52Z'
+        format:
+          type: string
+          enum:
+            - RFC3339
+            
+    TimeParam:
+      description: >- 
+        RFC3339-formatted time/date string. The time zone must be 'Z'. See https://www.rfc-editor.org/rfc/rfc3339
+      type: string
+      format: date-time
+      pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,3})?Z$"
+      example: '1985-04-12T23:20:50.52Z'

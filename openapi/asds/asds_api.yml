@@ -1,0 +1,680 @@
+---
+openapi: 3.0.0
+info:
+  title: Adaptation API
+  description: |-
+    Endpoints to request the available adaptation data, and airspace details for a specific location.
+  version: 2.0.1
+        
+tags:
+  - name: ansp
+    description: Operations available to ansp-actors
+  - name: other
+    description: Operations available to non-ansp-actors
+         
+security:
+  - fimsAzAuth: []
+
+paths:
+  /adaptation:
+    get:
+      tags:
+      - ansp
+      - other
+      summary: Returns an array of all available adaptations
+      operationId: getAllAdaptations  
+      responses:
+        "200":
+          description: Adaptation IDs and associated names in airspace
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdaptationID'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Unauthorized operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'               
+                
+  /adaptation/{adaptationid}:
+    get:
+      tags:
+      - ansp
+      - other
+      summary: Retrieve the specified adaptation details
+      operationId: getAdaptation
+      parameters:
+        - name: adaptationid
+          in: path
+          description: UUID associated with specific adaptation
+          required: true
+          style: simple
+          explode: false
+          schema:
+            $ref: '#/components/schemas/UUIDv4'
+      responses:
+        "200":
+          description: Adaptation object matching adaptation id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Adaptation'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Access token is missing or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: Unauthorized operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
+         
+components:
+  securitySchemes:
+    fimsAzAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |- 
+         This security scheme is applied to all operations, and the bearer token
+         must be acquired from the Fims-AZ. The scope must be 'utm.strategic_coordination',
+         and the audience claim must be the fully qualified domain name of the URL the access 
+         token will be used to access. For example, if the URL is 
+         https://sub.example.com:8888/asds/adaptation, the access token included in the 
+         request should specify "aud": "sub.example.com"`.
+
+  schemas:
+    AdaptationID:
+      description: |-
+        List of all available Adaptation
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this adaptation
+          allOf:
+            - $ref: '#/components/schemas/UUIDv4'
+        name:
+          type: string
+          description: Associated Name for adaptation
+          example: DFW
+    Adaptation:
+      description: |-
+        Details for a given Adaptation ID
+      required:
+      - id
+      - name
+      - version
+      - uam_airspaces
+      - boundary
+      - vertiports
+      - corridors
+      - adaptation_hash
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this adaptation
+          allOf:
+            - $ref: '#/components/schemas/UUIDv4'
+        name:
+          description: Associated Name for adaptation
+          type: string
+          example: DFW
+        version:
+          description: Version of the adaptation data
+          type: string
+          example: 0.0.2-UAMX4
+        configuration:
+          description: Associated airspace configuration used
+          type: string
+          example: North
+          enum:
+             - North
+             - NorthEast
+             - East
+             - SouthEast
+             - South
+             - SouthWest
+             - West
+             - NorthWest
+        uam_airspaces:
+          description: airspace where UAM operations may occur
+          type: array
+          items:
+            $ref: '#/components/schemas/UamAirspace'
+        boundary:
+          description: Boundary for this adaptation
+          allOf:
+            - $ref: '#/components/schemas/Polygon'
+        vertiports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vertiport'
+        corridors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Corridor'
+        waypoints:
+          type: array
+          items:
+            $ref: '#/components/schemas/Waypoint'
+        adaptation_hash:
+          $ref: '#/components/schemas/AdaptationHash'
+    Vertiport:
+      description: |-
+        A Lat/Lon/Alt corresponding to a Vertiport reference point. For X4, assume 1 vertipad per vertiport. Vertiport description includes inner and outer radius and associated waypoints.
+      required:
+      - id
+      - name
+      - lat_lng
+      - ground_level_altitude_egm96
+      - ground_level_altitude_wgs84
+      - inner_radius
+      - outer_radius
+      - final_waypoints
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this point
+          allOf:
+            - $ref: '#/components/schemas/UUIDv4'
+        name:
+          type: string
+          description: Names are descriptive for purpose of this point. Can denote entry or exit points, or a vertiport. 5 alphanumeric characters following traditional ATM formatting
+          example: ee123
+        lat_lng:
+          $ref: '#/components/schemas/LatLngPoint'
+        ground_level_altitude_egm96:
+          description: Ground level altitude of the vertiport in reference to the EGM96 geoid model
+          allOf:
+            - $ref: '#/components/schemas/Altitude'
+        ground_level_altitude_wgs84:
+          description: Ground level altitude of the vertiport in reference to the WGS84 ellipsoid model
+          allOf:
+            - $ref: '#/components/schemas/Altitude'            
+        volume:
+          description: The volume around the vertiport.
+          allOf:
+            - $ref: '#/components/schemas/Volume3D'
+        inner_radius:
+          description: Vertiport inner radius; center is Vertiport reference point
+          allOf:
+            - $ref: '#/components/schemas/Radius'
+        outer_radius:
+          description: Vertiport outer radius; center is Vertiport reference point
+          allOf:
+            - $ref: '#/components/schemas/Radius'  
+        final_waypoints:
+          type: array
+          description: List of final waypoints, which help in navigation with arrival/departures around the immediate vicinity of vertiports
+          items:
+            $ref: '#/components/schemas/Reference'        
+    UamAirspace:
+      required:
+      - id
+      - name
+      - class
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this UamAirspace
+          allOf:
+            - $ref: '#/components/schemas/UUIDv4'
+        name:
+          description: Associated Name for this UamAirspace
+          type: string
+          example: central
+        class:
+          description: The NAS airspace class(es) that is encompassed within the UAM airspace
+          allOf:
+            - $ref: '#/components/schemas/AirspaceClass'
+    Corridor:
+      description: An airspace volume defining a three-dimensional route segment with performance requirements to operate within or cross where tactical ATC separation services are not provided. 
+      required:
+      - id
+      - name
+      - volume
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this corridor
+          allOf:
+            - $ref: '#/components/schemas/UUIDv4'
+        name:
+          description: Associated Name for this corridor
+          type: string
+          example: central
+        volume:
+          description: The volume of the corridor
+          allOf:
+            - $ref: '#/components/schemas/Volume3D'
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Track'
+    Track:
+      description: Additional structure within the UAM Corridor to help organize UAM traffic at higher operational tempo. For X4, all corridors have tracks
+      required:
+      - id
+      - name
+      - corridors
+      - waypoints
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this Track
+          allOf:
+            - $ref: '#/components/schemas/UUIDv4'
+        name:
+          description: Name of this Track
+          type: string
+          example: examplename
+        waypoints:
+          type: array
+          description: Waypoints are in direction of travel
+          items:
+            $ref: '#/components/schemas/Reference'
+        corridors:
+          description: References to the corresponding corridors
+          type: array
+          items:
+            $ref: '#/components/schemas/Reference'
+    Volume3D:
+      description: |-
+        A three-dimensional geographic volume consisting of a vertically-extruded shape. Includes performance requirements needed to use the volume. Volume may be either a cylinder for vertiport use, or a polygon for corridors.
+      required:
+      - id
+      - altitude_lower_egm96
+      - altitude_lower_wgs84
+      - altitude_upper_egm96
+      - altitude_upper_wgs84
+      - performance_requirements
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this volume
+          allOf:
+            - $ref: '#/components/schemas/UUIDv4'
+        outline_polygon:
+          allOf:
+            - $ref: '#/components/schemas/Polygon'
+          description: A polygonal geographic shape on the surface of the earth.
+        altitude_lower_egm96:
+          description: Minimum bounding altitude of this volume in reference to the EGM96 geoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'
+        altitude_lower_wgs84:
+          description: Minimum bounding altitude of this volume in reference to the WGS84 ellipsoid model. 
+          allOf:
+            - $ref: '#/components/schemas/Altitude'            
+        altitude_upper_egm96:
+          description: Maximum bounding altitude of this volume in reference to the EGM96 geoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'
+        altitude_upper_wgs84:
+          description: Maximum bounding altitude of this volume in reference to the WGS84 ellipsoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'            
+        performance_requirements:
+          $ref: '#/components/schemas/PerformanceRequirements'
+    Waypoint:
+      description: |-
+        A Lat/Lon/Alt corresponding to a named point.
+      required:
+      - id
+      - name
+      - type
+      - lat_lng
+      type: object
+      properties:
+        id:
+          description: Associated UUID for this point
+          allOf:
+            - $ref: '#/components/schemas/UUIDv4'
+        name:
+          type: string
+          description: Names are descriptive for purpose of this point. Can denote entry or exit points, or a vertiport. 5 alphanumeric characters following traditional ATM formatting
+          example: ee123
+        type:
+          description: Associated type of waypoint for this point
+          allOf:
+          - $ref: '#/components/schemas/WaypointType'
+        scheduling_types:
+          description: A list of scheduling point types
+          type: array
+          items:
+            $ref: '#/components/schemas/SchedulingType'
+        lat_lng:
+          $ref: '#/components/schemas/LatLngPoint'
+        cruising_altitude_egm96:
+          description: An altitude maintained during an en route level flight, in reference to the EGM96 geoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'
+        cruising_altitude_wgs84:
+          description: An altitude maintained during an en route level flight, in reference to the WGS84 ellipsoid model.          
+          allOf:
+            - $ref: '#/components/schemas/Altitude'
+        remain_at_or_below_altitude_egm96:
+          description: An identified altitude the aircraft must fly at or below. An assigned altitude is based on many factors and may vary depending on airspace environment, waypoint location, or waypoint type. This altitude is in reference to the EGM96 geoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'
+        remain_at_or_below_altitude_wgs84:
+          description: An identified altitude the aircraft must fly at or below. An assigned altitude is based on many factors and may vary depending on airspace environment, waypoint location, or waypoint type. This altitude is in reference to the WGS84 ellipsoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'            
+        ground_level_altitude_egm96:
+          description: This is the ground level altitude of this waypoint in reference to the EGM96 geoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'
+        ground_level_altitude_wgs84:
+          description: This is the ground level altitude of this waypoint in reference to the WGS84 ellipsoid model.
+          allOf:
+            - $ref: '#/components/schemas/Altitude'             
+        performance_requirements:
+          $ref: '#/components/schemas/PerformanceRequirements'
+    PerformanceRequirements:
+      description: Performance capabilities needed by the vehicle to use this airspace element. Target speed, maximum speed, and minimum speed are allocated to Track. Maximum bank turn, maximum ascent gradient, and maximum descent gradient are allocated to Vertiport. Maximum bank turn and Navigation requirements are allocated to Corridor.
+      type: object
+      properties:
+        target_speed:
+          description: Indicated airspeed (IAS) the vehicle should aim to achieve, expressed in knots (kts). Target speed is not being used at this time.
+          maximum: 200
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 130
+        enroute_max_speed:
+          description: Maximum enroute cruise speed, measured as an indicated airspeed (IAS), the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values should be less than the enroute maximum speed values. An enroute maximum speed value of 130 knots is generally used.
+          maximum: 150
+          exclusiveMaximum: false
+          minimum: 50
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 130
+        enroute_min_speed:
+          description: Minimum enroute cruise speed, measured as an indicated airspeed (IAS), the vehicle is allowed to fly in knots (kts). Enroute speeds are utilized while on a track within a corridor. If a vehicle is passing through a merge / crossing track intersection, the enroute speed may be used given the vehicle is not exiting its current track. Given similar speed ranges, enroute minimum speed values should be less than the enroute maximum speed values. An enroute minimum speed value of 110 knots is generally used.
+          maximum: 130
+          exclusiveMaximum: false
+          minimum: 50
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 110          
+        transition_max_speed:
+          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents maximum transition speed, measured as an indicated airspeed (IAS), the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values should be less than the transition maximum speed values. A transition maximum speed value of 70 knots is generally used.
+          maximum: 150
+          exclusiveMaximum: false
+          minimum: 50
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 70
+        transition_min_speed:
+          description: Transition waypoints are part of tracks. Transition waypoints may be associated with an arrival / departure from a vertiport or merging / crossing tracks. This represents minimum transition speed, measured as an indicated airspeed (IAS), the vehicle is allowed to fly in knots (kts) while transitioning from one track to another or while transitioning from track to a vertiport area (or vertiport to track). Given similar speed ranges, transition minimum speed values should be less than the transition maximum speed values. A transition minimum speed value of 30 knots is generally used.
+          maximum: 120
+          exclusiveMaximum: false
+          minimum: 20
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 30    
+        max_bank_turn:
+          description: Maximum bank turn angle the vehicle is allowed to fly in degrees.
+          maximum: 30
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 20
+        max_ascent_gradient:
+          description: Maximum ascent gradient the vehicle is allowed to fly in degrees.
+          maximum: 9
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 8
+        max_descent_gradient:
+          description: Maximum descent gradient the vehicle is allowed to fly in degrees.
+          maximum: 9
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          format: double
+          example: 8
+    
+        navigation_requirements:
+          description: A coded list of values that indicate a set of aircraft and flight crew requirements needed to support performance-based navigation operations within a defined airspace. There are two kinds of navigation specifications, RNP (includes the requirement for performance monitoring and alerting) and RNAV (does not include the requirement for performance monitoring and alerting).
+          type: string
+          enum:
+          - RNAV_10
+          - RNAV_5
+          - RNAV_2
+          - RNAV_1
+          - RNP_4
+          - RNP_2
+          - RNP_0.1
+          - BASIC_RNP_1
+          - ADVANCED_RNP_1
+          - RNP_APCH
+          - RNP_AR_APCH
+          externalDocs:
+              description: See AIXM 5.1 for further information.
+              url: https://aixm.aero/sites/aixm.aero/files/imce/AIXM511HTML/AIXM/DataType_CodeNavigationSpecificationBaseType.html
+    Polygon:
+      description: |-
+        A polygonal geographic shape on the surface of the earth. Positions all in 2D. Vertices Follow the right-hand rule. Polygons should be closed.
+      required:
+      - vertices
+      type: object
+      properties:
+        vertices:
+          description: The number of vertices in this geometry.
+          type: array
+          maxItems: 400
+          minItems: 3
+          items:
+            $ref: '#/components/schemas/LatLngPoint'
+      externalDocs:
+        url: https://tools.ietf.org/html/rfc7946#section-3.1.6
+    LatLngPoint:
+      description: Point on the earth's surface.
+      required:
+        - lng
+        - lat
+      type: object
+      properties:
+        lng:
+          $ref: '#/components/schemas/Longitude'
+        lat:
+          $ref: '#/components/schemas/Latitude'
+    Latitude:
+      description: Degrees of latitude north of the equator, with reference to the WGS84 ellipsoid.
+      maximum: 90
+      exclusiveMaximum: false
+      minimum: -90
+      exclusiveMinimum: false
+      type: number
+      format: double
+      example: 34.123
+    Longitude:
+      description: Degrees of longitude east of the Prime Meridian, with reference to the WGS84 ellipsoid.
+      maximum: 180
+      exclusiveMaximum: false
+      minimum: -180
+      exclusiveMinimum: false
+      type: number
+      format: double
+      example: -118.456
+    Altitude:
+      required:
+        - value
+        - reference
+        - units
+      type: object
+      properties:
+        value:
+          maximum: 100000
+          exclusiveMaximum: false
+          minimum: -8000
+          exclusiveMinimum: false
+          type: number
+          description: |-
+            The numeric value of the altitude. Note that min and max values are
+            added as a sanity check.
+          format: double
+        reference:
+          type: string
+          description: A code indicating the reference for a vertical distance. EGM96 for altitude
+          enum:
+          - EGM96
+          - WGS84       
+        units:
+          type: string
+          description: The reference quantities used to express the value of altitude.
+          enum:
+            - M
+    Radius:
+      required:
+      - value
+      - units
+      type: object
+      properties:
+        value:
+          maximum: 100000
+          exclusiveMaximum: false
+          minimum: 0
+          exclusiveMinimum: false
+          type: number
+          description: |-
+            The numeric value of the radius. Note that min and max values are
+            added as a sanity check.
+          format: double
+        units:
+          type: string
+          description: The reference quantities used to express the value of radius. 'M' denotes meters and 'F' denotes feet.
+          enum:
+            - M
+            - F
+    AirspaceClass:
+      description: |-
+        Type of airspace class.
+      type: string
+      enum:
+          - A
+          - B
+          - C
+          - D
+          - E
+          - G
+      example: B
+    WaypointType:
+      description: |-
+        Type of waypoint.
+      type: string
+      enum:
+          - Transition
+          - Final
+          - Navigational
+          - Track
+          - Undefined
+      example: Final
+    SchedulingType:
+      description: |-
+        Type of potential scheduling point.
+      type: string
+      enum:
+          - Crossing
+          - Merge
+          - Entry
+          - Exit
+      example: Crossing 
+    Reference:
+       description: |-
+          A reference to an adaptation data.
+       required:
+          - id
+          - name
+       type: object
+       properties:
+          id:
+             description: Associated UUID for the referenced adaptation data.
+             allOf:
+                - $ref: '#/components/schemas/UUIDv4'
+          name:
+             description: Name of the referenced adaptation data.
+             type: string
+             example: BT003
+    UUIDv4:
+      description: |-
+        Universally-unique identifier (version 4).
+      maxLength: 36
+      minLength: 36
+      type: string
+      format: uuid
+      pattern: >-
+        '^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-4[0-9a-fA-F]{3}\\-[89abAB][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$'
+      example: d290f1ee-6c54-4b01-90e6-d701748f0851
+    AdaptationHash:
+      description: |-
+        SHA256 hash of the Adaptation ID data
+      required:
+        - hash
+      type: object
+      properties:
+        hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+    ErrorResponse:
+      description: |-
+        Human-readable string returned when an error occurs
+        as a result of a transaction with the ASDS.
+      type: object
+      properties:
+        status:
+          description: HTTP response status code from ASDS
+          type: string
+          example: 401
+        error:
+          description: A short description of the response status code
+          type: string
+          example: Unauthorized
+        message:
+          description: |-
+            Human-readable message indicating what error occurred and/or why.
+          type: string
+          example: 'The error occurred because [...]'
+...
