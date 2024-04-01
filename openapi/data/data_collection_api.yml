@@ -1,11 +1,11 @@
 openapi: 3.0.2
 info:
-  title: Data Collection for X4
-  version: 2.0.0
+  title: Data Collection API
+  version: 3.0.0
   description: |-
-    Definition of the models to be used for Data Collection in X4.
+    Definition of the models to be used for Data Collection.
     This model is based on the USSLogSet model in the ASTM v0.3.15 commit fde915a. Only
-    schemas applicable to X4 are included.
+    schemas applicable to AMP are included.
 
 security:
   - DataCollectionSecurity: []

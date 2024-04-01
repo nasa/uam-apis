@@ -16,6 +16,13 @@ __Security__ in case of vulnerabilities.
 ## Log
 Change logging is descending by time.
 
+### [3.0.0] - Fri Mar 29 21:45 UTC 2024
+#### Changed
+- ./cis_model.yml
+   - Version change to reflect transition of work to AMP Project
+- ./CHANGELOG.MD
+- ./CHANGELOG_EXT.MD
+
 ### [2.0.1] - Thu May 25 19:02:45 2023 -0700
 #### Changed
 - ./cis_model.yml

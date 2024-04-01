@@ -1,8 +1,8 @@
 ---
 openapi: 3.0.3
 info:
-  title: X4 UAM API (PSU->DSS)
-  version: 2.0.0
+  title: UAM API (PSU->DSS)
+  version: 3.0.0
   description: |-
     Interface definitions for communication between a Provider of Services UAM (PSU) and a Discovery and Synchronization Service
     (DSS) .

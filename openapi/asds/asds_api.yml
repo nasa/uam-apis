@@ -4,7 +4,7 @@ info:
   title: Adaptation API
   description: |-
     Endpoints to request the available adaptation data, and airspace details for a specific location.
-  version: 2.0.1
+  version: 3.0.0
         
 tags:
   - name: ansp

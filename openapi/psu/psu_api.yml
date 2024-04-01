@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: X5 UAM API (PSU->PSU)
-  version: 2.0.1
+  title: UAM API (PSU->PSU)
+  version: 3.0.0
   description: |-
     Interface definitions between two Providers of Services UAM (PSU)
     PSU functionality includes sharing details of flight operational intents and constraints.

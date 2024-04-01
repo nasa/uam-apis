@@ -14,6 +14,14 @@ __Fixed__ for any bug fixes.
 __Security__ in case of vulnerabilities.  
 
 ## Log  
+
+### [3.0.0] - Fri Mar 29 21:45 UTC 2024
+#### Changed
+- ./asds_api.yml
+   - Version change to reflect transition of work to AMP Project
+- ./CHANGELOG.MD
+- ./CHANGELOG_EXT.MD
+
 ### [2.0.1] - Fri Jul 28 11:28 PDT 2023
 #### Changed
 - ./asds.yml

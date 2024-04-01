@@ -1,5 +1,5 @@
 # Change Log for the PSU-PSU API
-All notable changes to the PSU-PSU API for X4 will be documented in this file.
+All notable changes to the PSU-PSU API will be documented in this file.
 
 ## Change Log Syntax
 ``[version] - <date/timestamp>``
@@ -15,6 +15,13 @@ __Security__ in case of vulnerabilities.
 
 ## Log
 Change logging is descending by time.
+
+### [3.0.0] - Fri Mar 29 21:45 UTC 2024
+#### Changed
+- ./psu_api.yml
+   - Version change to reflect transition of work to AMP Project
+- ./PSU_CHANGELOG.MD
+- ./PSU_CHANGELOG_EXT.MD
 
 ### [0.2.0-uam] - 
 #### Changed

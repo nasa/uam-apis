@@ -2,7 +2,7 @@
 openapi: 3.0.1
 info:
   title: Resources Registry (RR) Model Definition
-  version: 2.0.0-alpha+3
+  version: 3.0.0
   description: Data model definitions for Resources Registry that could be provided 
      by a Resources Registry Service if it were implemented. 
      <br><br>

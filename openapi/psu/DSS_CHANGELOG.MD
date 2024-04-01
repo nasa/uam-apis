@@ -1,5 +1,5 @@
 # Change Log for the DSS API
-All notable changes to the DSS API for X4 will be documented in this file.
+All notable changes to the DSS API will be documented in this file.
 
 ## Change Log Syntax
 ``[version] - <date/timestamp>``
@@ -15,6 +15,13 @@ __Security__ in case of vulnerabilities.
 
 ## Log
 Change logging is descending by time.
+
+### [3.0.0] - Fri Mar 29 21:45 UTC 2024
+#### Changed
+- ./dss_api.yml
+   - Version change to reflect transition of work to AMP Project
+- ./DSS_CHANGELOG.MD
+- ./DSS_CHANGELOG_EXT.MD
 
 ### [2.0.0] - Mon Feb 13 21:51:12 UTC 2023
 #### Changed
