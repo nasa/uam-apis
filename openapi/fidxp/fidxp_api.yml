@@ -10,7 +10,7 @@ info:
     - See Urban Air Mobility (UAM) Concept of Operations (ConOps) 2.0_0.pdf (https://www.faa.gov/sites/faa.gov/files/Urban%20Air%20Mobility%20%28UAM%29%20Concept%20of%20Operations%202.0_0.pdf) for more details.
 
     *NOTE:* This is an initial definition of the interface that would be needed to enable mid-term operations exchange. This definition only covers potential information that UAM operators would share with existing FAA systems (e.g. ERAM), via the Provider of Services for Urban Air Mobility (PSU).  This definition is expected to update and change over time.
-  version: 1.0.0-alpha-1
+  version: 3.0.0
   title: FIDXP (FAA-Industry Data Exchange Protocol) Service (FIDXS) Interface
   contact:
     name: NASA

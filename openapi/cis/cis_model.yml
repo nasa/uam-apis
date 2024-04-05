@@ -2,7 +2,7 @@
 openapi: 3.0.1
 info:
   title: Constraint Identification Service (CIS) Model Definition
-  version: 2.0.1
+  version: 3.0.0
   description: Data model definitions for constraint information that would have been provided 
      by the proposed Constraint Information Service (CIS) if it were implemented. 
      <br><br>
