@@ -1,5 +1,4 @@
-# Change Log for <REPOSITORY>
-Describe the content of this repository.
+# Change Log for RPS DCB and RPS SS APIs
   
 ## Change Log Syntax
 ``<changelog> ::= <changeentry> | <changelog><changeentry>``  
@@ -22,6 +21,13 @@ __Known Issues__ in the software.
 
 ## Log
 Change logging is descending by time.
+
+### [3.0.0] - Fri Mar 29 21:45 UTC 2024
+#### Changed
+- ./rps_dcb_api.yml
+- ./rps_ss_api.yml
+   - Version change to reflect transition of work to AMP Project
+- ./CHANGELOG.MD
 
 ### [2.0.5] - Tue Sep 5 11:33:44 PDT 2023
 #### Changed

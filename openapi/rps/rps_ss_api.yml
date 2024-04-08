@@ -8,7 +8,7 @@ info:
     - Provider of Services for Urban Air Mobility (PSU) API, see https://github.com/nasa/uam-apis/blob/x4/openapi/psu/psu_api.yml
     - Discovery & Synchronization Service (DSS) API, see https://github.com/nasa/uam-apis/blob/x4/openapi/psu/dss_api.yml
     - Capacity Information Service (CIS) model in https://github.com/nasa/uam-apis/blob/x4/openapi/cis/cis_model.yml
-  version: 2.0.5
+  version: 3.0.0
   title: RPS Interface
   contact:
     name: NASA

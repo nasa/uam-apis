@@ -1,5 +1,5 @@
-# Change Log for the Airspace Structure Definition Service API
-The following log describes the changes to the Airspace Structure Definition Service API.  
+# Change Log for the Resources Registry (RR) API
+The following log describes the changes to the Resources Registry (RR) API.  
 
 ## Change Log Syntax
 ``[version] - <date/timestamp>``  
@@ -14,6 +14,12 @@ __Fixed__ for any bug fixes.
 __Security__ in case of vulnerabilities.  
 
 ## Log  
+
+### [3.0.0] - Fri Mar 29 21:45 UTC 2024
+#### Changed
+- ./rr_model.yml
+   - Version change to reflect transition of work to AMP Project
+- ./CHANGELOG.MD
 
 ### [2.0.0] - Mon Feb 13 21:51:12 UTC 2023
 #### Changed
