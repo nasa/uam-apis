@@ -1,15 +1,17 @@
 ---
 openapi: 3.0.3
 info:
-  title: X4 UAM API (PSU->DSS)
-  version: 2.0.0
+  title: AMP TCL-1 DSS API
+  version: 3.0.1
   description: |-
     Interface definitions for communication between a Provider of Services UAM (PSU) and a Discovery and Synchronization Service
     (DSS) .
     DSS functionality includes identification of peer UAM PSU instances (managing flight operations and constraints).
     Note: Unless otherwise specified, fields specified in a message but not declared in the API must be ignored.
  
-    Note: Version 0.3.17 Commit ed1eac6 of the ASTM UTM API was used as starting point for editing this API.
+    Note: Version 3.0.0 of the UAM X5 DSS API was used as starting point for editing this API.
+    Property and Schema names where not changed from 'USS' to 'PSU' to support common models with previous DSS
+    API.
  
      
 security:
@@ -548,27 +550,48 @@ components:
     OperationalIntentState:
       description: |-
         State of an operational intent.
-        'Accepted': Operational intent is created and shared, but not yet in use; see standard text for more details.
+
+        'Proposed': This Operation is created and shared, but not yet in use; see standard text for more details.
         The create or update request for this operational intent reference must include a Key containing all OVNs for
         all relevant Entities.
-        'Activated': Operational intent is in active use; see standard text for more details.
+        
+        'Accepted': This Operation is strategically coordinated at its Acceptance Horizon, or time before its proposed 
+        take-off time. Latest airspace information has been evaluated and a DCB check has completed prior to transition to 
+        this state. 
         The create or update request for this operational intent reference must include a Key containing all OVNs for
         all relevant Entities.
+        
+        'Canceled': This Operation has never been in Activated State and will not be used.
+        The create or update request for this operational intent may omit a Key in this case because the operational intent 
+        is not flown and does not need to deconflict.
+
+        'Activated': This Operation is in active use; see standard text for more details.
+        This Operation must have been in Accepted state before transition to this state.
+        The create or update request for this operational intent reference must include a Key containing all OVNs for
+        all relevant Entities.
+        
         'Nonconforming': This Operation is not conforming to its operational intent per the Community Based Rules (CBR). 
         The create or update request for this operational intent may omit a Key 
         in this case because the operational intent is being adjusted as flown and cannot necessarily deconflict.
-        'Contingent': UA is considered unrecoverably unable to conform with its coordinate operational intent; see
+        
+        'Contingent': UAM Aircraft (UA) is considered unrecoverable so unable to conform with its coordinate operational intent; see
         standard text for more details. 
-        This state must transition to Ended.
-        The create or update request for
-        this operational intent may omit a Key in this case because the operational intent is being adjusted as flown 
-        and cannot necessarily deconflict.
+        This state must transition to Completed.
+        The create or update request for this operational intent may omit a Key in this case because the operational intent 
+        is being adjusted as flown and cannot necessarily deconflict.
+
+        'Completed': This Operation is no longer in active use; see standard text for more details.
+        The create or update request for this operational intent may omit a Key in this case because the operational intent 
+        has ended and does not need to deconflict.
       type: string
       enum:
+        - Proposed
         - Accepted
+        - Canceled
         - Activated
         - Nonconforming
         - Contingent
+        - Completed
  
     OperationalIntentReference:
       description: |-
