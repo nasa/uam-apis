@@ -831,12 +831,8 @@ components:
         resource_capacity:
           $ref: "#/components/schemas/ResourceCapacity"
         capacity_end_time:
-          description: The time at which the updated resource capacity ends, if known. 
-            If not provided, the current capacity continues indefinitely.
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
           $ref: '#/components/schemas/Time'
-
+          
     PostResourceDefinition:
       required:
         - definition
@@ -861,8 +857,6 @@ components:
         resource_reference:
           description: |-
             The resource reference that was changed by this definition update to DSS.
-          # anyOf:
-          # - $ref: '#/components/schemas/ResourceReference'
           $ref: '#/components/schemas/ResourceReference'
       description: Create or update the resource definition of the resource with the given ID.
       
@@ -903,8 +897,6 @@ components:
         resource_reference:
           description: |-
             Full information about the resource reference that has changed. If this field is omitted, the resource was deleted.  The `ovn` field in the nested `reference` must be populated.
-          # anyOf:
-          # - $ref: '#/components/schemas/ResourceReference'
           $ref: '#/components/schemas/ResourceReference'
         definition:
           $ref: '#/components/schemas/ResourceDefinition'
@@ -959,23 +951,12 @@ components:
         resource_capacity:
           $ref: "#/components/schemas/ResourceCapacity"
         capacity_start_time:
-          description: The time at which the updated resource capacity begins.
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
           $ref: '#/components/schemas/Time'
         capacity_end_time:
-          description: The time at which the updated resource capacity ends, if known. 
-            If not provided, the temporary capacity continues indefinitely. 
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
           $ref: '#/components/schemas/Time'
 
     ResourceShape:
       description: The physical shape of the resource.  This is not the same as the resource extent saved in the DSS.
-      # anyOf:
-      #  - $ref: '../DSS/astm-uam-psu-dss-0.0.0.yaml#/components/schemas/Circle'
-      #  - $ref: '../DSS/astm-uam-psu-dss-0.0.0.yaml#/components/schemas/LatLngPoint'
-      #  - $ref: '../DSS/astm-uam-psu-dss-0.0.0.yaml#/components/schemas/Polygon'      
       properties:
         outline_circle:
           $ref: '#/components/schemas/Circle'
@@ -1060,15 +1041,8 @@ components:
           type: number
           format: integer 
         performance_bound_start_time:
-          description: The time at which the performance bound start, if known.
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
           $ref: '#/components/schemas/Time'
         performance_bound_end_time:
-          description: The time at which the performance bound ends, if known. 
-            If not provided, the performance bound continues indefinitely.
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
           $ref: '#/components/schemas/Time'
 
     PutCurrentResourceStatus:
@@ -1083,8 +1057,6 @@ components:
         resource_reference:
           description: |-
             The resource reference that was changed by this capacity update.
-          # anyOf:
-          # - $ref: '#/components/schemas/ResourceReference'
           $ref: '#/components/schemas/ResourceReference'
 
     QueryCurrentResourceStatusResponse:
@@ -1129,8 +1101,6 @@ components:
         resource_reference:
           description: |-
             The resource reference that was changed by this capacity update.
-          # anyOf:
-          # - $ref: '#/components/schemas/ResourceReference'
           $ref: '#/components/schemas/ResourceReference'
 
     QueryFutureCapacitiesResponse:
