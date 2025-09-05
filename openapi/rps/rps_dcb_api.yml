@@ -1,7 +1,6 @@
 openapi: 3.0.0
 servers:
   - description: Resources Planning Service for Demand Capacity Balancing (DCB)
-  
     url: 'https://rps-dcb.arc.nasa.gov'
 info:
   description: |- 
@@ -1013,14 +1012,10 @@ components:
 #        time_start:
 #          description: Start time for resource availability query.  If start time is not specified, 
 #            it will default to the time the request is processed.
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
 #          $ref: '#/components/schemas/Time'
 #        time_end:
 #          description: End time of resource availability query. If end time is not specified, the 
 #            value will be chosen automatically by the DSS. The end time may not be in the past.
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
 #          $ref: '#/components/schemas/Time'
             
     ContributingOperation:
@@ -1041,9 +1036,6 @@ components:
             Duration of time for a volume based resource, or crossing Time
             for a waypoint based resource. 
           $ref: '#/components/schemas/ResourceOccupationDuration'
-          # anyOf:
-          #  - $ref: '#/components/schemas/ResourceCrossing"
-          #  - $ref: '#/components/schemas/ResourceOccupationDuration"  
 
     ResourceCrossing:
       required:
@@ -1068,14 +1060,10 @@ components:
         time_start:
           description: Beginning time of the time bin for computing this demand capacity imbalance status. If the capacity requirements
             are based on rate or an instantaneous limit, this value will be the time when that capacity rule began. Must be before time_end.
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
           $ref: '#/components/schemas/Time'
         time_end:
           description: End time of the time bin for computing this demand capacity imbalance status. Can be empty if the capacity rule
             in place is an instantaneous or rate limit.  If included, must be after time_start.
-          # anyOf:
-          # - $ref: '#/components/schemas/Time'
           $ref: '#/components/schemas/Time'     
         imbalance_magnitude:
           type: number
