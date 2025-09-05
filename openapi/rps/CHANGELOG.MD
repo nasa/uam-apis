@@ -22,6 +22,56 @@ __Known Issues__ in the software.
 ## Log
 Change logging is descending by time.
 
+### [3.1.0] - Sun Feb 16 15:50:36 PST 2025
+Changes below are for TCL1 Sequence Diagrams for ADR.7 Managing Dynamic Updates to Reduction of Resource Capacity.
+Changes are also based on these ASTM committee's draft APIs as of Feb 13, 2025:
+- astm-uam-psu-ris-0.0.0.yaml
+- astm-uam-psu-dss-0.0.0.yaml
+- astm-uam-psu-oim-0.0.0.yaml
+- astm-uam-psu-dcb-0.0.0.yaml
+#### Changed
+- rps_dcb_api.yml
+POST /resources_details/query to /resources_availability_volume/query to avoid clash with ASTM path
+#### Added
+- rps_dcb_api.yml paths:
+   - POST /dcb/v1/imbalance/query
+   - POST /dcb/v1/resource_details 
+   - PUT /dcb/v1/resource_details/{entityid}
+- rps_dcb_api.yml schemas:
+   - ResourcesBasedImbalanceRequest
+   - ContributingOperation
+   - DemandCapacityImbalanceInterval
+   - ResourcesImbalanced
+   - ResourceDemandCapacityImbalances
+   - CapacityLimitType
+   - CapacityPropertyType
+   - ResourceCapacity
+   - ActiveResourceCapacity
+   - ResourceDefinition
+   - ResourceDetails
+   - CurrentResourceStatus
+   - ResourceStatus
+   - FutureCapacities
+   - TemporaryResourceCapacity
+   - ResourceShape
+   - ResourcePhysicalDefinition
+   - ResourceType
+   - PerformanceBound
+   - ResourceOccupationDuration
+   - ResourceUssBaseURL
+   - ResourceReference
+   - PutResourceDetails
+   - TextShortType
+
+### [3.0.5] - Mon Jan 27 21:45 UTC 2025
+#### Changed
+Changes below are for TCL1 Sequence Diagrams for ADR.5 Changes Post-DSS Modifications to implement ADR.5 - Refactor X5 design for DCB & SS to handle multiple resources so following API endpoints no longer have {resource} input parameter:
+
+- ./external/rps/rps_dcb_api.yml - replaced availability time windows returned with earliest available time. All requests input has 4-D trajectory.
+- ResourcesEntityOVNsResponse schema in both RPS-DCB and RPS-SS changed to list of resource names and ovn_array instead of list of ResourceOVNs with resource name and its associated ovn_array.
+- To allow Java OpenAPI code generator to compile and generate Java code, add ResourceName schema to be used for list of resources, instead of Strings, in ResourcesEntityOVNsResponse schema.
+- Removed ResourceQueryRequest & ResourcesEntityOVNsRequest and replacing them with same ResourcesPlanningRequest.
+
 ### [3.0.0] - Fri Mar 29 21:45 UTC 2024
 #### Changed
 - ./rps_dcb_api.yml

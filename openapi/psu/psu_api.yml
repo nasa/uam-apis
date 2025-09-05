@@ -1,15 +1,15 @@
 openapi: 3.0.3
 info:
-  title: X5 UAM API (PSU->PSU)
-  version: 2.0.1
+  title: AMP TCL-1 PSU API
+  version: 3.1.0
   description: |-
     Interface definitions between two Providers of Services UAM (PSU)
     PSU functionality includes sharing details of flight operational intents and constraints.
     Note: Unless otherwise specified, fields specified in a message but not declared in the API must be ignored.
     Whenever a object-type field may be omitted, it may also be set to null for the same effect.
  
-    Note: Version 0.3.17 Commit ed1eac6 of the ASTM UTM API was used as starting point for editing this API.
-    Property and Schema names where not changed from 'USS' to 'PSU' to support common models with the DSS
+    Note: Version 3.0.0 of the UAM X5 PSU API was used as starting point for editing this API.
+    Property and Schema names where not changed from 'USS' to 'PSU' to support common models with previous DSS
     API.
  
      
@@ -33,7 +33,6 @@ tags:
       Endpoints exposed by the DSS for reporting peer DSS issues.
   - name: p2p_uam
     description: Endpoints exposed by PSUs for peer-peer communication.
- 
  
 #
 # Schemas
@@ -356,27 +355,35 @@ components:
     OperationalIntentState:
       description: |-
         State of an operational intent.
-        'Accepted': Operational intent is created and shared, but not yet in use; see standard text for more details.
-        The create or update request for this operational intent reference must include a Key containing all OVNs for
-        all relevant Entities.
-        'Activated': Operational intent is in active use; see standard text for more details.
-        The create or update request for this operational intent reference must include a Key containing all OVNs for
-        all relevant Entities.
-        'Nonconforming': This operation is not conforming to its operational intent per the Community Based Rules (CBR). 
-        The create or update request for this operational intent may omit a Key 
-        in this case because the operational intent is being adjusted as flown and cannot necessarily deconflict.
-        'Contingent': UA is considered unrecoverably unable to conform with its coordinate operational intent; see
+
+        'Proposed': This Operation is created and shared, but not yet in use; see standard text for more details.
+        
+        'Accepted': This Operation is strategically coordinated at its Acceptance Horizon, or time before its proposed 
+        take-off time. Latest airspace information has been evaluated and a DCB check has completed prior to transition to 
+        this state.
+        
+        'Canceled': This Operation has never been in Activated State and will not be used.
+
+        'Activated': This Operation is in active use; see standard text for more details.
+        This Operation must have been in Accepted state before transition to this state.
+        
+        'Nonconforming': This Operation is not conforming to its operational intent per the Community Based Rules (CBR). 
+        
+        'Contingent': UAM Aircraft (UA) is considered unrecoverable so unable to conform with its coordinate operational intent; see
         standard text for more details. 
-        This state must transition to Ended.
-        The create or update request for
-        this operational intent may omit a Key in this case because the operational intent is being adjusted as flown 
-        and cannot necessarily deconflict.
+        This state must transition to Completed.
+
+        'Completed': This Operation is no longer in active use; see standard text for more details.
+        
       type: string
       enum:
+        - Proposed
         - Accepted
+        - Canceled
         - Activated
         - Nonconforming
         - Contingent
+        - Completed
  
     OperationalIntentReference:
       description: |-
@@ -1020,6 +1027,112 @@ components:
           description: The request (by this PSU) and response associated with the
             error.
 
+    #
+    # Data structures from RPS-DCB
+    #
+    DemandCapacityImbalanceInterval:
+      type: object
+      description: >-
+        Returns a time range, imbalance status for the range, and all operation OVNs contributing to 
+        demand within that time range.
+      required:
+        - time_start
+        - time_end
+        - imbalance_magnitude
+        - imbalance_status
+        - operations
+      properties:
+        time_start:
+          description: Beginning time of the time bin for computing this demand capacity imbalance status. If the capacity requirements
+            are based on rate or an instantaneous limit, this value will be the time when that capacity rule began. Must be before time_end.
+          $ref: '#/components/schemas/Time'
+        time_end:
+          description: End time of the time bin for computing this demand capacity imbalance status. Can be empty if the capacity rule
+            in place is an instantaneous or rate limit.  If included, must be after time_start.
+          $ref: '#/components/schemas/Time'     
+        imbalance_magnitude:
+          type: number
+          format: double
+          description: The magnitude of demand capacity imbalance. Negative values indicate available capacity, zero indicates at capacity, 
+            and positive values indicate over capacity
+        imbalance_status:
+          type: string
+          enum:
+            - OVER_CAPACITY
+            - AT_CAPACITY
+            - UNDER_CAPACITY
+          description: >-
+            string indicating whether corresponding resource is over, at or under capacity
+        operations:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContributingOperation'
+          minItems: 0
+          description: >-
+            IDs and OVNs for all operations contributing to the reported demand at this resource at this time bin
+
+    ContributingOperation:
+      type: object
+      description: Id and OVN of an operation contributing to demand or imbalance. 
+      required:
+        - operational_intent_id
+        - operation_ovn
+      properties:
+        operation_ovn:
+          $ref: '#/components/schemas/EntityOVN'
+          description: OVN of the operation
+        operational_intent_id:
+          $ref: '#/components/schemas/EntityID'
+          description: Operational intent ID of the operation
+        resource_usage:
+          description: |-
+            Duration of time for a volume based resource, or crossing Time
+            for a waypoint based resource. 
+          $ref: '#/components/schemas/ResourceOccupationDuration'
+
+    ResourcesImbalanced:
+      type: object
+      required:
+        - resources_imbalanced
+      properties:
+        resources_imbalanced:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceDemandCapacityImbalances'
+
+    ResourceDemandCapacityImbalances:
+      type: object
+      description: >-
+        a set of properties describing a resource imbalance status that includes a resource reference from the adaptation data, 
+        the start and end time of the time bin used for demand-capacity imbalance computation, the magnitude of the imbalance, 
+        the imbalance status, and a potentially empty set of OVNs for all operations contributing to the reported demand at this resource at this time bin
+      required:
+        - resource_id
+        - resource_imbalances
+      properties:
+        resource_id:
+          $ref: '#/components/schemas/EntityID'
+        resource_ovn:
+          $ref: '#/components/schemas/EntityOVN'
+          description: >-
+            OVN proving knowledge of the latest status & capacity info for the resource. 
+        resource_imbalances:
+          type: array
+          items:
+            $ref: '#/components/schemas/DemandCapacityImbalanceInterval'
+          description: List of imbalance time ranges and determinations for the resource.
+
+    ResourceOccupationDuration:
+      required:
+       - entry_time
+       - exit_time
+      type: object
+      properties:
+        entry_time:
+          $ref: '#/components/schemas/Time'
+        exit_time:
+          $ref: '#/components/schemas/Time'
+
 paths:
   #
   # PSU Endpoint: OPERATIONAL INTENTS
@@ -1429,3 +1542,61 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
           description: The client issued too many requests in a short period of time.
+
+  #
+  # OIM PSU Endpoints: Imbalance Monitoring
+  #
+  /oim/v1/imbalance:
+    summary: Submit details about a detected resource demand capacity imbalance
+      to the OIM which manages the operation. 
+    post:
+      tags:
+      - p2p_uam 
+      summary: Notify an OIM of a demand capacity balance which for which their operation 
+        is contributing. 
+      description: Notify an OIM of a demand capacity balance which for which their operation 
+        is contributing. 
+      operationId: notifyDCBImbalanceParticipant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourcesImbalanced'
+        required: true
+      responses:
+        "202":
+          description: DCB imbalance information received successfully. 
+            Request has been received but not yet acted upon. 
+            It is noncommittal, since there is no way in HTTP to later send 
+            an asynchronous response indicating the outcome of the request.
+        "400":
+          description: |-
+            * One or more parameters were missing or invalid.
+            * The Entity could not be parsed, or contains illegal data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: |-
+            * The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+            * The client identified in the access token is not the manager of this Entity according to the receiving client's records.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - Authority:
+        - utm.strategic_coordination

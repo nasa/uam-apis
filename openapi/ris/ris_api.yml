@@ -1,0 +1,1713 @@
+openapi: 3.0.1
+servers:
+  - description: Resources Information Service (RIS) for storing & retrieving capacity constraints at resources.
+    url: 'https://ris.arc.nasa.gov'
+info:
+  title: ASTM UAM PSU RIS API
+  description: |-
+    Interface definitions for communication between a service that is part of Provider of Services for UAM (PSU) network and a Resource Information Service (RIS). This includes APIs for resource definition, resource capacity, and resource status.
+    - Based on astm-uam-psu-ris-0.0.0.yaml as of Feb 13, 2025. 
+  version: 3.1.0
+  contact:
+    name: NASA
+
+security:
+  - fimsAzAuth: 
+    - utm.strategic_coordination
+
+tags:
+- name: Resource references
+  description: Endpoints exposed by the RIS for details regarding resource references.
+- name: Resource definition
+  description: Endpoints exposed by the RIS for details regarding the physical definition and default capacity of a resource.  
+- name: Resource capacities
+  description: Endpoints exposed by the RIS for details regarding future resource capacities.
+- name: Resource status
+  description: Endpoints exposed by the RIS for details regarding the current status and capacity of a resource.
+- name: p2p_uam
+  description: Endpoints exposed by PSUs for peer-peer communication.
+- name: Subscriptions
+  description: Endpoints exposed by the DSS for interaction with subscription entities.
+- name: dss
+  description: Endpoints exposed by the DSS for interaction with subscription entities.
+
+paths:
+  /ris/v1/resource_details/{entityid}:
+    summary: Query detailed information of a resource from RIS. 
+    get:
+      tags:
+      - Resource references
+      - Resource definition
+      - Resource capacities
+      - Resource status
+      summary: Retrieve the specified resource details from an RIS.
+      description: |-
+        The RIS hosting this endpoint returns the details (and reference) of an
+        resource it manages.
+      operationId: getResourceDetailsChanged
+      parameters:
+      - name: entityid
+        in: path
+        description: Identifier for this resource. 
+          Identifier should match resource identifier returned from Adaptation Synchronization Data Service (ASDS).
+        required: true
+        schema:
+          $ref: '#/components/schemas/EntityID'
+      responses:
+        "200":
+          description: Resource details were retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResourceDetailsResponse'
+        "400":
+          description: One or more input parameters were missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: The requested Entity could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+
+  /ris/v1/resource_details/{entityid}/definition:
+    summary: Get the resource definition 
+    get:
+      tags:
+      - Resource definition
+      summary: Retrieve the resource definition from the RIS.
+      operationId: getResourceDefinition
+      parameters:
+      - name: entityid
+        in: path
+        description: EntityID of the resource.
+          Identifier should match resource identifier returned from Adaptation Synchronization Data Service (ASDS).
+        required: true
+        schema:
+          $ref: '#/components/schemas/EntityID'
+      responses:
+        "200":
+          description: The definition of the resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResourceDefinitionResponse'
+        "400":
+          description: One or more input parameters were missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: The requested Entity could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+    put:
+      tags:
+      - Resource definition
+      - p2p_uam 
+      summary: Submit a resource definition update to RIS. 
+      operationId: createResourceDefinition
+      parameters:
+      - name: entityid
+        in: path
+        description: EntityID of the resource.
+        required: true
+        schema:
+          $ref: '#/components/schemas/EntityID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutResourceDefinition'
+        required: true
+      responses:
+        "204":
+          description: Updated resource definition was successfully received.
+        "400":
+          description: |-
+            * One or more input parameters were missing or invalid.
+            * The request attempted to mutate the operational intent in a disallowed way.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: |-
+            The Entity version specified in this message is lower than
+            a previously-received notification and the Entity is different.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+        
+  /ris/v1/resource_details/{entityid}/capacities:
+    summary: Get future or temporary resource capacities for the resource. 
+    get:
+      tags:
+      - Resource capacities
+      summary: Retrieve the specified resource capacity information from the RIS.
+      operationId: getFutureResourceCapacities
+      parameters:
+      - name: entityid
+        in: path
+        description: EntityID of the resource. Identifier should match resource identifier returned from Adaptation Synchronization Data Service (ASDS).
+        required: true
+        schema:
+          $ref: '#/components/schemas/EntityID'
+      - name: begin_query_time
+        in: query
+        description: |-
+          The time to begin the capacity query. If not provided, endpoint should assume NOW. 
+        required: false
+        schema:
+          $ref: '#/components/schemas/TimeParam'
+      - name: end_query_time
+        in: query
+        description: |-
+          The time to end the capacity query. If not provided, all future
+          capacities should be returned. 
+        required: false
+        schema:
+          $ref: '#/components/schemas/TimeParam'
+      responses:
+        "200":
+          description: List of future capacity details was retrieved successfully. 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryFutureCapacitiesResponse'
+        "400":
+          description: One or more input parameters were missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: The requested Entity could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+    put:
+      tags:
+      - Resource capacities
+      - p2p_uam 
+      summary: Submit a new or changed future or temporary resource capacity to a peer. 
+      operationId: updateFutureResourceCapacities
+      parameters:
+      - name: entityid
+        in: path
+        description: EntityID of the operational intent. Identifier should match resource identifier returned from Adaptation Synchronization Data Service (ASDS).
+        required: true
+        schema:
+          $ref: '#/components/schemas/EntityID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutFutureCapacities'
+        required: true
+      responses:
+        "204":
+          description: Future temporary capacities were successfully received by RIS.
+        "400":
+          description: |-
+            * One or more input parameters were missing or invalid.
+            * The request attempted to mutate the operational intent in a disallowed way.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: |-
+            The Entity version specified in this message is lower than
+            a previously-received notification and the Entity is different.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+
+  /ris/v1/resource_details/{entityid}/status:
+    summary: Get the current resource status and if status is ACTIVE, return active capacity. 
+    get:
+      tags:
+      - Resource status
+      summary: Retrieve the current resource status from the RIS.
+      operationId: getCurrentResourceStatus
+      parameters:
+      - name: entityid
+        in: path
+        description: EntityID of the resource. 
+          Identifier should match resource identifier returned from Adaptation Synchronization Data Service (ASDS).
+        required: true
+        schema:
+          $ref: '#/components/schemas/EntityID'
+      responses:
+        "200":
+          description: The current status of the resource. 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryCurrentResourceStatusResponse'
+        "400":
+          description: One or more input parameters were missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: The requested Entity could not be found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+    put:
+      tags:
+      - Resource status
+      - p2p_uam 
+      summary: Submit a new or changed resource status to a peer. 
+      operationId: updateCurrentResourceStatus
+      parameters:
+      - name: entityid
+        in: path
+        description: EntityID of the resource.
+        required: true
+        schema:
+          $ref: '#/components/schemas/EntityID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutCurrentResourceStatus'
+        required: true
+      responses:
+        "204":
+          description: Current resource status was successfully received.
+        "400":
+          description: |-
+            * One or more input parameters were missing or invalid.
+            * The request attempted to mutate the operational intent in a disallowed way.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: |-
+            The Entity version specified in this message is lower than
+            a previously-received notification, or identical to a previously-received
+            notification and the Entity is different.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+
+    #
+    # DSS-PSU paths - See https://raw.githubusercontent.com/nasa/uam-apis/master/openapi/psu/dss_api.yml
+    # DSS-RI paths - under ASTM development
+    # Even though our DSS implementation does not include resource information. 
+    # Instead, our RIS implementation will implement the resource-related DSS endpoints to 
+    # replicate the information flow for subscriptions to updates of resources' references. 
+    # When a resource-enabled DSS is available, these RIS endpoints will be removed without 
+    # changing the information flow.
+    #
+  /ris/dss/v1/subscriptions/{subscriptionid}:
+    summary: Create/read endpoint for a specific subscription in the DSS.
+    put:
+      tags:
+      - Subscriptions
+      - dss
+      summary: Create the specified subscription in the DSS.
+      description: |-
+        Create a subscription.
+        Subscription notifications are only triggered by (and contain full information of) changes to, creation of, or deletion of, Entities referenced by or stored in the DSS; they do not involve any data transfer (such as remote ID telemetry updates) apart from Entity information.
+      parameters:
+      - name: subscriptionid
+        in: path
+        description: SubscriptionID of the subscription of interest.
+        required: true
+        schema:
+          $ref: '#/components/schemas/SubscriptionID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutSubscriptionParameters'
+        required: true
+      responses:
+        "200":
+          description: A new subscription was created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutSubscriptionResponse'
+        "400":
+          description: |-
+            * One or more input parameters were missing or invalid.
+            * The request attempted to mutate the subscription in a disallowed way.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: |-
+            * The access token was decoded successfully but did not include a scope appropriate to this endpoint or the request.
+            * Client attempted to request notifications for an Entity type to which the scopes included in the access token do not provide access.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: |-
+            * A subscription with the specified ID already exists.
+            * Despite repeated attempts, the DSS was unable to complete the update because of other simultaneous changes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client may have issued too many requests within a small period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ris/dss/v1/subscriptions/{subscriptionid}/{version}:
+    summary: Update/delete a specific subscription in the DSS.
+    put:
+      tags:
+      - Subscriptions
+      - dss
+      summary: Update the specified subscription in the DSS.
+      description: |-
+        Update a subscription.
+        Subscription notifications are only triggered by (and contain full information of) changes to, creation of, or deletion of, Entities referenced by or stored in the DSS; they do not involve any data transfer (such as remote ID telemetry updates) apart from Entity information.
+        The standard requires each operational intent to have a subscription that cover the 4D volume of the operational intent.  If a USS attempts to update a subscription upon which an operational intent depends, and this update would cause the operational intent to lose subscription coverage, the update will be rejected by the DSS as a bad request.
+      operationId: updateSubscription
+      parameters:
+      - name: subscriptionid
+        in: path
+        description: SubscriptionID of the subscription of interest.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/SubscriptionID'
+      - name: version
+        in: path
+        description: Version of the subscription to be modified.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutSubscriptionParameters'
+        required: true
+      responses:
+        "200":
+          description: A subscription was updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutSubscriptionResponse'
+        "400":
+          description: |-
+            * One or more input parameters were missing or invalid.
+            * The request attempted to mutate the subscription in a disallowed way.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: |-
+            * The access token was decoded successfully but did not include a scope appropriate to this endpoint or the request.
+            * Client attempted to request notifications for an Entity type to which the scopes included in the access token do not provide access.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: |-
+            * A subscription with the specified ID already exists and is managed by a different client.
+            * The provided `version` does not match the current subscription.
+            * Despite repeated attempts, the DSS was unable to complete the update because of other simultaneous changes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client may have issued too many requests within a small period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+    delete:
+      tags:
+      - Subscriptions
+      - dss
+      summary: Remove the specified subscription from the DSS.
+      description: "The standard requires each operational intent to have a subscription that cover the 4D volume of the operational intent.  If a USS attempts to delete a subscription upon which an operational intent depends, the deletion will be rejected by the DSS as a bad request."
+      operationId: deleteSubscription
+      parameters:
+      - name: subscriptionid
+        in: path
+        description: SubscriptionID of the subscription of interest.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          $ref: '#/components/schemas/SubscriptionID'
+      - name: version
+        in: path
+        description: Version of the subscription to be modified.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Subscription was successfully removed from DSS.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteSubscriptionResponse'
+        "400":
+          description: One or more input parameters were missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: A subscription with the specified ID was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "409":
+          description: |-
+            * A subscription with the specified ID is managed by a different client.
+            * The provided `version` does not match the current subscription.
+            * Despite repeated attempts, the DSS was unable to complete the deletion because of other simultaneous changes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+
+  /ris/dss/v1/resource_references/query:
+    summary: Query all resource references in the DSS.
+    get:
+      tags:
+      - Resource references
+      - dss
+      summary: Query all resource references from the DSS.
+      operationId: queryResourceReferences
+      responses:
+        "200":
+          description: Resource references were successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResourceReferencesResponse'
+        "400":
+          description: One or more input parameters were missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: "Bearer access token was not provided in Authorization header, token could not be decoded, or token was invalid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: The access token was decoded successfully but did not include a scope appropriate to this endpoint.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "413":
+          description: The requested area was too large.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          description: The client issued too many requests in a short period of time.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - fimsAzAuth:
+        - utm.strategic_coordination
+
+components:
+  securitySchemes:
+    fimsAzAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |-
+         This security scheme is applied to all operations, and the bearer token must be acquired from the Fims-AZ. The scope must be 'utm.strategic_coordination' and the 'aud' claim must match the base URL of the RIS server.
+          
+  schemas:
+    CapacityLimitType:
+      required:
+        - capacity_type
+      type: object
+      properties:
+        capacity_type:
+          type: string
+          description: |
+            The type of capacity limitation which is to be met for the resource. 
+            Types of constraint at waypoint are:
+            - FLOW_RATE_CONSTANT
+              Constant time rate of separation.
+            - FLOW_RATE_FIXED_BIN
+              Constraint values for number of operations within a fixed time bin with duration in seconds. 
+              - Fixed time bin should start at top-of-the-hour and evenly divide up an hour. For more details, see description for unit = seconds in CapacityPropertyType.
+            - FLOW_RATE_ROLLING_BIN
+              Constraint values for number of operations within a rolling time bin starting at end of previous time bin. Duration of time bin is in seconds in CapacityPropertyType. 
+              - Rolling time bin does not necessarily start at top-of-the-hour.
+            - INSTANTANEOUS
+              The maximum number of operations that are permitted to occupy the resource at any time.
+          externalDocs:
+            url: TBD
+          enum: 
+          - FLOW_RATE_CONSTANT
+          - FLOW_RATE_FIXED_BIN
+          - FLOW_RATE_ROLLING_BIN
+          - INSTANTANEOUS
+
+    CapacityPropertyType:
+      required:
+        - capacity_property
+        - capacity_value
+      type: object
+      properties:
+        capacity_property:
+          type: string
+          description: |
+            Property of the capacity check which must be met.
+            - RATE describes the number of crossings (or events) allowed per time interval DURATION (seconds).
+              Resources using RATE property must also specify a DURATION property. 
+            - DURATION describes the length of a capacity bin or the interval duration (seconds). 
+            - LIMIT describes the max aircraft allowed in either a time bin or instantaneously. If
+              describing a time bin, the LIMIT and DURATION properties must both be provided.  
+          externalDocs:
+            url: TBD
+          enum: 
+          - DURATION
+          - LIMIT
+          - RATE
+        capacity_value:
+          type: number
+          description: |-
+            The number of flights allowed without exceeding the capacity limit.  This
+            number represents the maximum capacity for the limit type. 
+          minimum: 0
+
+    ResourceCapacity:
+      required:
+      - capacity_limit_type
+      - capacity_property_array
+      description: |-
+        Describes the properties of the capacity requirements defined for the resource.
+        For example, to specify only 2 operations within 12-minutes time bin
+        - capacity_limit_type = FLOW_RATE_FIXED_BIN with capacity properties:
+          - capacity_property = DURATION with capacity_value = 720
+          - capacity_property = LIMIT with capacity_value = 2
+      properties:
+        capacity_limit_type:
+          $ref: "#/components/schemas/CapacityLimitType"
+        capacity_property_array:
+          items:
+            $ref: "#/components/schemas/CapacityPropertyType"
+          minItems: 1
+          maxItems: 2
+          type: array
+      
+    ActiveResourceCapacity:
+      required: 
+        - resource_capacity
+      description: |-
+        The current resource capacity requirement in place. This may be a default in Resource Definition or a temporary capacity requirement.
+        - If capacity end time is provided, either active resource capacity is default capacity in Resource Definition or next Temporary Resource Capacity in Future Capacities.
+      properties:
+        resource_capacity:
+          $ref: "#/components/schemas/ResourceCapacity"
+        capacity_end_time:
+          $ref: '#/components/schemas/Time'
+          
+    PostResourceDefinition:
+      required:
+        - definition
+      type: object
+      properties:
+        resource_id:
+          description: ID of resource.
+            Identifier should match resource identifier returned from Adaptation Synchronization Data Service (ASDS).
+          $ref: '#/components/schemas/EntityID'      
+        definition:
+          $ref: '#/components/schemas/ResourceDefinition'
+      description: Create or update the resource definition of the resource with the given ID.
+      
+    PutResourceDefinition:
+      required:
+        - definition
+        - resource_reference
+      type: object
+      properties:
+        definition:
+          $ref: '#/components/schemas/ResourceDefinition'
+        resource_reference:
+          description: |-
+            The resource reference that was changed by this definition update to DSS.
+          $ref: '#/components/schemas/ResourceReference'
+      description: Create or update the resource definition of the resource with the given ID.
+      
+    QueryResourceDefinitionResponse:
+      required:
+      - definition
+      - resource_reference
+      type: object
+      properties:
+        definition:
+          $ref: '#/components/schemas/ResourceDefinition'
+        resource_reference:
+          description: |-
+            The resource reference that was changed by this definition update to DSS. 
+          $ref: '#/components/schemas/ResourceReference'
+      description: Response to peer request for the resource definition of the resource with the given ID.
+
+    ResourceDefinition:
+      required:
+      - default_capacity
+      type: object
+      properties:
+        physical_definition:
+          $ref: '#/components/schemas/ResourcePhysicalDefinition'
+        default_capacity:
+          $ref: '#/components/schemas/ResourceCapacity'
+        performance_bound:
+          $ref: '#/components/schemas/PerformanceBound'
+      description: Response to peer request for the resource definition of the resource with the given ID.
+
+    ResourceDetails:
+      required:
+        - resource_reference
+        - definition
+        - current_resource_status
+        - future_capacities
+      properties:
+        resource_reference:
+          description: |-
+            Full information about the resource reference that has changed. If this field is omitted, the resource was deleted.  The `ovn` field in the nested `reference` must be populated.
+          $ref: '#/components/schemas/ResourceReference'
+        definition:
+          $ref: '#/components/schemas/ResourceDefinition'
+        current_resource_status:
+          $ref: '#/components/schemas/CurrentResourceStatus'
+        future_capacities:
+          type: array
+          items: 
+            $ref: '#/components/schemas/TemporaryResourceCapacity'
+          default: []
+
+    CurrentResourceStatus:
+      required:
+        - status
+        - active_capacity
+      description: |-
+        Returns the current resource status and active capacity rule in place. 
+        - status is independent of active capacity. 
+      properties:
+        status: 
+          $ref: '#/components/schemas/ResourceStatus'
+        active_capacity:
+          $ref: '#/components/schemas/ActiveResourceCapacity'
+        performance_bound:
+          $ref: '#/components/schemas/PerformanceBound'
+
+    ResourceStatus:
+      required: 
+        - status
+      properties:
+        status: 
+          type: string
+          description: The current status of the resource. 
+          enum: 
+          - ACTIVE
+          - INACTIVE
+
+    TemporaryResourceCapacity:
+      required: 
+        - id
+        - resource_capacity
+        - capacity_start_time
+      description: |-
+        A temporary resource capacity which overrides the default Resource Capacity.
+        - The capacity start time should be later than current time.
+        - The id should be unique and needed to allow for future updates (for example, adding an end time) to an existing temporary capacity change.
+      properties:
+        id:
+          description: |- 
+            A unique identifier for this temporary change to the default resource capacity.  Included to allow for future updates (ex. adding an end time) to an existing temporary capacity change. 
+          $ref: '#/components/schemas/EntityID'
+        resource_capacity:
+          $ref: "#/components/schemas/ResourceCapacity"
+        capacity_start_time:
+          $ref: '#/components/schemas/Time'
+        capacity_end_time:
+          $ref: '#/components/schemas/Time'
+
+    ResourceShape:
+      description: The physical shape of the resource.  This is not the same as the resource extent saved in the DSS.
+      properties:
+        outline_circle:
+          $ref: '#/components/schemas/Circle'
+        outline_polygon:
+          $ref: '#/components/schemas/Polygon'
+        lat_lng_point:
+          description: Latitude and Longitude of the point. If this is for a named resource 
+            point from ASDS, it should be the same value as from ASDS.
+          $ref: '#/components/schemas/LatLngPoint'
+
+    ResourcePhysicalDefinition:
+      required:
+        - name
+        - shape
+        - type
+      description: |-
+        If this is for a named resource from ASDS, it should be the same value as from ASDS.
+      properties:
+        name:
+            description: Name of the resource.
+            example: DF100
+            $ref: '#/components/schemas/TextShortType'
+        shape:
+          $ref: '#/components/schemas/ResourceShape'
+        altitude_lower:
+          description: Lower altitude limit of the resource, if any.
+            If this is for a named resource from ASDS, it should be the same value as from ASDS.
+          $ref: '#/components/schemas/Altitude'
+        altitude_upper:
+          description: Upper altitude limit of the resource, if any.
+            If this is for a named resource from ASDS, it should be the same value as from ASDS.
+          $ref: '#/components/schemas/Altitude'
+        type:
+          $ref: '#/components/schemas/ResourceType'
+
+    ResourceType:
+      required: 
+        - resource_type
+      properties:
+        resource_type: 
+          type: string
+          description: The type of resource.  
+          enum: 
+          - WAYPOINT
+          - VOLUME
+
+    PerformanceBound:
+      description: Performance bounds for a resource indicate lateral, vertical, and time 
+        bounds which must be met for an operational intent to remain conforming. 
+      required:
+        - maximum_altitude_deviation
+        - maximum_lateral_deviation
+        - maximum_time_deviation 
+      properties: 
+        maximum_time_deviation:
+          description: The time buffer allowed from the expecting crossing or occupation time that is allowed in Seconds. 
+          type: number
+        maximum_altitude_deviation:
+          description: The maximum allowed altitude deviation in feet. 
+          type: number
+        maximum_lateral_deviation:
+          description: The maximum allowed lateral deviation in feet. 
+          type: number
+        min_altitude:
+          description: The minimum allowed altitude for usage of this resource.
+          $ref: '#/components/schemas/Altitude'
+        max_altitude:
+          description: The maximum allowed altitude for usage of this resource.
+          $ref: '#/components/schemas/Altitude'
+        min_speed:
+          description: The minimum allowed speed for usage of this resource.
+          $ref: '#/components/schemas/Velocity'
+        max_speed:
+          description: The maximum allowed speed for usage of this resource.
+          $ref: '#/components/schemas/Velocity'
+        radius:
+          description: The maximum allowed radius for usage of this resource.
+          $ref: '#/components/schemas/Radius'
+        trajectory_interval_required:
+          description: Specifies how frequently trajectory points are required to be
+            provided when describing use of this resource, in seconds. 
+          type: number
+          format: integer 
+        performance_bound_start_time:
+          $ref: '#/components/schemas/Time'
+        performance_bound_end_time:
+          $ref: '#/components/schemas/Time'
+
+    PutCurrentResourceStatus:
+      description: Update the current status of the resource. 
+      type: object
+      required:
+        - status
+        - resource_reference
+      properties:
+        status: 
+          $ref: '#/components/schemas/ResourceStatus'
+        resource_reference:
+          description: |-
+            The resource reference that was changed by this capacity update.
+          $ref: '#/components/schemas/ResourceReference'
+
+    QueryCurrentResourceStatusResponse:
+      description: |- 
+        Returns the current status of the resource. 
+        - If status is INACTIVE, no active capacity can be returned.
+      type: object
+      required:
+        - status
+        - resource_reference
+      properties:
+        status: 
+          $ref: '#/components/schemas/ResourceStatus'
+        active_capacity:
+          $ref: '#/components/schemas/ActiveResourceCapacity'
+        resource_reference:
+          description: |-
+            The resource reference that was changed by this capacity update. 
+          $ref: '#/components/schemas/ResourceReference'
+
+    QueryResourceDetailsResponse:
+      required:
+      - resource_details
+      type: object
+      properties:
+        resource_details:
+          $ref: '#/components/schemas/ResourceDetails'
+      description: Response to peer request for the details of resource with the given ID.
+
+    PutFutureCapacities:
+      type: object
+      description: Submit a list of new or updated temporary capacities for the future. 
+      required: 
+        - future_capacities
+        - resource_reference
+      properties:
+        future_capacities:
+          type: array
+          items: 
+            $ref: '#/components/schemas/TemporaryResourceCapacity'
+          default: []
+        resource_reference:
+          description: |-
+            The resource reference that was changed by this capacity update.
+          $ref: '#/components/schemas/ResourceReference'
+
+    QueryFutureCapacitiesResponse:
+      description: Return a list temporary capacities for the future. 
+      type: object
+      required: 
+        - future_capacities
+        - resource_reference
+      properties:
+        future_capacities:
+          type: array
+          items: 
+            $ref: '#/components/schemas/TemporaryResourceCapacity'
+          default: []
+        resource_reference:
+          description: |-
+            The resource reference that was changed by this definition update to DSS. 
+          $ref: '#/components/schemas/ResourceReference'
+
+    #
+    # DSS-PSU schema components - See https://raw.githubusercontent.com/nasa/uam-apis/master/openapi/psu/dss_api.yml
+    #
+    UUIDv4Format:
+      maxLength: 36
+      minLength: 36
+      pattern: "^[0-9a-fA-F]{8}\\\\-[0-9a-fA-F]{4}\\\\-4[0-9a-fA-F]{3}\\\\-[8-b][0-9a-fA-F]{3}\\\\-[0-9a-fA-F]{12}$"
+      type: string
+      description: String whose format matches a version-4 UUID according to RFC 4122.
+      format: uuid
+      example: 03e5572a-f733-49af-bc14-8a18bd53ee39
+
+    EntityID:
+      description: Identifier for an Entity communicated through the DSS.  Formatted as a UUIDv4.   
+      example: 2f8343be-6482-4d1b-a474-16847e01af1e
+      $ref: '#/components/schemas/UUIDv4Format'
+
+    ErrorResponse:
+      type: object
+      required:
+        - "msg"
+      properties:
+        status_code:
+          description: >-
+            the status code of the response
+          type: integer
+          format: int32
+        msg:
+          description: >-
+            message should have reason for response
+          type: string
+        entity_id:
+          type: string
+          format: uuid
+        request_id:
+          type: string
+          
+    EntityOVN:
+      title: EntityOVN
+      maxLength: 128
+      minLength: 16
+      type: string
+      description: "A token associated with a particular UTM Entity+version created by the DSS upon creation or modification of an Entity reference and provided to the client creating or modifying the Entity reference.  The EntityOVN is stored privately by the DSS and then compared against entries in a Key provided to mutate the airspace.  The EntityOVN is also provided by the client whenever that client transmits the full information of the Entity (either via GET, or via a subscription notification)."
+      example: 9d158f59-80b7-4c11-9c0c-8a2b4d936b2d
+
+    ConstraintReference:
+      required:
+      - id
+      - manager
+      - time_end
+      - time_start
+      - uss_availability
+      - uss_base_url
+      - version
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityID'
+        manager:
+          type: string
+          description: Created by the DSS based on creating client's ID (via access token).  Used internal to the DSS for restricting mutation and deletion operations to manager.  Used by USSs to reject constraint update notifications originating from a USS that does not manage the constraint.
+          example: uss1
+        uss_availability:
+          $ref: '#/components/schemas/UssAvailabilityState'
+        version:
+          type: integer
+          description: "Numeric version of this constraint which increments upon each change in the constraint, regardless of whether any field of the constraint reference changes.  A USS with the details of this constraint when it was at a particular version does not need to retrieve the details again until the version changes."
+          format: int32
+          example: 1
+        ovn:
+          description: "Opaque version number of this constraint.  Populated only when the ConstraintReference is managed by the USS retrieving or providing it.  Not populated when the ConstraintReference is not managed by the USS retrieving or providing it (instead, the USS must obtain the OVN from the details retrieved from the managing USS)."
+          $ref: '#/components/schemas/EntityOVN'
+        time_start:
+          $ref: '#/components/schemas/Time'
+        time_end:
+          $ref: '#/components/schemas/Time'
+        uss_base_url:
+          $ref: '#/components/schemas/ConstraintUssBaseURL'
+      description: "A ConstraintReference (area in which a constraint is present, along with other high-level information, but no details).  The DSS reports only these references and clients must exchange details and additional information peer-to-peer."
+
+    ConstraintUssBaseURL:
+      description: The base URL of a USS implementation that implements the parts of the USS-USS API necessary for providing the details of this constraint.
+      $ref: '#/components/schemas/UssBaseURL'
+
+    OperationalIntentState:
+      description: |-
+        State of an operational intent.
+        
+        'Proposed': This Operation is created and shared, but not yet in use; see standard text for more details.
+        
+        'Accepted': This Operation is strategically coordinated at its Acceptance Horizon, or time before its proposed 
+        take-off time. Latest airspace information has been evaluated and a DCB check has completed prior to transition to 
+        this state.
+        
+        'Canceled': This Operation has never been in Activated State and will not be used.
+
+        'Activated': This Operation is in active use; see standard text for more details.
+        This Operation must have been in Accepted state before transition to this state.
+        
+        'Nonconforming': This Operation is not conforming to its operational intent per the Community Based Rules (CBR).
+        
+        'Contingent': UAM Aircraft (UA) is considered unrecoverable so unable to conform with its coordinate operational intent; see
+        standard text for more details. 
+        This state must transition to Completed.
+
+        'Completed': This Operation is no longer in active use; see standard text for more details.
+        
+      type: string
+      enum:
+        - Proposed
+        - Accepted
+        - Canceled
+        - Activated
+        - Nonconforming
+        - Contingent
+        - Completed
+
+    OperationalIntentReference:
+      description: |-
+        The high-level information of a planned or active operational intent with the URL
+        of a USS to query for details.  Note: 'ovn' is returned ONLY to the USS that
+        created the operational intent but NEVER to other USS instances.
+        - See https://raw.githubusercontent.com/nasa/uam-apis/master/openapi/psu/dss_api.yml#/components/schemas/OperationalIntentReference
+      required:
+        - id
+        - manager
+        - uss_availability
+        - version
+        - state
+        - time_start
+        - time_end
+        - uss_base_url
+        - subscription_id
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityID'
+        manager:
+          type: string
+          example: uss1
+          description: |-
+            Created by the DSS based on creating client's ID (via access token).  Used internal
+            to the DSS for restricting mutation and deletion operations to manager.  Used by USSs
+            to reject operational intent update notifications originating from a USS that does not manage
+            the operational intent.
+        uss_availability:
+          $ref: '#/components/schemas/UssAvailabilityState'
+        version:
+          type: integer
+          format: int32
+          example: 1
+          description: |-
+            Numeric version of this operational intent which increments upon each change in the operational intent,
+            regardless of whether any field of the operational intent reference changes.  A USS with the
+            details of this operational intent when it was at a particular version does not need to retrieve
+            the details again until the version changes.
+        state:
+          $ref: '#/components/schemas/OperationalIntentState'
+        ovn:
+          description: |-
+            Opaque version number of this operational intent.  Populated only when the OperationalIntentReference
+            is managed by the USS retrieving or providing it.  Not populated when the
+            OperationalIntentReference is not managed by the USS retrieving or providing it (instead, the
+            USS must obtain the OVN from the details retrieved from the managing USS).
+          $ref: '#/components/schemas/EntityOVN'
+        time_start:
+          description: Beginning time of operational intent.
+          $ref: '#/components/schemas/Time'
+        time_end:
+          description: End time of operational intent.
+          $ref: '#/components/schemas/Time'
+        uss_base_url:
+          $ref: '#/components/schemas/OperationalIntentUssBaseURL'
+        subscription_id:
+          description: |-
+            The ID of the subscription that is ensuring the operational intent manager receives relevant
+            airspace updates.
+          $ref: '#/components/schemas/SubscriptionID'
+
+    OperationalIntentUssBaseURL:
+      description: "The base URL of a USS implementation that implements the parts of the USS-USS API necessary for providing the details of this operational intent, and telemetry during non-conformance or contingency, if applicable."
+      $ref: '#/components/schemas/UssBaseURL'
+
+    SubscriptionID:
+      description: Identifier for a subscription communicated through the DSS.  Formatted as a UUIDv4.
+      example: 78ea3fe8-71c2-4f5c-9b44-9c02f5563c6f
+      $ref: '#/components/schemas/UUIDv4Format'
+
+    SubscriptionUssBaseURL:
+      description: The base URL of a USS implementation of the parts of the USS-USS API necessary for receiving the notifications requested by this subscription.
+      $ref: '#/components/schemas/UssBaseURL'
+
+    Subscription:
+      required:
+      - id
+      - notification_index
+      - uss_base_url
+      - version
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/SubscriptionID'
+        version:
+          type: string
+          description: Version of the subscription that the DSS changes every time a USS changes the subscription.  The DSS incrementing the notification_index does not constitute a change that triggers a new version.  A USS must specify this version when modifying an existing subscription to ensure consistency in read-modify-write operations and distributed systems.
+        notification_index:
+          $ref: '#/components/schemas/SubscriptionNotificationIndex'
+        time_start:
+          description: "If set, this subscription will not receive notifications involving airspace changes entirely before this time."
+          $ref: '#/components/schemas/Time'
+        time_end:
+          description: "If set, this subscription will not receive notifications involving airspace changes entirely after this time."
+          $ref: '#/components/schemas/Time'
+        uss_base_url:
+          $ref: '#/components/schemas/SubscriptionUssBaseURL'
+        notify_for_operational_intents:
+          type: boolean
+          description: "If true, trigger notifications when operational intents are created, updated, or deleted.  Otherwise, changes in operational intents should not trigger notifications.  The scope utm.strategic_coordination is required to set this flag true."
+          default: false
+        notify_for_constraints:
+          type: boolean
+          description: "If true, trigger notifications when constraints are created, updated, or deleted.  Otherwise, changes in constraints should not trigger notifications.  The scope uam.constraint_processing is required to set this flag true."
+          default: false
+        notify_for_resources:
+          type: boolean
+          description: "If true, trigger notifications when resources are created, updated, or deleted.  Otherwise, changes in resources should not trigger notifications.  The scope uam.resource_processing is required to set this flag true."
+          default: false
+        implicit_subscription:
+          type: boolean
+          description: "True if this subscription was implicitly created by the DSS via the creation of an operational intent, and should therefore be deleted by the DSS when that operational intent is deleted."
+          default: false
+        dependent_operational_intents:
+          type: array
+          description: List of IDs for operational intents that are dependent on this subscription.
+          items:
+            $ref: '#/components/schemas/EntityID'
+          default: []
+      description: "Specification of a geographic area that a client is interested in on an ongoing basis (e.g., \"planning area\")."
+    SubscriptionNotificationIndex:
+      minimum: 0
+      exclusiveMinimum: false
+      type: integer
+      description: Tracks the notifications sent for a subscription so the subscriber can detect missed notifications more easily.
+      format: int32
+      default: 0
+
+    PutSubscriptionParameters:
+      required:
+        - uss_base_url
+      type: object
+      properties:
+        area_of_interest:
+          description: |-
+            Volume of airspace to subscribe to.
+            This subscription will automatically be deleted after its end time if it has not been refreshed by then. 
+            Note that some Entities triggering notifications may lie entirely outside the requested area.
+          $ref: '#/components/schemas/Volume3D'
+        resource_ids:
+          description: List of resources for which to create the subscription. 
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityID'
+        time_start:
+          description: If start time is not specified, it will default to the time the request is processed. 
+          $ref: '#/components/schemas/Time'
+        time_end:
+          description: If end time is not specified, the value will be chosen automatically by the DSS. 
+            The end time may not be in the past.
+          $ref: '#/components/schemas/Time'
+        uss_base_url:
+          $ref: '#/components/schemas/SubscriptionUssBaseURL'
+        notify_for_operational_intents:
+          type: boolean
+          description: "If true, trigger notifications when operational intents are created, updated, or deleted.  Otherwise, changes in operational intents should not trigger notifications.  The scope utm.strategic_coordination is required to set this flag true."
+          default: false
+        notify_for_constraints:
+          type: boolean
+          description: "If true, trigger notifications when constraints are created, updated, or deleted.  Otherwise, changes in constraints should not trigger notifications.  The scope uam.constraint_processing is required to set this flag true."
+          default: false
+        notify_for_resources:
+          type: boolean
+          description: "If true, trigger notifications when resources are created, updated, or deleted.  Otherwise, changes in resources should not trigger notifications.  The scope uam.resource_processing is required to set this flag true."
+          default: false
+      description: Parameters for a request to create/update a subscription in the DSS.  At least one form of notifications must be requested.
+        At least one of the volume_of_interest or resource_ids must be provided. A combination of volume and resource ids may be provided.
+
+    PutSubscriptionResponse:
+      required:
+      - subscription
+      type: object
+      properties:
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+        operational_intent_references:
+          type: array
+          description: "Operational intents in or near the subscription area at the time of creation/update, if `notify_for_operational_intents` is true."
+          items:
+            $ref: '#/components/schemas/OperationalIntentReference'
+          default: []
+        constraint_references:
+          type: array
+          description: "Constraints in or near the subscription area at the time of creation/update, if `notify_for_constraints` is true."
+          items:
+            $ref: '#/components/schemas/ConstraintReference'
+          default: []
+        resource_references:
+          type: array
+          description: "Resources in or near the subscription area at the time of creation/update, if `notify_for_resources` is true."
+          items:
+            $ref: '#/components/schemas/ResourceReference'
+          default: []
+      description: Response for a request to create or update a subscription.
+
+    DeleteSubscriptionResponse:
+      required:
+      - subscription
+      type: object
+      properties:
+        subscription:
+          $ref: '#/components/schemas/Subscription'
+      description: Response for a successful request to delete a subscription.
+
+    Time:
+      required:
+      - format
+      - value
+      type: object
+      properties:
+        value:
+          type: string
+          description: RFC3339-formatted time/date string.  The time zone must be 'Z'.
+          format: date-time
+          example: 1985-04-12T23:20:50.52Z
+        format:
+          type: string
+          enum:
+          - RFC3339
+
+    TimeParam:
+      description: >- 
+        RFC3339-formatted time/date string. The time zone must be 'Z'. See https://www.rfc-editor.org/rfc/rfc3339
+      type: string
+      format: date-time
+      pattern: "^([0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\\.[0-9]{1,3})?Z$"
+      example: '1985-04-12T23:20:50.52Z'
+      
+    UssAvailabilityStatus:
+      required:
+      - availability
+      - uss
+      type: object
+      properties:
+        uss:
+          type: string
+          description: Client ID (matching their `sub` in access tokens) of the USS to which this availability applies.
+        availability:
+          $ref: '#/components/schemas/UssAvailabilityState'
+
+    UssAvailabilityState:
+      type: string
+      description: |-
+        A USS is presumed to be in the Unknown state absent indication otherwise by a USS with availability arbitration scope.  Upon determination via availability arbitration, a USS is Down when it does not respond appropriately, and a Down USS may not perform the following operations in the DSS:
+        * Create an operational intent in the Accepted or Activated states
+        * Modify an operational intent whose new or unchanged state is Accepted or Activated
+        * Delete an operational intent
+        A USS in the Unknown state possesses all the capabilities, within the DSS, of a USS in the Normal state.
+      enum:
+      - Unknown
+      - Normal
+      - Down
+
+    UssBaseURL:
+      type: string
+      description: "The base URL of a USS implementation of part or all of the USS-USS API. Per the USS-USS API, the full URL of a particular resource can be constructed by appending, e.g., `/uss/v1/{resource}/{id}` to this base URL. Accordingly, this URL may not have a trailing '/' character."
+      example: https://uss.example.com/uam
+
+    Altitude:
+      required:
+      - reference
+      - units
+      - value
+      type: object
+      properties:
+        value:
+          maximum: 100000
+          exclusiveMaximum: false
+          minimum: -8000
+          exclusiveMinimum: false
+          type: number
+          description: "The numeric value of the altitude. Note that min and max values are added as a sanity check. As use cases evolve and more options are made available in terms of units of measure or reference systems, these bounds may be re-evaluated."
+          format: double
+        reference:
+          type: string
+          description: "A code indicating the reference for a vertical distance. See AIXM 5.1 and FIXM 4.2.0. Currently, UTM only allows WGS84 with no immediate plans to allow other options. FIXM and AIXM allow for 'SFC' which is equivalent to AGL."
+          enum:
+          - W84
+        units:
+          type: string
+          description: "The reference quantities used to express the value of altitude. See FIXM 4.2. Currently, UTM only allows meters with no immediate plans to allow other options."
+          enum:
+          - M
+    Latitude:
+      maximum: 90
+      exclusiveMaximum: false
+      minimum: -90
+      exclusiveMinimum: false
+      type: number
+      description: "Degrees of latitude north of the equator, with reference to the WGS84 ellipsoid."
+      format: double
+      example: 34.123
+
+    Longitude:
+      maximum: 180
+      exclusiveMaximum: false
+      minimum: -180
+      exclusiveMinimum: false
+      type: number
+      description: "Degrees of longitude east of the Prime Meridian, with reference to the WGS84 ellipsoid."
+      format: double
+      example: -118.456
+
+    Polygon:
+      required:
+      - vertices
+      type: object
+      properties:
+        vertices:
+          minItems: 3
+          type: array
+          items:
+            $ref: '#/components/schemas/LatLngPoint'
+      description: "An enclosed area on the earth. The bounding edges of this polygon are defined to be the shortest paths between connected vertices.  This means, for instance, that the edge between two points both defined at a particular latitude is not generally contained at that latitude. The winding order must be interpreted as the order which produces the smaller area. The path between two vertices is defined to be the shortest possible path between those vertices. Edges may not cross. Vertices may not be duplicated.  In particular, the final polygon vertex must not be identical to the first vertex."
+    
+    LatLngPoint:
+      required:
+      - lat
+      - lng
+      type: object
+      properties:
+        lng:
+          $ref: '#/components/schemas/Longitude'
+        lat:
+          $ref: '#/components/schemas/Latitude'
+      description: Point on the earth's surface.
+
+    Radius:
+      required:
+      - units
+      - value
+      type: object
+      properties:
+        value:
+          minimum: 0
+          exclusiveMinimum: true
+          type: number
+          description: "Distance from the centerpoint of a circular area, along the WGS84 ellipsoid."
+          format: float
+          example: 300.183
+        units:
+          type: string
+          description: FIXM-compatible units.  Only meters ("M") are acceptable for UTM.
+          enum:
+          - M
+
+    Circle:
+      type: object
+      properties:
+        center:
+          $ref: '#/components/schemas/LatLngPoint'
+        radius:
+          $ref: '#/components/schemas/Radius'
+      description: A circular area on the surface of the earth.
+
+    Volume3D:
+      type: object
+      properties:
+        outline_circle:
+          description: A circular geographic shape on the surface of the earth.
+          $ref: '#/components/schemas/Circle'
+        outline_polygon:
+          description: A polygonal geographic shape on the surface of the earth.
+          $ref: '#/components/schemas/Polygon'
+        altitude_lower:
+          description: "Minimum bounding altitude of this volume. Must be less than altitude_upper, if specified."
+          $ref: '#/components/schemas/Altitude'
+        altitude_upper:
+          description: "Maximum bounding altitude of this volume. Must be greater than altitude_lower, if specified."
+          $ref: '#/components/schemas/Altitude'
+      description: A three-dimensional geographic volume consisting of a vertically-extruded shape. Exactly one outline must be specified.
+
+    #
+    # DSS-RI schemas - under ASTM development
+    #
+    ResourceUssBaseURL:
+      description: The base URL of a USS implementation that implements the parts of the USS-USS API necessary for providing the details of this constraint.
+      $ref: '#/components/schemas/UssBaseURL'
+
+    QueryResourceReferencesResponse:
+      required:
+      - resource_references
+      type: object
+      properties:
+        resource_references:
+          type: array
+          description: ResourceReferences in the area of interest.
+          items:
+            $ref: '#/components/schemas/ResourceReference'
+          default: []
+      description: Response to DSS query for ResourceReferences in an area of interest.
+
+    ResourceReference:
+      required:
+      - id
+      - manager
+      - time_start
+      - ris_availability
+      - ris_base_url
+      - version
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/EntityID'
+        manager:
+          type: string
+          description: Created by the DSS based on creating client's ID (via access token).  Used internal to the DSS for restricting mutation and deletion operations to manager.  Used by USS to reject resource update notifications originating from a USS that does not manage the resource.
+          example: uss1
+        ris_availability:
+          $ref: '#/components/schemas/UssAvailabilityState'
+        version:
+          type: integer
+          description: "Numeric version of this constraint which increments upon each change in the resource, regardless of whether any field of the resource reference changes.  A USS with the details of this resource when it was at a particular version does not need to retrieve the details again until the version changes."
+          format: int32
+          example: 1
+        ovn:
+          description: "Opaque version number of this resource.  Populated only when the ResourceReference is managed by the USS retrieving or providing it.  Not populated when the ResourceReference is not managed by the USS retrieving or providing it (instead, the USS must obtain the OVN from the details retrieved from the managing USS)."
+          $ref: '#/components/schemas/EntityOVN'
+        # Start/end time for resource
+        time_start:
+          description: "Date/time when the resource should begin being considered for DCB."
+          $ref: '#/components/schemas/Time'
+        time_end:
+          description: "Ending time of the Resource, if applicable. Indefinite if not set."
+          $ref: '#/components/schemas/Time'
+        ris_base_url:
+          $ref: '#/components/schemas/ResourceUssBaseURL'
+      description: "A ResourceReference (area in which a resource is present, along with other high-level information, but no details).  The DSS reports only these references and clients must exchange details and additional information peer-to-peer."
+
+    TextShortType:
+      maxLength: 200
+      type: string
+      description: A free text with a maximum length of 200 characters
+
+    #
+    # PSU schema components - See https://raw.githubusercontent.com/nasa/uam-apis/master/openapi/psu/psu_api.yml
+    #
+    Velocity:
+      description: |-
+        Velocity of the associated vehicle at the time_measured.
+      required:
+        - speed
+        - units_speed
+      type: object
+      properties:
+        speed:
+          format: float
+          type: number
+          description: |-
+            Speed numerical value.
+          example: 200.1
+        units_speed:
+          type: string
+          enum:
+            - MetersPerSecond
+            - Knots
+        track:
+          format: float
+          type: number
+          description: |-
+            Direction of flight expressed as a "True North-based" ground track angle.
+            This value is provided in degrees East of North with a minimum resolution of 1 degree.
+            A value of 360 indicates invalid, no value, or unknown.
+          example: 120
+          default: 0
+        speed_type:
+          description: |-
+            Air speed or ground speed
+          type: string
+          enum:
+            - GROUND
+            - AIR
+          default: GROUND

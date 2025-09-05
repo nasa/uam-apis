@@ -1,6 +1,6 @@
 <h1 align="center"> UAM API  </h1>
 
-[![version](https://img.shields.io/badge/version-2.0.0-yellow.svg?style=flat-square)](https://img.shields.io)
+[![version](https://img.shields.io/badge/version-3.1.0-yellow.svg?style=flat-square)](https://img.shields.io)
 
 ## Table of Contents
 
@@ -16,31 +16,21 @@
 This repository stores APIs and defines functionality for API auto code generation.  All API definition in their YAML form are stored as the following:
 - [External](./external/)
   - APIs which would be known to all players within the federated PSU network
-- [Internal](./internal/)
-  - APIs which are internal to NASA's implementation and execution of a PSU and execution.   
 
 Overview description of APIs can be found in OVERVIEW.MD
 
 The list below references the directories for the various APIs within this repository.  Each section has a README.MD file specific to the API.
-
-__Internal__
-* ETA Generator ([etag](./internal/etag/))
-* Operations Planning Service ([ops](./internal/ops/))
-* Provider of Service UAM ([psu](./internal/psu/))
-* UAM Constraints ([uam-constraints](./internal/uam-constraints/))
   
 __External__
-* Airspace Authorization ([aa](./external/aa/))
 * Airspace Structure Definition Service ([asds](./external/asds/))
 * Constraint Information Service ([cis](./external/cis/))
 * Data Collection ([data](./external/data/))
 * FAA Industry Data Exchange Protocol ([fidxp](./external/fidxp/))
 * FIMS Authorization ([fims-authz](./external/fims-authz/))
-* Provider of Service UAM ([psu](./external/psu/))
-* Resource Planning Service ([rps](./external/rps/))
+* Provider of Service for UAM ([psu](./external/psu/))
+* Resource Information Service ([ris](./external/ris/))
+* Resource Planning Service for DCB & SS ([rps](./external/rps/))
 * Resource Registry ([rr](./external/rr/))
-* Timeline Data Provider ([tdp](./external/tdp/))
-* XTGUI ([xtgui](./external/xtgui/))
 
 ## Software
 
@@ -95,11 +85,19 @@ Our [Contributors](#contributors) are also great points of contacts for our soft
 
 ## Contributors
 Thanks to our contributors this software has been made possible:
-- [Annie Cheng](mailto:annie.w.cheng@nasa.gov) - Concept & Design
-- [Hanbong Lee](mailto:hanbong.lee@nasa.gov) - Product Owner
-- [Chin Seah](mailto:chin.h.seah@nasa.gov) - Design & Tester
-- [Chu Han Lee](mailto:chu.h.lee@nasa.gov) - Scrum Master/Developer
-- [Stephen Chu](fu-sheng.chu@nasa.gov) - Developer
+- [Hanbong Lee](mailto:hanbong.lee@nasa.gov) - Product & Concept Owner
+- [Alan Lee](mailto:alan.g.lee@nasa.gov) - Architect
+- [Chin Seah](mailto:chin.h.seah@nasa.gov) - API Design & Tester
+- [John Robinson](mailto:john.e.robinson@nasa.gov) - Developer Lead
+- [Stephen Chu](mailto:fu-sheng.chu@nasa.gov) - Developer
+- [Tung Nguyen](mailto:tung.d.nguyen@nasa.gov) - Developer
+- [Fu-tai Shih](mailto:fu-tai.shih-1@nasa.gov) - Developer
+- [Huu Huynh](mailto:huu.v.huynh@nasa.gov) - Integration & Test Lead
+
+### Previous Contributors
+- Annie Cheng - Concept & Design
+- Chuhan Lee - Developer Lead
+- [Leonard Bagasol](mailto:leonard.n.bagasol@nasa.gov) - SCRUM Master
 
 Please contact project management if we have left someone out.
 
@@ -110,10 +108,6 @@ Please contact project management if we have left someone out.
 ## Resources
 
 ### Related Documents
-- [Known Issues](./documents/KNOWN_ISSUES.MD)
-
-### Confluence Documentation
-- [UAM Application Programming Interface (API)](https://atmconfluence.arc.nasa.gov/pages/viewpage.action?pageId=118489726)
 
 
 
