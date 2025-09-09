@@ -21,11 +21,11 @@ Below diagram shows ASTM Architecture and Information Flow, as of 2025-08-07, fo
 
 NOTE: There are different Resource Planning Services (RPS) for Demand-Capacity Balancing versus Sequencing and Spacing.
 
-- **FAA-Industry Data Exchange Protocol (FIDXP)** - Provides a gateway for PSU and FAA to share relevant operational information.
+- **FAA-Industry Data Exchange Protocol (FIDXP)** - Provides a gateway for PSU and the FAA to share relevant operational information.
 - **Discovery and Synchronization Service (DSS)** - Enables third-party services to discover relevant information and ensures that data shared among them are synchronized.
 - **Resource Registry (RR)** - Provides connectivity information for third-party resource management services (Demand-Capacity Balancing, Sequencing and Spacing) that PSUs would communicate with.
 - **Authentication & Authorization (FIMS-AZ)** - Authenticates and authorizes PSUs and other third-party services.
-- **Aeronautical Information (ASDS)** - Provides airspace definitions for UAM, these definitions include vertiport, routes, corridors, arrival and departure procedures. These definitions are developed to accommodate new types of UAM aircraft and operations into the National Airspace System (NAS).
+- **Aeronautical Information (ASDS)** - Provides airspace definitions for UAM, these definitions include vertiports, routes, corridors, arrival and departure procedures. Airspace structure, called adaptation data, are developed to accommodate new types of UAM aircraft and operations into the National Airspace System (NAS).
 - **Capacity Information (CIS)** - Provides capacity and constraint information about resources that are shared among PSUs.
 - **Resource Information Service (RIS)** - Obtains capacity information at shared resources from CIS and provides each resource capacity information to Demand Capacity Balancing (DCB) services (see below).
 - **Resource Planning Service - Demand-Capacity Balancing (RPS-DCB)** - Obtains capacity information at shared resources from RIS and provides availability information for earliest estimated departure and arrival time at resources for UAM Fleet Managers, via the PSU, to perform strategic planning & scheduling.
@@ -40,18 +40,16 @@ NOTE: There are different Resource Planning Services (RPS) for Demand-Capacity B
 Below diagram defines X5 system scope and boundaries of the system for which these APIs were previously defined.
 
 ![UAM System Scope and Boundaries](./images/system_scope_boundaries.png)  
-<sup>Figure 1.1 UAM X4 System Scope and Boundaries</sup>
+<sup>Figure 2. UAM X4 System Scope and Boundaries</sup>
 
 #### Major updates
 
 - A new service, Demand-Capacity Balancing (DCB), provides information for PSU to coordinate operations at vertiports. A new API (rps/rps_dcb_api.yml) defines the information exchange requirements between the service and PSU.
-- A new service, Sequencing & Spacing, provides information for PSU to coordinate operations at selected corridor entry and exit points. A new API (rps/rps_ss_api.yml) defines the information exchange requirements between the service and PSU.
+- A new service, Sequencing & Spacing, provides information for PSU to coordinate operations at selected control waypoints such as corridor entry/exit points and cross/merge/diverge points. A new API (rps/rps_ss_api.yml) defines the information exchange requirements between the service and PSU.
 - A new file, Registration Registry (RR), provides connectivity information about services (i.e., endpoint) that PSU would communicate with. This file provides an interim method to discover dynamic services until a more appropriate mechanism is identified.
-
 - The Capacity Information Service (CIS) file is updated to include additional information about corridor entry and exit points and associated constraint definitions for Sequencing & Spacing.
 - A new service, FAA-Industry Data Exchange Prototype Service (FIDXP), provides an initial connection to FAA systems for PSU. A new API (fidxp/fidxp_api.xml) defines initial information exchange requirements between the FIDXP and PSU.
 - The Airspace Authorization (AA) service was no longer used.
-
 - A new API, PSU-Fleet Operator API (psu/uam_operator_api.yml), defines the information exchange between NASA PSU and NASA UAM Operator prototypes. This API is specific to NASA implementation and included only as a reference.
 
 ### Changes X5 -> SDS Version
