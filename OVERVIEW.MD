@@ -12,10 +12,10 @@ The set of APIs referenced in this documentation were tested and validated using
 
 The APIs were updated from NASA's “UAM X5” version of APIs that was then shared and tested with an industry airspace partner during Strategic Deconfliction Simulations (SDS) activity.
 
-Below diagram shows ASTM Architecture and Information Flow, as of 2025-08-07, for which these APIs were developed for.
+Below diagram shows ASTM PSU Architecture and Information Flow, as of 2025-08-07, for which these APIs were developed.
 
 ![ASTM Architecture and Information Flow](./images/astm_arch_info_flow_20250807.png)  
-<sup>Figure 1. ASTM Architecture and Information Flow as of 2025-08-07</sup>
+<sup>Figure 1. ASTM PSU Architecture and Information Flow as of 2025-08-07</sup>
 
 ## API Functional Descriptions
 
@@ -25,7 +25,7 @@ NOTE: There are different Resource Planning Services (RPS) for Demand-Capacity B
 - **Discovery and Synchronization Service (DSS)** - Enables third-party services to discover relevant information and ensures that data shared among them are synchronized.
 - **Resource Registry (RR)** - Provides connectivity information for third-party resource management services (Demand-Capacity Balancing, Sequencing and Spacing) that PSUs would communicate with.
 - **Authentication & Authorization (FIMS-AZ)** - Authenticates and authorizes PSUs and other third-party services.
-- **Aeronautical Information (ASDS)** - Provides airspace definitions for UAM, these definitions include vertiports, routes, corridors, arrival and departure procedures. Airspace structure, called adaptation data, are developed to accommodate new types of UAM aircraft and operations into the National Airspace System (NAS).
+- **Aeronautical Information (ASDS)** - Provides airspace structure definitions for UAM, these definitions include vertiports, routes, corridors, and arrival and departure procedures. Airspace structure, called adaptation data, are developed to accommodate new types of UAM aircraft and operations into the National Airspace System (NAS).
 - **Capacity Information (CIS)** - Provides capacity and constraint information about resources that are shared among PSUs.
 - **Resource Information Service (RIS)** - Obtains capacity information at shared resources from CIS and provides each resource capacity information to Demand Capacity Balancing (DCB) services (see below).
 - **Resource Planning Service - Demand-Capacity Balancing (RPS-DCB)** - Obtains capacity information at shared resources from RIS and provides availability information for earliest estimated departure and arrival time at resources for UAM Fleet Managers, via the PSU, to perform strategic planning & scheduling.
@@ -40,14 +40,14 @@ NOTE: There are different Resource Planning Services (RPS) for Demand-Capacity B
 Below diagram defines X5 system scope and boundaries of the system for which these APIs were previously defined.
 
 ![UAM System Scope and Boundaries](./images/system_scope_boundaries.png)  
-<sup>Figure 2. UAM X4 System Scope and Boundaries</sup>
+<sup>Figure 2. UAM X5 System Scope and Boundaries</sup>
 
 #### Major updates
 
 - A new service, Demand-Capacity Balancing (DCB), provides information for PSU to coordinate operations at vertiports. A new API (rps/rps_dcb_api.yml) defines the information exchange requirements between the service and PSU.
 - A new service, Sequencing & Spacing, provides information for PSU to coordinate operations at selected control waypoints such as corridor entry/exit points and cross/merge/diverge points. A new API (rps/rps_ss_api.yml) defines the information exchange requirements between the service and PSU.
 - A new file, Registration Registry (RR), provides connectivity information about services (i.e., endpoint) that PSU would communicate with. This file provides an interim method to discover dynamic services until a more appropriate mechanism is identified.
-- The Capacity Information Service (CIS) file is updated to include additional information about corridor entry and exit points and associated constraint definitions for Sequencing & Spacing.
+- The Capacity Information Service (CIS) file is updated to include additional information about control waypoints (e.g., corridor entry/exit points) and associated constraint definitions for Sequencing & Spacing.
 - A new service, FAA-Industry Data Exchange Prototype Service (FIDXP), provides an initial connection to FAA systems for PSU. A new API (fidxp/fidxp_api.xml) defines initial information exchange requirements between the FIDXP and PSU.
 - The Airspace Authorization (AA) service was no longer used.
 - A new API, PSU-Fleet Operator API (psu/uam_operator_api.yml), defines the information exchange between NASA PSU and NASA UAM Operator prototypes. This API is specific to NASA implementation and included only as a reference.
@@ -61,11 +61,15 @@ Below diagram defines X5 system scope and boundaries of the system for which the
 ![ASTM Op Intent States Transitions](./images/astm_op_intent_states_transistions_20250807.png)  
 <sup>Figure 3. Operational Intent States Transition Diagram defined in the ASTM PSU Interoperability standard, as of 2025-08-07</sup>
 
-- A new service, Resource Information Service (RIS), provides capacity at resources information to Demand Capacity Balancing (DCB) services. A new API (ris/rps_api.yml) defines the information exchange requirements between this service and DCB. RIS provides:
-  - available capacity, within time windows, at resources - vertiports & entry/exit points of airspace corridors.
-  - resource operators ability to reduce available capacity at resources from certain start time with/without end time.
-  - inform subscribers about reduction to available capacity at resources.
+- Update Provider of Services for UAM (PSU) API (psu/psu_api.yml) to receive the information about imbalanced operations due to updated available capacity at resources. Imbalanced operations should be passed to UAM Fleet Managers/Operators for re-planning.
+- A new service, Resource Information Service (RIS), provides capacity at resources information to Demand Capacity Balancing (DCB) services based on new API (ris/rps_api.yml) which defines the information exchange requirements between this service and DCB.
+  - provides available capacity, within time windows, at resources - vertiports and entry/exit points of airspace corridors.
+  - provides resource operators ability to reduce available capacity at resources from certain start time with/without end time.
+  - informs subscribers, like DCB service, about reduction to available capacity at resources.
 - Update Demand Capacity Balancing (DCB) service API (rps/rps_dcb_api.yml) to:
   - accept updates to available capacity at resources.
   - determine imbalanced operations due to updated available capacity at resources & inform OIMs about their imbalanced operations.
-- Update Provider of Services for UAM (PSU) API (psu/psu_api.yml) to receive imbalanced operations due to updated available capacity at resources. Imbalanced operations should be passed to UAM Fleet Managers/Operators for re-planning.
+
+  *NOTE:*
+
+  NASA's implementation logic does not properly handle capacity increases or updating status of a resource to unavailable even though the RIS API allows these events.
